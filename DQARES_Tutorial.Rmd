@@ -1,0 +1,267 @@
+---
+title: '"Assessing Response Quality in Multi-Item Scales"'
+author: "Cagla Yildiz"
+date: "2024-08-14"
+output:
+  html_document: default
+  word_document: default
+---
+
+## Case Study - Substantial Research Question
+
+**How does participation in political activities and social organizations influence trust in political institutions?**
+
+Our research question is about how participation in political activities and organizations influences trust in political institutions. 
+
+## The GESIS Panel Campus File
+
+We use the GESIS Panel Campus File, which is a dataset designed for educational purposes. The GESIS Panel Campus File contains high-quality data, albeit with a limited selection of variables from the original GESIS Panel scientific use file. It contains a random 25% sample of all panel members surveyed in 2014 (n=1,222). This dataset provides an excellent opportunity to practice working with panel data and understanding the implications of data quality on research outcomes. The dataset also includes selected variables for analyses related to political participation, organizational participation, and trust in institutions in Social & Political Participation Core Study.
+
+## Variables
+
+We will focus on the following variables:
+
+- **Political Participation:** "During the last 12 months, have you done any of the following? Have you..."
+  - **Items:**
+    - bbzc002a: Contacted a politician  
+    - bbzc003a: Worked in a political party 
+    - bbzc004a: Signed a petition
+    - bbzc005a: Taken part in a public demonstration
+    - bbzc006a: Bought or boycotted certain product
+    - bbzc007a: Worked in another organisation
+    - bbzc008a: Discussed with friends about politics
+    - bbzc009a: Sent a letter to a newspaper
+  - **Response Scale:** 1 = No; 2 = Yes, once; 3 = Yes, sometimes; 4 = Yes, often 
+  
+  
+- **Participation in Organizations:** "During the last 12 months, how often did you participate in the following
+federations, associations, clubs and organizations?"
+  - **Items:**
+    - bbzc044a: Sport or recreational organization
+    - bbzc045a: Church or religious organization
+    - bbzc046a: Art, music or cultural organization
+    - bbzc047a: Social movement
+    - bbzc048a: Political party
+    - bbzc049a: Labor Union
+    - bbzc050a: Youth organization
+    - bbzc051a: Humanitarian or charitable organization
+    - bbzc052a: Parents’or school association
+  - **Response Scale:** 1 = Never; 2 = Rarely; 3 = Sometimes; 4 = Often
+  
+  
+- **Trust in Institutions:** Trust in various political institutions.
+  - **Items:**
+    - bbzc078a: Trust in government
+    - bbzc079a: Trust in judiciary
+    - bbzc080a: Trust in police
+    - bbzc081a: Trust in media
+    - bbzc082a: Trust in parliament
+    - bbzc083a: Trust in political parties
+    - bbzc084a: Trust in NGOs
+    - bbzc085a: Trust in European Union
+    - bbzc086a: Trust in United Nations
+    - bbzc087a: Trust in religious institutions
+  - **Response Scale:** 1 = Don’t trust at all -  7 = Entirely trust
+
+
+## Assessing Data Quality Using the DQAres Package
+
+Before delving into the analysis, it is crucial to ensure that the data we are using is of high quality. The reliability and validity of our findings are dependent on the accuracy and integrity of the dataset. By addressing data quality issues first, we can confidently proceed to analyze the relationship between political participation, organizational involvement, and trust in institutions, ensuring that our conclusions are based on reliable and high-quality data.
+
+To investigate these aspects, we will use the `DQAres` package in R, specifically the resquin (response quality indicators) and restin (response style indicators) functions, which are designed to calculate response quality and style indicators such as straightlining behavior, middle or extreme response styles. This preliminary step is essential to validate that the data is suitable for answering our research question and to prevent potential biases or inaccuracies in our analysis. Below is a brief overview of the functions and the indicators that will be calculated:
+
+### resquin
+
+  -  n_valid: number of within person valid answers
+  -  n_na: number of within person missing answers
+  -  prop_na: proportion of missing responses within respondents
+  -  ips_mean: within respondent mean over all items
+  -  ips_median: within respondent median
+  -  ips_median_abs_dev: within respondent median absolute deviation
+  -  ips_sd: within respondent standard deviation
+  -  mahalanobis: Mahalanobis distance per respondent. Represents the distance of observations from the centroid of a   multivariate normal distribution.
+  
+### restin
+
+  -  MRS: Middle response style (only if scale has a numeric midpoint)
+  -  ARS: Acquiescence response style
+  -  DRS: Disacquiescence response style
+  -  ERS: Extreme response style
+  -  NERS: Non-extreme response style
+
+```{r}
+# Load necessary libraries
+pacman::p_load(haven, readr, tidyr, dplyr, ggplot2, psych, rmarkdown, corrr, corrtable, devtools,haven, dqares, ggrepel)
+
+# Installing dqares with devtools
+#install_git("https://git.gesis.org/rothms/dqares.git")
+
+# The instructed README code for package installation was not working due to a different URL
+#devtools::install_github("https://github.com/MatRoth/dqares")
+
+# Load your data here 
+data <- read_dta("ZA5666_v1-0-0_Stata14.dta")
+```
+
+##  Assessing Data Quality for Political Participation
+
+```{r}
+# Subset and clean the dataset
+polpar <- data %>%
+  select(bbzc002a:bbzc009a) %>% 
+  mutate_all(~ifelse(. %in% c(-22, -33, -77, -88, -99, -111), NA, .))
+
+# RESQUIN (Response Quality Indicators)
+polpar_resquin <- resquin(polpar)
+
+# Non-differentiation/Straightlining
+polpar_resquin$slining_1 <- NA 
+polpar_resquin$slining_1[polpar_resquin$ips_sd == 0] <- 1
+polpar_resquin$slining_1[polpar_resquin$ips_sd != 0] <- 0
+straightlining_polpar <- mean(polpar_resquin$slining_1 == 1, na.rm = TRUE)  # 10% straightlining
+
+# Summary of response quality indicators
+summary(polpar_resquin)
+
+# RESTIN (Response Style Indicators)
+polpar_restin <- restin(polpar, 1, 4, normalize = TRUE)
+
+# Summary of response style indicators
+summary(polpar_restin)
+
+# Bind the results
+polpar <- bind_cols(polpar, polpar_resquin, polpar_restin)
+```
+### Interpretation
+
+- **Straightlining Behavior:**
+  - 10% of respondents exhibited straightlining behavior, where they gave identical responses across all items. This could indicate a lack of engagement, but it might also reflect genuine consistency in political activity.
+
+- **Response Styles:**
+  - **Middle Responses (MRS):**
+    - Not calculated because the response scale lacks a midpoint.
+  - **Acquiescence (ARS):**
+    - 20% of responses indicate a tendency to agree with statements.
+  - **Disacquiescence (DRS):**
+    - 80% of responses indicate a tendency to disagree with statements.
+  - **Extreme Responses (ERS):**
+    - 79% of responses were at the extreme ends of the scale.
+  - **Non-extreme Responses (NERS):**
+    - 21% of responses were at the extreme ends of the scale.
+
+These findings suggest that while some respondents may not engage much in political activities, the high levels of disacquiescence and extreme responding could be due to genuine positions rather than low-quality data.
+
+##  Assessing Data Quality for Participation in Organizations
+
+```{r}
+# Subset and clean the dataset
+orgpar <- data %>%
+  select(bbzc044a:bbzc052a) %>% 
+  mutate_all(~ifelse(. %in% c(-11, -22, -33, -55, -77, -88, -99, -111), NA, .))
+
+# RESQUIN (Response Quality Indicators)
+orgpar_resquin <- resquin(orgpar)
+
+# Non-differentiation/Straightlining
+orgpar_resquin$slining_2 <- NA 
+orgpar_resquin$slining_2[orgpar_resquin$ips_sd == 0] <- 1
+orgpar_resquin$slining_2[orgpar_resquin$ips_sd != 0] <- 0
+straightlining_orgpar <- mean(orgpar_resquin$slining_2 == 1, na.rm = TRUE)  # 23% straightlining
+
+# Summary of response quality indicators
+summary(orgpar_resquin)
+
+# RESTIN (Response Style Indicators)
+orgpar_restin <- restin(orgpar, 1, 4, normalize = TRUE)
+
+# Summary of response style indicators
+summary(orgpar_restin)
+
+# Bind the results
+orgpar <- bind_cols(orgpar, orgpar_resquin, orgpar_restin)
+```
+### Interpretation
+
+- **Straightlining Behavior:**
+  - 23% of respondents exhibited straightlining behavior. This is not necessarily indicative of low data quality but may reflect the fact that many respondents do not participate in organizations and answered with "never".
+
+- **Response Styles:**
+  - **Middle Responses (MRS):**
+    - Not calculated because the response scale lacks a midpoint.
+  - **Acquiescence (ARS):**
+    - 14% of responses indicate a tendency to agree with statements.
+  - **Disacquiescence (DRS):**
+    - 86% of responses indicate a tendency to disagree with statements.
+  - **Extreme Responses (ERS):**
+    - 82% of responses were at the extreme ends of the scale.
+  - **Non-extreme Responses (NERS):**
+    - 18% of responses were at the extreme ends of the scale.
+
+
+High levels of straightlining or extreme responding might reflect valid answers due to the nature of the questions. Removing or excluding these responses could lead to biased estimates.
+
+## Assessing Data Quality for Trust in Institutions
+
+```{r}
+# Subset and clean the dataset
+trustinst <- data %>%
+  select(bbzc078a:bbzc087a) %>% 
+  mutate_all(~ifelse(. %in% c(-11, -22, -33, -55, -77, -88, -99, -111), NA, .))
+
+# RESQUIN (Response Quality Indicators)
+trustinst_resquin <- resquin(trustinst)
+
+# Non-differentiation/Straightlining
+trustinst_resquin$slining_3 <- NA 
+trustinst_resquin$slining_3[trustinst_resquin$ips_sd == 0] <- 1
+trustinst_resquin$slining_3[trustinst_resquin$ips_sd != 0] <- 0
+straightlining_trustinst <- mean(trustinst_resquin$slining_3 == 1, na.rm = TRUE)  # 5% straightlining
+
+# Summary of response quality indicators
+summary(trustinst_resquin)
+
+# RESTIN (Response Style Indicators)
+trustinst_restin <- restin(trustinst, 1, 7, normalize = TRUE)
+
+# Summary of response style indicators
+summary(trustinst_restin)
+
+# Bind the results
+trustinst <- bind_cols(trustinst, trustinst_resquin, trustinst_restin)
+```
+
+### Interpretation
+
+- **Straightlining Behavior:**
+  - 5% of respondents exhibited straightlining behavior. This suggests low levels of straightlining in responses, which is generally favorable for data quality.
+
+- **Response Styles:**
+  - **Middle Responses:**
+    - 24% of responses were at the midpoint of the scale.
+  - **Acquiescence:**
+    - 33% of responses indicate a tendency to agree with statements.
+  - **Disacquiescence:**
+    - 43% of responses indicate a tendency to disagree with statements.
+  - **Extreme Responses:**
+    - 14% of responses were at the extreme ends of the scale.
+  - **Non-extreme Responses:**
+    - 86% of responses were at the midpoint of the scale.
+
+The data shows that the majority of respondents did not exhibit extreme response styles or straightlining behavior, which generally indicates good data quality. The moderate levels of acquiescence and disacquiescence suggest a balanced range of opinions on trust in institutions, with some tendency towards agreement and others towards disagreement. The presence of middle responses reflects a portion of respondents who are undecided or neutral about their trust levels.
+
+Overall, the indicators suggest that while there is some variability in responses, the data appears to be of reasonable quality. However, it's important to consider these response styles when analyzing the relationship between trust in institutions and other variables to ensure that conclusions are not biased by response patterns.
+
+## Summary of Findings and Considerations
+
+This analysis using the DQAres package has highlighted the importance of examining response quality indicators. Key findings include:
+
+- **Straightlining:** High straightlining percentages are not always indicative of low-quality data but may reflect genuine patterns in responses.
+- **Extreme Responding:** High extreme response rates may represent polarized opinions rather than poor data quality.
+- **Response Styles:** Indicators such as acquiescence and disacquiescence offer insights into response tendencies but should be interpreted contextually.
+
+**Important Note:** Removing responses based on perceived quality without considering the context could introduce bias into your analysis. Always interpret these indicators carefully and consider their implications for your research findings.
+
+## Conclusion
+
+This tutorial has demonstrated how to assess response quality using the GESIS Panel Campus File and the DQAres package. By carefully analyzing straightlining, response styles, and other indicators, researchers can better understand the quality of their data and make informed decisions about their analyses.
+
