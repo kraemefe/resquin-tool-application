@@ -36,6 +36,8 @@ Political trust is measured with a 10-item scale and a 7-point Likert response s
 
 <!-- something is wrong here!! Some of the variable names and labels don't match with the ones in the codebook. Did you make this list based on the data? Either the GP codebook is wrong or the list here. Please double check -->
 
+Participation in organizations
+
 Environmental attitudes are measured with the established NEP (New Ecological Paradigm) scale (Reference) comprising 15 items on different aspects of environmental or climate attitudes. The multi-item scale uses a 5-point Likert response scale.
 
 **NEP scale:** Environmental attitudes
