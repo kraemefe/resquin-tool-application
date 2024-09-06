@@ -10,7 +10,7 @@ output:
 ## Introduction 
 
 Psychological constructs, political or social attitudes as well as behavioral patterns are often measured by using multi-item scales in questionnaires. Multi-item scales comprise several items, questions, or statements that assess different aspects of the same underlying construct, i.e., gender-role attitudes or attitudes toward foreigners. Main concerns of multi-item scales usually revolve around the validity of the measurement instrument itself, i.e., do the several questions/items reflect the underlying construct or in other words: Does the scale really measure what it intends to measure? Established scales usually underwent a series of analyses and revisions to assess and ensure the validity and reliability of the measurement instrument. Nevertheless, collected data from these scales can still suffer from bias resulting from poor response behavior. Before analyzing data from these scales and drawing conclusions regarding a substantive research question, the quality of survey responses to these scales should be examined to avoid bias and ensure the validity of your results.
-In this tutorial, we will focus on the relationship between the two concepts of political/institutional trust and environmental attitudes which both are measured by multi-item scales and assess the quality of given responses to these scales.
+In this tutorial, we will focus on the relationship between the concepts of political/institutional trust and environmental attitudes which both are measured by multi-item scales and assess the quality of given responses to these scales.
 
 
 ## Data and Measurement Instruments
@@ -22,24 +22,32 @@ Political trust is measured with a 10-item scale and a 7-point Likert response s
 
 **Trust in Institutions:** Trust in various political institutions.
    **Items:**
-    - bbzc078a: Trust in government
-    - bbzc079a: Trust in judiciary
-    - bbzc080a: Trust in police
-    - bbzc081a: Trust in media
-    - bbzc082a: Trust in parliament
-    - bbzc083a: Trust in political parties
-    - bbzc084a: Trust in NGOs
+    - bbzc078a: Trust in Bundestag
+    - bbzc079a: Trust in federal government
+    - bbzc080a: Trust in political parties
+    - bbzc081a: Trust in judicial authorities
+    - bbzc082a: Trust in police
+    - bbzc083a: Trust in politicians
+    - bbzc084a: Trust in media
     - bbzc085a: Trust in European Union
     - bbzc086a: Trust in United Nations
-    - bbzc087a: Trust in religious institutions
+    - bbzc087a: Trust in Federal Constitutional Court
    **Response Scale:** 1 = Don’t trust at all -  7 = Entirely trust
 
-<!-- something is wrong here!! Some of the variable names and labels don't match with the ones in the codebook. Did you make this list based on the data? Either the GP codebook is wrong or the list here. Please double check -->
+<!-- Items checked and replaced -->
 
 Environmental attitudes are measured with the established NEP (New Ecological Paradigm) scale (Reference) comprising 15 items on different aspects of environmental or climate attitudes. The multi-item scale uses a 5-point Likert response scale.
 
 **NEP scale:** Environmental attitudes
-<!-- Fill in NEP Scale: Part of the core study on environmental behavior and attitudes -->
+  **Items:**
+    - bczd005a: NEP-scale: Approaching maximum number of humans
+    - bczd006a: NEP-scale: The right to adapt environment to the needs
+    - bczd007a: NEP-scale: Consequences of human intervention
+    - bczd008a: NEP-scale: Human ingenuity
+    - bczd009a: NEP-scale: Abuse of the environment by humans
+  **Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 = Don't agree; 5 = Fully disagree
+
+<!-- Fill in rest of the NEP Scale: you can find it in the codebook of the GESIS Panel Campus File (buzzword for search: "NEP") -->
 
 
 ## Assessing Response Quality Using Resquin
