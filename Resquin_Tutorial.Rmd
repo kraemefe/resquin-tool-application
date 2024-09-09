@@ -45,6 +45,17 @@ Environmental attitudes are measured with the established NEP (New Ecological Pa
     - bczd007a: NEP-scale: Consequences of human intervention
     - bczd008a: NEP-scale: Human ingenuity
     - bczd009a: NEP-scale: Abuse of the environment by humans
+    - bczd010a: NEP-scale: Sufficient natural resources
+    - bczd011a: NEP-scale: Equal rights for plants and animals
+    - bczd012a: NEP-scale: Balance of nature stable enough
+    - bczd013a: NEP-scale: Humans are subjected to natural laws
+    - bczd014a: NEP-scale: Environmental crisis greatly exaggerated
+    - bczd015a: NEP-scale: Earth is like spaceship
+    - bczd016a: NEP-scale: Humans were assigned to rule over nature
+    - bczd017a: NEP-scale: Balance of nature is very sensitive
+    - bczd018a: NEP-scale: Control nature
+    - bczd019a: NEP-scale: Environmental disaster
+
   **Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 = Don't agree; 5 = Fully disagree
 
 <!-- Fill in rest of the NEP Scale: you can find it in the codebook of the GESIS Panel Campus File (buzzword for search: "NEP") -->
@@ -100,7 +111,7 @@ Before delving into the analysis of response quality, let's have a first look at
 
 ```{r}
 # Load necessary packages for data preparation and analysis
-pacman::p_load(resquin, readr, tidyr, dplyr, ggplot2, psych, rmarkdown, corrr, corrtable, ggrepel) # I already deleted duplicates but do we really need all of them? I suggest we keep it as concise as possible and see again after finalizing the tutorial which packages are really needed
+pacman::p_load(readr, resquin, dplyr, ggplot2) # I already deleted duplicates but do we really need all of them? I suggest we keep it as concise as possible and see again after finalizing the tutorial which packages are really needed
 
 # Inspect responses to political trust scale
 trust_responses <- lapply(df[, c("variable1", "variable2", "variable3", ...)], function(x) table(x, useNA = "ifany"))
