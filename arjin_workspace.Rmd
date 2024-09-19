@@ -1,7 +1,7 @@
 ---
 title: '"Assessing Response Quality in Multi-Item Scales on Political Trust and Climate Attitudes "'
 author: "Arjin"
-date: "2024-09-13"
+date: "2024-09-19"
 output:
   html_document: default
   word_document: default
@@ -18,7 +18,7 @@ In this tutorial, we will focus on the relationship between the concepts of poli
 
 ## Data and Measurement Instruments
 
-For this tutorial, we use data from the GESIS Panel. The GESIS Panel is a German probability-based mixed-mode panel study which surveys respondents every three months on a variety of topics, such as political and social attitudes. We specifically use data from the 2nd and 3rd wave in 2014 from a sub-sample of the GESIS Panel (n=1,222). <!--adapt--> The data includes  multi-item measurements of political trust and environmental attitudes.
+For this tutorial, we use data from the GESIS Panel. The GESIS Panel is a German probability-based mixed-mode panel study which surveys respondents every three months on a variety of topics, such as political and social attitudes. We specifically use data from the 2nd and 3rd wave in 2014 from a sub-sample of the GESIS Panel (n=1,222). <!--adapted--> The data includes  multi-item measurements of political trust and environmental attitudes.
 
 
 Political trust is measured with a 10-item scale and a 7-point Likert response scale:
@@ -39,9 +39,9 @@ Political trust is measured with a 10-item scale and a 7-point Likert response s
 
 <!-- Items checked and replaced -->
 
-Environmental attitudes are measured with the established NEP (New Ecological Paradigm) scale @dunlap_et_al_2022 comprising 15 items on different aspects of environmental or climate attitudes. The multi-item scale uses a 5-point Likert response scale.
+Environmental attitudes are measured with the established NEP (New Ecological Paradigm) scale by @dunlap_et_al_2022 comprising 15 items on different aspects of environmental or climate attitudes. The multi-item scale uses a 5-point Likert response scale.
 
-<!-- reference added for NEP - should be checked though -->
+<!-- reference added for NEP - should be checked -->
 
 **NEP scale:** Environmental attitudes
   **Items:**
@@ -80,31 +80,34 @@ First, let's take a brief look on the two functions `resp_distributions` and `re
   -  ii_median_abs_dev: median absolute deviation across multiple items per respondent
   -  ii_sd: standard deviation across multiple items per respondent
   -  ii_var: variance across multiple items per respondent
-  -  mahal: Mahalanobis distance per respondent. <!--Mouseover: "Represents the distance of a respondents' answers from the center of a multivariate normal distribution. -->
+  -  mahal: Mahalanobis distance per respondent <!-- Mouseover: "Represents the distance of a respondents' answers from the center of a multivariate normal distribution. -->
 
+<!-- Mouseover could also be: "It calculates an average response pattern over the given set of items and produces a score for each respondent that measures how different their responses are from this average pattern. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the group. -->
   
 ### resp_styles
 
   -  MRS: Sum of mid-point responses across multiple items <!-- Mouseover: "Only if scale has a numeric mid-point" -->
   -  ARS: Acquiescence: Sum of responses above the middle response category across multiple items
-  -  DRS: Disacquiescence: Sum of responses below the middle response category across multiple items
+  -  DRS: Disacquiescence: Sum of responses below the middle response category across multiple items 
   -  ERS: Extreme responses: Sum of responses at the endpoint of the multi-item scale
   -  NERS: Non-extreme responses: Sum of responses between endpoints of the multi-item scale
+  
+  <!--  DRS is mentioned as DARS in the help page but dataframe returns it as DRS. I think this is a typo in the help page to be noted -->
 
 ## Getting started
 
 Alongside `resquin` itself, we will use several other packages for setup, data preparation and analysis in this tutorial. To easily install and load packages from the repository of CRAN, the Comprehensive R Archive Network, we can use `pacman` package:
 
-```{r install packages}
+```{r install CRAN packages}
 # Install and load pacman
 install.packages("pacman")
 library(pacman)
 
 # Install and load other CRAN packages using pacman
-pacman::p_load(devtools, pak, dplyr)
+pacman::p_load(devtools, pak, dplyr,ggplot2,tidyr,patchwork)
 ```
 
-As `resquin` is not currently stored in CRAN, we need to install the package from GitHub. For installation, we can use one of the following commands:
+Since `resquin` is not currently stored in CRAN, we need to install the package from GitHub. For installation, we can use one of the following commands:
 
 ```{r install resquin}
 # Installing resquin with devtools
@@ -112,6 +115,8 @@ devtools::install_github("https://github.com/MatRoth/resquin")
 
 # Installing resquin with pak
 pak::pak("https://github.com/MatRoth/resquin")
+# Load resquin into the R session
+library(resquin)
 ```
 
 After installation, we can import the survey data we want to analyze regarding its response quality. For both `resp_distributions` and `resp_styles` to calculate meaningful indicators, we need to import survey data in a wide format, i.e., with only one row per observation unit (respondent). For this tutorial, the raw data has already been uploaded to the GitHub repository and can be imported directly:
@@ -120,11 +125,14 @@ After installation, we can import the survey data we want to analyze regarding i
 raw_data <- read.csv("raw-data/ZA5666_v1-0-0.csv", header=TRUE, sep=";", na.strings="NA")
 ```
 
+<!-- csv format data is stored in the repository under "raw-data" file -->
+
 ##  Inspecting data
 
-Before delving into the analysis of response quality, let's have a first look at the distribution of given responses to both multi-item scales:
+Before delving into the analysis of response quality, let's have a first look at the distribution of given responses to both multi-item scales by subsetting the relevant items for each:
+<!-- as data is stored in an ordered manner, I used the indices instead of manually specifying each variable name -->
 
-```{r data preparation}
+```{r data inspection}
 # Subset and inspect responses to political trust scale
 start_col_trust_responses <- which(colnames(raw_data) == "bbzc078a")
 end_col_trust_responses <- which(colnames(raw_data) == "bbzc087a")
@@ -133,7 +141,7 @@ trust_responses <- raw_data[,start_col_trust_responses:end_col_trust_responses]
 # Print the results
 trust_responses
 
-# Subset and inspect responses NEP 
+# Subset and inspect responses to NEP scale 
 start_col_NEP_responses <- which(colnames(raw_data) == "bczd005a")
 end_col_NEP_responses <- which(colnames(raw_data) == "bczd019a")
 NEP_responses <- raw_data[,start_col_NEP_responses:end_col_NEP_responses]
@@ -144,9 +152,9 @@ NEP_responses
 
 ## Data preparation
 A first overview of the response distribution of both scales shows that there are several missing values which are not defined as NA yet. For `resquin` to calculate meaningful indicators, we have to make sure that missings are coded to NA before we run any analyses:
+<!-- Is the approach below -finding unique values to identify what's different from the scale values- okay, or should we simply state something like: "Based on the codebook, the following values represent missing data (-22, -33, -77, -99, -111) and will therefore be recoded as NA"? -->
 
-```{r recode NAs}
-
+```{r data preparation}
 # Get unique values for all items in the trust responses
 combined_unique_values_trust <- unique(unlist(lapply(trust_responses, unique)))
 
@@ -180,24 +188,23 @@ print(NEP)
 Now that we have prepared our data for analysis, we can proceed to the main analysis of response quality and calculate several response quality indicators using `resquin`. 
 Let's first look at the response distributions of both the institutional trust scale and the NEP scale in greater detail by using `resp_distributions`. We can use `resp_distributions` as follows:
 
-```{r}
+```{r resp_destributions default}
 # Calculate indicators of response distribution with resp_distribution
 
 # Institutional trust
 trust_distribution <- resp_distributions(trust)
 
-# Print results
-head(trust_distribution)
+# Print results for the first 10 respondents
+trust_distribution[1:10,]
 
 # Environmental attitudes 
 NEP_distribution <- resp_distributions(NEP)
 
 # Print results
-head(NEP_distribution)
-
+NEP_distribution[1:10,]
 ```
 
-`resp_distributions` returns a data frame containing the several indicators of response distribution per respondent (displayed as separate rows of the data frame). Inspecting the calculated indicators for the first 10 respondents in our data frame, we see that for x out of y respondents of the institutional trust scale and for x out of y respondents of the NEP scale <!-- adapt --> no parameters of central tendency (i.e., mean, median) or variability (i.e., ii.mean, ii_sd, ii_var, ii_median, ii_median_abs_dev, mahal) were calculated. The reason for this is that `resp_distributions` by default only calculates response distribution indicators for respondents who do not show any missing value in the analyzed multi-item scale. Accordingly, for all respondents who show a value higher than 0 for the indicator `n_na` (count of missing values), indicators of central tendency and variability are NA. 
+`resp_distributions` returns a data frame containing the several indicators of response distribution per respondent (displayed as separate rows of the data frame). Inspecting the calculated indicators for the first 10 respondents in our data frame, we see that for 1 out of 10 respondents of the institutional trust scale and for 1 out of 10 respondents of the NEP scale <!-- adapted acc. to the resulting data frame --> no parameters of central tendency (i.e., ii_mean, ii_median) or variability (i.e., ii_sd, mahal) <!-- adapted acc. to the help page of the function --> were calculated. The reason for this is that `resp_distributions` by default only calculates response distribution indicators for respondents who do not show any missing value in the analyzed multi-item scale. Accordingly, for all respondents who show a value higher than 0 for the indicator `n_na` (count of missing values), indicators of central tendency and variability are NA. 
 By specifying the option `min_valid_responses`, respondents with missing values in the multi-item scale can be included in the analysis of response quality. `min_valid_responses` takes on a numeric value between 0 and 1 and defines the share of valid responses a respondent must have to calculate the respective indicators of response distribution. 
 We first proceed with the inspection of response distribution indicators only for those respondents who show no missing values for the institutional trust and environmental attitudes scale.
 
@@ -210,6 +217,41 @@ summary(trust_distribution)
 # Summarize results over all respondents
 summary(NEP_distribution)
 ```
+
+```{r}
+
+# Reshape the data for density and box plots
+trust_distribution_long <- pivot_longer(trust_distribution, 
+                                         cols = c("ii_mean", "ii_sd", "ii_median", "mahal"), 
+                                         names_to = "Indicator", 
+                                         values_to = "Value")
+
+# Remove non-finite values
+trust_distribution_long <- trust_distribution_long %>%
+  filter(!is.na(Value) & is.finite(Value))
+
+# Calculate mean for each Indicator
+mean_values <- trust_distribution_long %>%
+  group_by(Indicator) %>%
+  summarize(mean_value = mean(Value, na.rm = TRUE))
+
+# Create combined boxplot and density plot with a dashed line for each mean
+ggplot(trust_distribution_long, aes(x = Value, y = ..scaled..)) +
+  geom_density(aes(y = ..scaled..), alpha = 0.5) +
+  geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
+  geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
+  scale_color_manual(values = c("Mean" = "black")) +
+  facet_wrap(~ Indicator, scales = "free") +
+  labs(title = "Combined Density and Box Plots of Indicators with Mean Values",
+       x = "Value",
+       y = "Scaled Density / Boxplot") +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank()) # Remove legend title
+
+```
+
+
 
 ## Indicators of response distribution
 Let's have a closer look at the response distributions of the institutional trust scale and the NEP scale across all respondents: 

@@ -1,0 +1,38 @@
+1. How to name the waves bb and bc?
+
+2. Where and how to store the data? What to include etc. 
+
+3. Should we cite the data?
+
+4. In which format we should download the data?
+
+5. We may upload data after the first introductory paragraph?
+
+6. Should I include the references for example for NEP?
+
+7. Fill in the rest of NEP scale it says but it seems okay sofar...
+
+8. FOr example the explanation of the mahal could include that the more the socre the higher dissimilarity etc. 
+
+9. Some pacakages should be uploaded before hand.. such as "pak"
+
+10. Should we include codebook etc to the repository github?
+
+11. Check https://quarto.org/ for the final outcome expected from this task
+
+12. Should we more precisely address research question?
+
+
+
+
+List of packages"
+- pak
+- dplyr
+- haven if will use dta
+
+
+What I did:
+
+- included citation document and reference header in the end
+- uploaded csv data in a file in repository
+
