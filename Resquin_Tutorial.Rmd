@@ -15,7 +15,7 @@ In this tutorial, we will focus on the relationship between the concepts of poli
 
 ## Data and Measurement Instruments
 
-For this tutorial, we use data from the GESIS Panel. The GESIS Panel is a German probability-based mixed-mode panel study which surveys respondents every three months on a variety of topics, such as political and social attitudes. We specifically use data from the xth and yth wave in 2014 from a sub-sample of the GESIS Panel (n=1,222). <!--adapt--> The data includes  multi-item measurements of political trust and environmental attitudes.
+For this tutorial, we use data from the GESIS Panel. The GESIS Panel is a German probability-based mixed-mode panel study which surveys respondents every three months on a variety of topics, such as political and social attitudes. We specifically use data from the xth and yth wave in 2014 from a sub-sample of the GESIS Panel (n=1,222). <!--adapt--> The data includes multi-item measurements of political trust and environmental attitudes.
 
 
 Political trust is measured with a 10-item scale and a 7-point Likert response scale:
@@ -312,7 +312,7 @@ Looking at the response styles indicators across all respondents of the NEP scal
 Although `resquin` and `resp_styles` is typically designed for multi-item scales or matrix questions that share the same question introduction and response scale, it is also possible to evaluate "stand-alone" survey questions (e.g., attitudes toward governmental spending, attitudes toward social policies) from a broader topic (e.g., political attitudes) together. If you want to do so, it is crucial to only investigate those "stand-alone" questions together which have the same number of response options. Also, you want to make sure that the questions are not separated from each other in the questionnaire but are in a consecutive order. As long as the several questions are sequential and share the same response scale range, it is possible to calculate meaningful indicators of certain response styles, for example mid-point or extreme point responding.
 
 
-## Conclusion and recommendations for further analyses
+## Conclusion and recommendations
 
 <!-- I like the overall structure of the section but content-wise we need to discuss things differently. Let's see what results we get with the new measures and adapt then -->
 
