@@ -1,10 +1,12 @@
 ---
 title: '"Assessing Response Quality in Multi-Item Scales on Political Trust and Climate Attitudes "'
 author: "Fabienne"
-date: "2024-08-14"
+date: "2024-09-24"
 output:
   html_document: default
   word_document: default
+bibliography: citation.bib
+biblio-style: apsr
 ---
 
 ## Introduction 
@@ -15,12 +17,16 @@ In this tutorial, we will focus on the relationship between the concepts of poli
 
 ## Data and Measurement Instruments
 
-For this tutorial, we use data from the GESIS Panel. The GESIS Panel is a German probability-based mixed-mode panel study which surveys respondents every three months on a variety of topics, such as political and social attitudes. We specifically use data from the xth and yth wave in 2014 from a sub-sample of the GESIS Panel (n=1,222). <!--adapt--> The data includes multi-item measurements of political trust and environmental attitudes.
+For this tutorial, we use data from the GESIS Panel. The GESIS Panel is a German probability-based mixed-mode panel study which surveys respondents every three months on a variety of topics, such as political and social attitudes. We specifically use data from the 2nd and 3rd wave in 2014 from a sub-sample of the GESIS Panel (n=1,222). The data includes multi-item measurements of political trust and environmental attitudes.
+
+<!--side remark-->
+This sub-sample of the GESIS Panel is publicly accessible as the GESIS Panel Campus File <!--reference-->. It contains a random 25% sample of the GESIS panel members surveyed in 2014 and comprises only a limited selection of variables from the orginial GESIS Panel scientific use file. 
 
 
 Political trust is measured with a 10-item scale and a 7-point Likert response scale:
 
 **Trust in Institutions:** Trust in various political institutions.
+How much do you personally trust the following public institutions or groups?
    **Items:**
     - bbzc078a: Trust in Bundestag
     - bbzc079a: Trust in federal government
@@ -34,11 +40,11 @@ Political trust is measured with a 10-item scale and a 7-point Likert response s
     - bbzc087a: Trust in Federal Constitutional Court
    **Response Scale:** 1 = Don’t trust at all -  7 = Entirely trust
 
-<!-- Items checked and replaced -->
 
-Environmental attitudes are measured with the established NEP (New Ecological Paradigm) scale (Reference) comprising 15 items on different aspects of environmental or climate attitudes. The multi-item scale uses a 5-point Likert response scale.
+Environmental attitudes are measured with the established NEP (New Ecological Paradigm) scale by @dunlap_et_al_2022 comprising 15 items on different aspects of environmental or climate attitudes. The multi-item scale uses a 5-point Likert response scale.
 
 **NEP scale:** Environmental attitudes
+To what extent do you agree or disagree with the following statements?
   **Items:**
     - bczd005a: NEP-scale: Approaching maximum number of humans
     - bczd006a: NEP-scale: The right to adapt environment to the needs
@@ -58,63 +64,72 @@ Environmental attitudes are measured with the established NEP (New Ecological Pa
 
   **Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 = Don't agree; 5 = Fully disagree
 
-<!-- Fill in rest of the NEP Scale: you can find it in the codebook of the GESIS Panel Campus File (buzzword for search: "NEP") -->
 
 
-## Assessing Response Quality Using Resquin
+## Assessing Response Quality and Response Quality Indicators
 
-To ensure unbiased conclusions regarding a substantial relationship between two construct, we advise to initially investigate the quality of given responses to a measurement instrument. To investigate response quality in the present multi-item scales and identify low-quality responses, we will use the `Resquin` package in R. The `resquin` package comprises several functions to calculate response quality indicators for multi-item scales. The quality indicators are calculated per respondent. In this tutorial, we will specifically use the `resp_distributions` (indicators of response distribution) and `resp_styles`(response style indicators) functions, which are designed to assess response quality based on response distribution and identifying certain response biases, such as mid-point or extreme response styles.
+To ensure unbiased conclusions regarding a substantial relationship between two construct, we advise to initially investigate the quality of given responses to a measurement instrument. There are several indicators which can help identify low-quality responses and assess the response quality in multi-item scales.
 
-First, let's take a brief look on the two functions `resp_distributions` and `resp_styles` of `resquin` and the response quality indicators it will calculate:
+In this case, we will specifically look at several indicators of response distribution, such as
 
-### resp_distribution
+  -  n_na: the count of missing answers across multiple items per respondent or
+  -  prop_na: the proportion of missing responses across multiple items per respondent
+  -  ii_mean: the mean over multiple items per respondent
+  -  ii_median: the median over multiple items per respondent
+  -  ii_sd: the standard deviation across multiple items per respondent
+  -  mahal: the mahalanobis distance per respondent. 
+<!-- Mouseover: "Represents the distance of a respondents' answers from the center of a multivariate normal distribution. -->
 
-  -  n_valid: count of valid answers across multiple items per respondent
-  -  n_na: count of missing answers across multiple items per respondent
-  -  prop_na: proportion of missing responses across multiple items per respondent
-  -  ii_mean: mean over multiple items per respondent
-  -  ii_median: median over multiple items per respondent
-  -  ii_median_abs_dev: median absolute deviation across multiple items per respondent
-  -  ii_sd: standard deviation across multiple items per respondent
-  -  ii_var: variance across multiple items per respondent
-  -  mahal: Mahalanobis distance per respondent. <!--Mouseover: "Represents the distance of a respondents' answers from the center of a multivariate normal distribution. -->
+<!-- Mouseover could also be: "It calculates an average response pattern over the given set of items and produces a score for each respondent that measures how different their responses are from this average pattern. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the group. -->
 
-  
-### resp_styles
+Apart from peculiarities in the response distribution of our multi-item scales, we will further consider indicators of different response biases, namely:
 
-  -  MRS: Sum of mid-point responses across multiple items <!-- Mouseover: "Only if scale has a numeric mid-point" -->
-  -  ARS: Acquiescence: Sum of responses above the middle response category across multiple items
-  -  DRS: Disacquiescence: Sum of responses below the middle response category across multiple items
-  -  ERS: Extreme responses: Sum of responses at the endpoint of the multi-item scale
-  -  NERS: Non-extreme responses: Sum of responses between endpoints of the multi-item scale
+  - MRS: Indicator of mid-point response bias (tendency to select the neutral/middle option on a scale); indicates sum of mid-point responses across multiple items <!-- Mouseover: "Only if scale has a numeric mid-point" -->
+  - ARS: Indicator of acquiescence bias (tendency to agree with statements irrespective of actual views); indicates sum of responses above the scale mid-point across multiple items  <!-- Mouseover: "Only for scales with agree-disagree format" -->
+  - ERS: Indicator of extreme response bias (tendency to select most extreme response options on a scale); indicates sum of responses at both endpoints of the multi-item scale.
+
+
+To calculate these indicators for the assessment of response quality of our multi-item scales, we will use the `Resquin` package in R. The `resquin` package comprises several functions to calculate response quality indicators for multi-item scales. The quality indicators are calculated per respondent. Specifically, we will use the two functions `resp_distributions` (indicators of response distribution) and `resp_styles`(response style indicators), designed to assess response quality based on response distribution and identifying certain response biases.
+
 
 ## Getting started
-To use `resquin`, we first have to install the package from github. For installation, we can use one of the following commands:
+Alongside `resquin` itself, we will use other packages for setup, data preparation and analysis in this tutorial. To install and load these packages from the repository of CRAN, the Comprehensive R Archive Network, we will use the `pacman` package:
 
-```{r}
+```{r install CRAN packages}
+# Install and load pacman
+install.packages("pacman")
+library(pacman)
+
+# Install and load other CRAN packages using pacman
+pacman::p_load(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr)
+```
+
+To use `resquin`, we need to install the package from GitHub. For installation, we can use one of the following commands: <!--resquin is now also on CRAN so we could also adapt this -->
+
+```{r install resquin}
 # Installing resquin with devtools
 devtools::install_github("https://github.com/MatRoth/resquin")
 
 # Installing resquin with pak
 pak::pak("https://github.com/MatRoth/resquin")
+# Load resquin into the R session
+library(resquin)
 ```
 
-After installation, we can import the survey data we want to analyze regarding its response quality. For both `resp_distributions` and `resp_styles` to calculate meaningful indicators, we need to import survey data in a wide format, i.e., with only one row per observation unit (respondent). For this tutorial, we import our data set directly from github:
-```{r}
+After installation, we can import the survey data we want to analyze regarding its response quality. For both `resp_distributions` and `resp_styles` to calculate meaningful indicators, we need to import survey data in a wide format, i.e., with only one row per observation unit (respondent). For this tutorial, we import our data set directly from github: <!--maybe let's rename the data for better usability -->
+
+```{r import data}
 # Import data from github
-data <- read_dta("ZA5666_v1-0-0_Stata14.dta") #needs updating after github folder is created and dataset is stored there. I would also use the csv-file here and import it as such. When using R it is more common to import the csv-file instead of mixing different data formats (.dta being the format for Stata)
+raw_data <- read.csv("raw-data/ZA5666_v1-0-0.csv", header=TRUE, sep=";", na.strings="NA")
 ```
 
 ##  Inspecting data
 Before delving into the analysis of response quality, let's have a first look at the distribution of given responses to both multi-item scales:
 
 
-```{r}
-# Load necessary packages for data preparation and analysis
-pacman::p_load(readr, resquin, dplyr, ggplot2) # I already deleted duplicates but do we really need all of them? I suggest we keep it as concise as possible and see again after finalizing the tutorial which packages are really needed
-
+```{r data inspection}
 # Inspect responses to political trust scale
-trust_responses <- lapply(df[, c("variable1", "variable2", "variable3", ...)], function(x) table(x, useNA = "ifany"))
+trust_responses <- lapply(raw_data[, c("bbzc078a", "bbzc079a", "bbzc080a", "bbzc081a", "bbzc082a", "bbzc083a", "bbzc084a", "bbzc085a", "bbzc086a", "bbzc087a")], function(x) table(x, useNA = "ifany"))
  
 # Print the results
 trust_responses
