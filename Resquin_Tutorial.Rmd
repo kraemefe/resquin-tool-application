@@ -9,6 +9,9 @@ bibliography: citation.bib
 biblio-style: apsr
 ---
 
+# At a glance
+<!--summary of main take home messages and lessons to be learned in this tutorial-->
+
 ## Introduction 
 
 Psychological constructs, political or social attitudes as well as behavioral patterns are often measured by using multi-item scales in questionnaires. Multi-item scales comprise several items, questions, or statements that assess different aspects of the same underlying construct, i.e., gender-role attitudes or attitudes toward foreigners. Main concerns of multi-item scales usually revolve around the validity of the measurement instrument itself, i.e., do the several questions/items reflect the underlying construct or in other words: Does the scale really measure what it intends to measure? Established scales usually underwent a series of analyses and revisions to assess and ensure the validity and reliability of the measurement instrument. Nevertheless, collected data from these scales can still suffer from bias resulting from poor response behavior. Before analyzing data from these scales and drawing conclusions regarding a substantive research question, the quality of survey responses to these scales should be examined to avoid bias and ensure the validity of your results.
@@ -93,27 +96,24 @@ To calculate these indicators for the assessment of response quality of our mult
 
 
 ## Getting started
-Alongside `resquin` itself, we will use other packages for setup, data preparation and analysis in this tutorial. To install and load these packages from the repository of CRAN, the Comprehensive R Archive Network, we will use the `pacman` package:
+To use `resquin`, we first need to install the package from the repository of CRAN, the Comprehensive R Archive Network. For installation, we can use the following commands:
+
+```{r install resquin}
+# Installing resquin
+install.packages("resquin")
+# Loading resquin into the R session
+library(resquin)
+```
+
+Alongside `resquin` itself, we will use other packages for setup, data preparation and analysis in this tutorial. To install and load these packages from CRAN simultaneously, we will use the `pacman` package:
 
 ```{r install CRAN packages}
-# Install and load pacman
+# Installing pacman and loading pacman into the R session
 install.packages("pacman")
 library(pacman)
 
 # Install and load other CRAN packages using pacman
 pacman::p_load(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr)
-```
-
-To use `resquin`, we need to install the package from GitHub. For installation, we can use one of the following commands: <!--resquin is now also on CRAN so we could also adapt this -->
-
-```{r install resquin}
-# Installing resquin with devtools
-devtools::install_github("https://github.com/MatRoth/resquin")
-
-# Installing resquin with pak
-pak::pak("https://github.com/MatRoth/resquin")
-# Load resquin into the R session
-library(resquin)
 ```
 
 After installation, we can import the survey data we want to analyze regarding its response quality. For both `resp_distributions` and `resp_styles` to calculate meaningful indicators, we need to import survey data in a wide format, i.e., with only one row per observation unit (respondent). For this tutorial, we import our data set directly from github: <!--maybe let's rename the data for better usability -->
@@ -128,14 +128,24 @@ Before delving into the analysis of response quality, let's have a first look at
 
 
 ```{r data inspection}
+# Creating subset of political trust scale
+start_col_trust <- which(colnames(raw_data) == "bbzc078a")
+end_col_trust <- which(colnames(raw_data) == "bbzc087a")
+trust <- raw_data[,start_col_trust:end_col_trust]
+ 
+# Creating subset of NEP scale
+start_col_NEP <- which(colnames(raw_data) == "bczd005a")
+end_col_NEP <- which(colnames(raw_data) == "bczd019a")
+NEP <- raw_data[,start_col_NEP:end_col_NEP]
+
 # Inspect responses to political trust scale
-trust_responses <- lapply(raw_data[, c("bbzc078a", "bbzc079a", "bbzc080a", "bbzc081a", "bbzc082a", "bbzc083a", "bbzc084a", "bbzc085a", "bbzc086a", "bbzc087a")], function(x) table(x, useNA = "ifany"))
+trust_responses <- lapply(trust, function(x) table(x, useNA = "ifany"))
  
 # Print the results
 trust_responses
 
 # Inspect responses to NEP 
-NEP_responses <- lapply(df[, c("variable1", "variable2", "variable3", ...)], function(x) table(x, useNA = "ifany"))
+NEP_responses <- lapply(NEP, function(x) table(x, useNA = "ifany"))
  
 # Print the results
 NEP_responses
@@ -144,22 +154,32 @@ NEP_responses
 ## Data preparation
 A first overview of the response distribution of both scales shows that there are several missing values which are not defined as NA yet. For `resquin` to calculate meaningful indicators, we have to make sure that missings are coded to NA before we run any analyses:
 
-```{r}
-# Creating subsets of the data for analysis and recoding missing values to NA
+```{r data preparation}
+# Get unique values for responses to political trust scale
+unique_values_trust <- unique(unlist(lapply(trust, unique)))
 
-# Subset the data to responses on institutional trust
-trust <- data %>%
-  select(variable1, variable2, variable3)
+# Print the unique values sorted in an ascending order
+sort(unique_values_trust)
 
-# Recode missing values to NA for the selected items
+# Recode missing values to NA for responses to political trust scale
 trust <- trust %>%
-  mutate(across(everything(), ~ replace(., . %in% c(-22, -33, -99, ...), NA)))
+  mutate(across(everything(), ~ replace(., . %in% c(-22, -33, -77, -99, -111), NA)))
 
-# View the new subsetted data frame
+# View the new recoded data frame
 print(trust)
 
-# Do the same for the NEP scale
-#....
+# Get unique values for responses to NEP scale
+unique_values_NEP <- unique(unlist(lapply(NEP, unique)))
+
+# Print the unique values sorted in an ascending order
+sort(unique_values_NEP)
+
+# Recode missing values to NA for responses to NEP scale
+NEP <- NEP %>%
+  mutate(across(everything(), ~ replace(., . %in% c(-22, -33, -77, -99, -111), NA)))
+
+# View the new recoded data frame
+print(NEP)
 ```
 
 ## Calculating indicators of response distribution
@@ -184,9 +204,12 @@ head(NEP_distribution)
 
 ```
 
-`resp_distributions` returns a data frame containing the several indicators of response distribution per respondent (displayed as separate rows of the data frame). Inspecting the calculated indicators for the first 10 respondents in our data frame, we see that for x out of y respondents of the institutional trust scale and for x out of y respondents of the NEP scale <!-- adapt --> no parameters of central tendency (i.e., mean, median) or variability (i.e., ii.mean, ii_sd, ii_var, ii_median, ii_median_abs_dev, mahal) were calculated. The reason for this is that `resp_distributions` by default only calculates response distribution indicators for respondents who do not show any missing value in the analyzed multi-item scale. Accordingly, for all respondents who show a value higher than 0 for the indicator `n_na` (count of missing values), indicators of central tendency and variability are NA. 
+<!--Info box-->
+*Package-specific feature*
+`resp_distributions` returns a data frame containing the several indicators of response distribution per respondent (displayed as separate rows of the data frame). Inspecting the calculated indicators for the first 10 respondents in our data frame, we see that for 1 out of 10 respondents of the institutional trust scale and for 1 out of 10 respondents of the NEP scale no parameters of central tendency (i.e., ii_mean, ii_median) or variability (i.e., ii_sd, mahal) were calculated. The reason for this is that `resp_distributions` by default only calculates response distribution indicators for respondents who do not show any missing value in the analyzed multi-item scale. Accordingly, for all respondents who show a value higher than 0 for the indicator `n_na` (count of missing values), indicators of central tendency and variability are NA. 
 By specifying the option `min_valid_responses`, respondents with missing values in the multi-item scale can be included in the analysis of response quality. `min_valid_responses` takes on a numeric value between 0 and 1 and defines the share of valid responses a respondent must have to calculate the respective indicators of response distribution. 
-We first proceed with the inspection of response distribution indicators only for those respondents who show no missing values for the institutional trust and environmental attitudes scale.
+
+We proceed with the inspection of response distribution indicators only for those respondents who show no missing values for the institutional trust and environmental attitudes scale.
 
 
 To make statements about the response distribution of institutional trust and environmental attitudes across *all respondents*, we have to calculate summary statistics for each indicator in the data frame produced by `resp_distributions`.
