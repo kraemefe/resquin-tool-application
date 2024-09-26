@@ -22,6 +22,10 @@
 
 12. Should we more precisely address research question?
 
+13.!! What about mentioning min_valid_responses in the place where its first mentioned?
+
+14. abstract in the beginning with bulletpoints
+
 
 
 
