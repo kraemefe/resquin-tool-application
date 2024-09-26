@@ -255,6 +255,7 @@ ggplot(trust_distribution_long, aes(x = Value, y = ..scaled..)) +
 
 The density and box plots provide a quick visualization of central tendency and variability across all indicators. Box plots highlight key summary statistics like the median, quartiles, and potential outliers, while density plots complement this by showing the distribution shape and peaks. Together, they give a fuller picture of how responses are distributed.
 
+
 ## Indicators of response distribution for Institutional Trust 
 
 The `resp_distributions` function provides two measures of **central tendency**: `ii_mean` (average response) and `ii_median` (central response) for each respondent across the 10-item scale (ranging from 1 to 7).
@@ -461,7 +462,7 @@ Generally, the more complete data we have from respondents on a certain multi-it
 **Be careful**
 We advise to specify the cut-offs regarding how many valid answers a respondent should have depending on the number of items in your scale and to consider higher cut-offs or excluding respondents with NAs completely if the scale comprises only a few items. Nevertheless, specifying cut-offs for valid responses is more or less arbitrary and should always be considered after looking at the data. In any case, make sure to thoroughly document and report which cut-off you used to exclude respondents from the analysis. <!-- get feedback from Henning on this -->
 
-
+<!-- this following code and interpretation paragraph would then be obsolete and we could delete it :-) -->
 ```{r}
 
 # Calculate indicators of response distribution with resp_distribution for all respondents with at least 80% valid responses
@@ -501,6 +502,8 @@ After investigating the response distribution of both the institutional trust sc
   - **Disacquiescence (DRS):** Tendency to disagree with statements
   - **Extreme Response Style (ERS):** Tendency to select the endpoints of a response scale
   - **Non-extreme Response Style (NERS):** Tendency to avoid selecting the endpoints of a response scale
+
+<!-- Let's not look at non-extreme responses style - I personally think it would be confusing to interpret it together with extreme response style since it's the inverse of it -->
   
 To use `resp_styles`, we first need to specify the range of the response scale of the underlying multi-item scale or matrix question. Only with information on the range, and therefore existence of a mid-point and the endpoints of the response scale, `resp_styles` can calculate indicators for the different response styles. Similar to `resp_distributions`, we can additionally specify how many valid responses respondents should show on the multi-item scale (`min_valid_responses`) to calculate response style indicators. To enable the calculation of all response style indicators per respondent, we only include those respondents who show no NAs across items. We can further determine whether we want `resp_styles` to simply return the counts of each response style across items or if it should return the proportion of a specific response behavior out of all the items a respondent has answered. Although the proportion of a certain response behavior is generally more informative than the mere count, we specify the option `normalize = FALSE` for our analysis in this tutorial.
 
@@ -544,7 +547,7 @@ Looking at the response styles indicators across all respondents of the NEP scal
 
 <!--Info box --> 
 **Good to know**
-Although `resquin` and `resp_styles` is typically designed for multi-item scales or matrix questions that share the same question introduction and response scale, it is also possible to evaluate "stand-alone" survey questions (e.g., attitudes toward governmental spending, attitudes toward social policies) from a broader topic (e.g., political attitudes) together. If you want to do so, it is crucial to only investigate those "stand-alone" questions together which have the same number of response options. Also, you want to make sure that the questions are not separated from each other in the questionnaire but are in a consecutive order. As long as the several questions are sequential and share the same response scale range, it is possible to calculate meaningful indicators of certain response styles, for example mid-point or extreme point responding.
+Although `resquin` and is typically designed for multi-item scales or matrix questions that share the same question introduction and response scale, it is also possible to evaluate "stand-alone" survey questions (e.g., attitudes toward governmental spending, attitudes toward social policies) from a broader topic (e.g., political attitudes) together. If you want to do so, it is crucial to only investigate those "stand-alone" questions together which have the same number of response options. Also, you want to make sure that the questions are not separated from each other in the questionnaire but are in a consecutive order. As long as the several questions are sequential and share the same response scale range, it is possible to calculate meaningful indicators of certain response styles, for example mid-point or extreme point responding.
 
 
 ## Conclusion and recommendations for further analyses
