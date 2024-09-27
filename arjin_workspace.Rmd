@@ -315,7 +315,7 @@ NEP_distribution <- resp_distributions(NEP)
 NEP_distribution[1:10,]
 ```
 
-<!--Info box-->
+<!--Info box start-->
 
 ***Package-specific feature***
 
@@ -338,8 +338,6 @@ values in the multi-item scale can be included in the analysis of
 response quality. `min_valid_responses` takes on a numeric value between
 0 and 1 and defines the share of valid responses a respondent must have
 to calculate the respective indicators of response distribution.
-
-<!--Info box -->
 
 ***Be careful!***
 
@@ -366,6 +364,8 @@ cut-off you used to exclude respondents from the analysis.
 
 <!-- We aim to shortly explain that this option exists and what it does. But that we generally recommend to exclude respondents with NAs, especially if the number of items in the multi-item scale is below 10. -->
 
+<!--Info box end-->
+
 We will proceed with the inspection of response distribution indicators
 only for those respondents who show no missing values for the
 institutional trust and environmental attitudes scale.
@@ -385,7 +385,7 @@ indicate unusual response patterns.
 
 Let’s begin with the institutional trust scale.
 
-```{r}
+```{r summary statistics trust}
 # Summarize and print results over all respondents
 trust_table <- summary(trust_distribution)
 kable(trust_table)
@@ -406,7 +406,7 @@ mean_values <- trust_distribution_long %>%
   summarize(mean_value = mean(Value, na.rm = TRUE))
 
 # Create combined boxplot and density plot with a dashed line for each mean
-ggplot(trust_distribution_long, aes(x = Value, y = ..scaled..)) +
+ggplot(trust_distribution_long, aes(x = Value, y = after_stat(scaled))) +
   geom_density(aes(y = ..scaled..), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
@@ -433,12 +433,12 @@ The `resp_distributions` function provides two measures of **central
 tendency**: `ii_mean` (average response) and `ii_median` (central
 response) for each respondent.
 
-For 10-item scale of institutional trust (ranging from 1 to 7):
+For the 10-item scale of institutional trust (ranging from 1 to 7):
 
 -   The mean of `ii_mean` is 3.755, and the median of `ii_mean` is
     3.800. This indicates that the distribution of `ii_mean` across all
     respondents is nearly normal, with a slight skew towards lower
-    values indicating distrust.
+    values.
 -   The `ii_median` has a mean value of 3.645 and a median value of
     4.000. These values indicates an almost normal distribution for
     central values, which are neutral or leans slightly towards lower
@@ -449,9 +449,9 @@ For 10-item scale of institutional trust (ranging from 1 to 7):
     range.
 
 *In summary*, the central tendency indicators shows a balanced
-distribution overall with few extreme outliers at the higher end. The
-distribution does not reveal significant deviations that stand out as
-suspicious or extraordinary at first glance.
+distribution overall with few extreme outliers at the higher end. Most
+of the respondents fall within the normal range and do not stand out as
+suspicious or unusual at first glance.
 
 `resp_distributions` also provides two measures of **variability**:
 `ii_sd` (individual response variability) and `mahal` (deviation from
@@ -472,11 +472,13 @@ overall response patterns).
     compared to the overall average. These outliers could flag potential
     data quality concerns and requires further examination.
 
-*In summary*, most respondents show moderate variability, but a few
-demonstrate significant deviations that may require further
-investigation to assess the consistency and reliability of their
-responses. Mahalanobis distance helps identify these respondents whose
-patterns deviate substantially from the group norm.
+*In summary*, most respondents show moderate variability indicating
+consistent responding, but a few demonstrate significant deviations that
+may require further investigation with additional checks to assess the
+consistency and reliability of their responses.
+<!-- should we mention that we will closely inspect those outlier later in the tutorial?-->
+Mahalanobis distance helps identify these respondents whose patterns
+deviate substantially from the group norm.
 
 <!-- Should we still include Straightlining? -->
 
@@ -495,12 +497,12 @@ generate a new indicator based on a respondents' standard deviation
 across the several items:
 <!-- comment on different operationalizations of straightlining, maybe even refer to literature here (as special feature) -->
 
-```{r}
+```{r straightlining trust}
 # Generating straightlining indicator for institutional trust scale 
 trust_distribution$non_diff <- NA 
 trust_distribution$non_diff[trust_distribution$ii_sd == 0] <- 1
 trust_distribution$non_diff[trust_distribution$ii_sd != 0] <- 0
-table(trust_distribution$non_diff)
+
 # Get proportion of respondents who show straightlining response behavior
 proportion_nondiff <- prop.table(table(trust_distribution$non_diff))[2]
 proportion_nondiff
@@ -510,30 +512,35 @@ The results show that about 5% of respondents show **straightlining
 response behavior** in the institutional trust scale, meaning that 5% of
 respondents selected an identical answer across the several items.
 
-<!--Info box -->
+<!--Info box start -->
 
-**Be careful** Whereas straightlining can indicate "careless" response
-behavior resulting in poor quality responses, we advise to always pay
-attention to the contents of the several items of a scale. For some
-multi-item scales, selecting identical answers across all the items can
-be plausible and reflect respondents' true values. For example, some
-scales comprise items that are both positive and negative formulated -
-in this case straightlining seems more implausible and more likely
-represents poor quality responses. In this case, however, all items are
-identically formulated and showing the identical answer across all items
-can reflect genuine distrust or trust in institutions overall.
+**Be careful!**
+
+Whereas straightlining can indicate "careless" response behavior
+resulting in poor quality responses, we advise to always pay attention
+to the contents of the several items of a scale before drawing
+conclusions. For some multi-item scales, selecting identical answers
+across all the items can be plausible and reflect respondents' true
+values. For example, some scales comprise items that are both positive
+and negative formulated - in this case straightlining seems more
+implausible and more likely represents poor quality responses. In this
+case, however, all items are identically formulated and showing the
+identical answer across all items can reflect genuine distrust or trust
+in institutions overall.
 <!--comment on additional checks to make sure, such as using response times or other response biases/styles -->
 
 <!-- I don't know... Now reading this I'm not sure if we can confidently make this statement and maybe it would be better to include political engagement instead to have a clear case of plausible straightlining vs. a clear case of implausible straightlining (environmental attitudes scale) - What do you think? -->
 
 <!-- maybe we could also discuss here that users should be cautious since not only perfect straightlining (literally always the same answer) but also straightlining with e.g., 8 out of 9 items with the same answer could be problematic -->
 
+<!--Info box end -->
+
 ### 2. NEP Scale
 
 Now we will inspect central tendency and variability indicators for NEP
 scale;
 
-```{r}
+```{r summary statistics NEP}
 # Summarize and print results over all respondents
 NEP_table <- summary(NEP_distribution)
 kable(NEP_table)
@@ -554,7 +561,7 @@ mean_values <- NEP_distribution_long %>%
   summarize(mean_value = mean(Value, na.rm = TRUE))
 
 # Create combined boxplot and density plot with a dashed line for each mean
-ggplot(NEP_distribution_long, aes(x = Value, y = ..scaled..)) +
+ggplot(NEP_distribution_long, aes(x = Value, y = after_stat(scaled))) +
   geom_density(aes(y = ..scaled..), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
@@ -569,52 +576,128 @@ ggplot(NEP_distribution_long, aes(x = Value, y = ..scaled..)) +
 
 ```
 
-```{r}
+**Central tendency** measures for the 15-item NEP scale (ranging from 1
+to 5):
+
+-   The mean of `ii_mean` is 2.639, and the median of `ii_mean` is
+    2.667, reflecting an almost normal distribution centered around the
+    middle of the scale, ranging from 2 to 4. Respondents consistently
+    selected lower-end (agree) or higher-end (disagree) responses are
+    clear outliers compared to the typical pattern of the sample.
+-   \`\`The `ii_median` has a mean value of 2.335 and a median value of
+    2.000. This suggests a noticeable concentration of responses at 2
+    and 3, with a skew towards the lower end of the scale. The box plot
+    flags a median of 5 as an outlier.
+
+*In summary*, the central tendency indicators shows a clear
+concentration around the midpoints of the scale, but there are notable
+outliers on both the extreme agreement and disagreement ends. This
+reveals having extreme responses on average as suspicious or
+extraordinary at first glance.
+
+**Variablity** measures;
+
+-   The mean `ii_sd` is 1.1516, which indicates that, on average,
+    responses vary by about 1 point from each respondents' individual
+    mean. While fluctuations up to 2 are within the normal range, no
+    fluctuation (`ii_sd` = 0) is a noteworthy outlier.
+
+-   Mahalanobis distance (`mahal`) box plot flags those respondents with
+    a `mahal` score near or above 6 as having highly atypical responses,
+    compared to the average responding pattern of the sample.
+
+*In summary*, most respondents show some variability over the items,
+however, few giving identical answers with no variability are outliers
+in the sample. Individuals with high consistency and/or are extremely
+dissimilar from average response pattern (`mahal`) requires further
+investigation as they could address potential data quality concerns.
+
+**Straightlining or non-differentiation**
+
+Unlike the instutional trust scale, the NEP scale comprises several
+reversely coded items (i.e., meaning that some of the items are
+positively formulated while others are negatively worded). To better
+understand the difference, we have to look at the item contents again;
+
+[*Question:*]{.underline} To what extend do you agree or disagree with
+the following statements?
+
+[*Response Scale:*]{.underline} 1 = Fully agree; 2 = Agree; 3 = Neither
+nor; 4 = Don't agree; 5 = Fully disagree
+
+[*Items:*]{.underline}
+
+1.  We are approaching the limit of the number of people the earth can
+    support [(*Pro-environmental)*]{.underline}
+2.  Humans have the right to modify the natural environment to suit
+    their needs [*(Negative worded)*]{.underline}
+3.  When humans interfere with nature it often produces disastrous
+    consequences [(*Pro-environmental)*]{.underline}
+4.  Human ingenuity will ensure that we do NOT make the earth unlivable
+    [*(Negative worded)*]{.underline}
+5.  Humans are severely abusing the environment
+    [(*Pro-environmental)*]{.underline}
+6.  There are enough resources on the planet - we just have to learn how
+    to use them [*(Negative worded)*]{.underline}
+7.  Plants and animals have as much right as humans to exist
+    [(*Pro-environmental)*]{.underline}
+8.  The balance of nature is strong enough to cope with the impacts of
+    modern industrial nations [*(Negative worded)*]{.underline}
+9.  Despite our special abilities humans are still subject to the laws
+    of nature [(*Pro-environmental)*]{.underline}
+10. The so called 'ecological crisis' facing humankind has been greatly
+    exaggerated [*(Negative worded)*]{.underline}
+11. The earth is like a spaceship with very limited room and resources
+    [(*Pro-environmental)*]{.underline}
+12. Humans were meant to rule over the rest of nature [*(Negative
+    worded)*]{.underline}
+13. The balance of nature is very delicate and easily upset
+    [(*Pro-environmental)*]{.underline}
+14. Humans will eventually learn enough about how nature works to be
+    able to control it [*(Negative worded)*]{.underline}
+15. If things continue on their present course, we will soon experience
+    a major ecological catastrophe [(*Pro-environmental)*]{.underline}
+
+As observed, 8 of the items are positively worded, with a response of 1
+indicating a pro-environmental attitude. In contrast, the remaining 7
+items are negatively worded, where a response of 1 indicates an
+anti-environmental attitude. As a result, respondents showing
+straightlining (i.e., giving the same response to all items) indeed
+contradict attitudinal aspects of previous items, making **careless
+responding** as the most likely underlying mechanism. Therefore, this
+design, which includes reverse-coded items, makes straightlining for the
+NEP scale more concerning than for the institutional trust scale:
+
+```{r straightlining NEP}
 # Generating straightlining indicator for institutional trust scale 
 NEP_distribution$non_diff <- NA 
 NEP_distribution$non_diff[NEP_distribution$ii_sd == 0] <- 1
 NEP_distribution$non_diff[NEP_distribution$ii_sd != 0] <- 0
 table(NEP_distribution$non_diff)
+
 # Get proportion of respondents who show straightlining response behavior
 proportion_nondiff <- prop.table(table(NEP_distribution$non_diff))[2]
+proportion_nondiff
 ```
 
-**Pay Attention to Reverse Coding**
+For the NEP scale, we can see that 0.5% of respondents show
+straightlining across the several items of the scale. This finding
+indeed indicates that 0.5% of respondents potentially provided poor
+quality responses which do not reflect their true environmental
+attitudes.
 
-Question: To what extend do you agree or disagree with the following
-statements? (1 = Fully Agree, ... , 5 = Fully Disagree)
+<!--Info box start-->
 
-1.  We are approaching the limit of the number of people the earth can
-    support *Pro-environmental (no need to reverse code)*
-2.  Humans have the right to modify the natural environment to suit
-    their needs *Reverse code (negative)*
-3.  When humans interfere with nature it often produces disastrous
-    consequences *Pro-environmental (no need to reverse code)*
-4.  Human ingenuity will ensure that we do NOT make the earth unlivable
-    *Reverse code (negative).*
-5.  Humans are severely abusing the environment *Pro-environmental (no
-    need to reverse code)*
-6.  There are enough resources on the planet - we just have to learn how
-    to use them *Reverse code (negative)*
-7.  Plants and animals have as much right as humans to exist
-    *Pro-environmental (no need to reverse code)*
-8.  The balance of nature is strong enough to cope with the impacts of
-    modern industrial nations *Reverse code (negative)*
-9.  Despite our special abilities humans are still subject to the laws
-    of nature *Pro-environmental (no need to reverse code)*
-10. The so called 'ecological crisis' facing humankind has been greatly
-    exaggerated *Reverse code (negative)*
-11. The earth is like a spaceship with very limited room and resources
-    *Pro-environmental (no need to reverse code)*
-12. Humans were meant to rule over the rest of nature *Reverse code
-    (negative)*
-13. The balance of nature is very delicate and easily upset
-    *Pro-environmental (no need to reverse code)*
-14. Humans will eventually learn enough about how nature works to be
-    able to control it *Reverse code (negative)*
-15. If things continue on their present course, we will soon experience
-    a major ecological catastrophe. *Pro-environmental (no need to
-    reverse code)*
+**Be careful!**
+
+As the NEP scale includes items with both positive and negative
+wordings, the scores alone do not directly indicate pro or
+anti-environmental attitudes. To derive substantively meaningul
+conclusions from response distributions (i.e., the typical and atypical
+attitudes among the respondents), it's necessary to reverse-code either
+the positively or negatively worded questions. This ensures that all
+items reflect the same directional attitude.
+<!-- should we be more specific here, and mention for example about how to infer straightlining, resp_distributions indicators etc?-->
 
 ```{r}
 # Create a new data frame by copying the original NEP data
@@ -628,74 +711,9 @@ NEP_recoded$bczd012a <- 6 - NEP_recoded$bczd012a  # Q8: The balance of nature is
 NEP_recoded$bczd014a <- 6 - NEP_recoded$bczd014a  # Q10: Ecological crisis exaggerated
 NEP_recoded$bczd016a <- 6 - NEP_recoded$bczd016a  # Q12: Humans were meant to rule over nature
 NEP_recoded$bczd018a <- 6 - NEP_recoded$bczd018a  # Q14: Control nature
-
 ```
 
-```{r}
-# Environmental attitudes 
-NEP_recoded_distribution <- resp_distributions(NEP_recoded)
-
-# Summarize and print results over all respondents
-NEP_recoded_table <- summary(NEP_recoded_distribution)
-kable(NEP_recoded_table)
-
-# Reshape the data for density and box plots
-NEP_recoded_distribution_long <- pivot_longer(NEP_recoded_distribution, 
-                                         cols = c("ii_mean", "ii_sd", "ii_median", "mahal"), 
-                                         names_to = "Indicator", 
-                                         values_to = "Value")
-
-# Remove non-finite values
-NEP_recoded_distribution_long <- NEP_recoded_distribution_long %>%
-  filter(!is.na(Value) & is.finite(Value))
-
-# Calculate mean for each Indicator
-mean_values <- NEP_recoded_distribution_long %>%
-  group_by(Indicator) %>%
-  summarize(mean_value = mean(Value, na.rm = TRUE))
-
-# Create combined boxplot and density plot with a dashed line for each mean
-ggplot(NEP_recoded_distribution_long, aes(x = Value, y = ..scaled..)) +
-  geom_density(aes(y = ..scaled..), alpha = 0.5) +
-  geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
-  geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
-  scale_color_manual(values = c("Mean" = "black")) +
-  facet_wrap(~ Indicator, scales = "free") +
-  labs(title = "Combined Density and Box Plots of Indicators with Mean Values",
-       x = "Value",
-       y = "Scaled Density / Boxplot") +
-  theme_minimal() +
-  theme(legend.position = "right",
-        legend.title = element_blank()) # Remove legend title
-
-```
-
-```{r}
-# Generating straightlining indicator for institutional trust scale 
-NEP_recoded_distribution$non_diff <- NA 
-NEP_recoded_distribution$non_diff[NEP_recoded_distribution$ii_sd == 0] <- 1
-NEP_recoded_distribution$non_diff[NEP_recoded_distribution$ii_sd != 0] <- 0
-table(NEP_recoded_distribution$non_diff)
-# Get proportion of respondents who show straightlining response behavior
-proportion_nondiff <- prop.table(table(NEP_recoded_distribution$non_diff))[2]
-print(proportion_nondiff)
-
-```
-
-<!-- Where to include straightlining and which to use: NEP or NEP_recoded? -->
-
-For the NEP scale, we can see that xy% of respondents show
-straightlining across the several items of the scale. This finding
-indeed indicates that xy% of respondents potentially provided poor
-quality responses which do not reflect their true environmental
-attitudes. To better understand why straightlining in the NEP scale
-might be more concerning than in the institutional trust scale, we have
-to look at the item contents again. Unlike the instutional trust scale,
-the NEP scale comprises several reversely coded items (i.e., meaning
-that some of the items are positively formulated while others are
-negatively worded). As a result, respondents showing straightlining
-indeed contradict attitudinal aspects of previous items, making careless
-responding as the underlying mechanisms most likely.
+<!--Info box end-->
 
 ## Calculating indicators of various response styles
 
@@ -706,21 +724,28 @@ multi-item scales. For this, we use the `resp_styles` function of the
 `resquin` package, which calculates indicators for the following
 response styles:
 
-**Response Styles:** - **Mid-point response style (MRS):** Tendency to
-choose the mid-point of a response scale - **Acquiescence (ARS):**
-Tendency to agree with statements - **Disacquiescence (DRS):** Tendency
-to disagree with statements - **Extreme Response Style (ERS):** Tendency
-to select the endpoints of a response scale - **Non-extreme Response
-Style (NERS):** Tendency to avoid selecting the endpoints of a response
-scale
+**Response Styles:**
+
+-   **Mid-point response style (MRS):** Tendency to choose the mid-point
+    of a response scale
+
+-   **Acquiescence (ARS):** Tendency to agree with statements
+
+-   **Disacquiescence (DRS):** Tendency to disagree with statements
+
+-   **Extreme Response Style (ERS):** Tendency to select the endpoints
+    of a response scale
+
+-   **Non-extreme Response Style (NERS):** Tendency to avoid selecting
+    the endpoints of a response scale
 
 To use `resp_styles`, we first need to specify the range of the response
 scale of the underlying multi-item scale or matrix question. Only with
 information on the range, and therefore existence of a mid-point and the
 endpoints of the response scale, `resp_styles` can calculate indicators
 for the different response styles. Similar to `resp_distributions`, we
-can additionally specify how many valid responses respondents should
-show on the multi-item scale (`min_valid_responses`) to calculate
+can additionally specify proportion of valid responses respondents
+should have on the multi-item scale (`min_valid_responses`) to calculate
 response style indicators. To enable the calculation of all response
 style indicators per respondent, we only include those respondents who
 show no NAs across items. We can further determine whether we want
@@ -735,46 +760,84 @@ analysis in this tutorial.
 # Calculating response style indicators for institutional trust
 trust_respstyles <- resp_styles(trust, 1, 7, min_valid_responses = 1, normalize = FALSE)
 
-# Print results
-head(trust_respstyles)
+# Print results of the first 10 respondents
+trust_respstyles[1:10,]
 
 # Calculating response style indicators for environmental attitudes
 NEP_respstyles <- resp_styles(NEP, 1, 7, min_valid_responses = 1, normalize = FALSE)
 
-# Print results
-head(NEP_respstyles)
+# Print results of the first 10 respondents
+NEP_respstyles[1:10,]
 ```
 
 As with `resp_distributions` `resp_styles` returns a data frame
 containing the several response style indicators per respondent
 (displayed as separate rows of the data frame). Again, let's first
 inspect the calculated indicators for the first 10 respondents in our
-data frame: Similar to `resp_distributions` we see that for x out of y
-respondents of the institutional trust scale and for x out of y
-respondents of the NEP scale <!-- adapt --> no indicators were
-calculated due to our specification of `min_valid_responses`, which only
-included respondents without NA across items into the analysis.
+data frame: Similar to `resp_distributions` we see that for 1 out of 10
+respondents of the institutional trust scale and for 1 out of 10
+respondents of the NEP scale, no indicators were calculated due to our
+specification of `min_valid_responses`, which only included respondents
+without NA across items into the analysis.
+
+## Indicators of response styles
 
 To make statements about the occurrence of the specific response styles
 in the institutional trust and NEP scale across *all respondents*, we
 have to again calculate summary statistics for each indicator in the
 data frame produced by `resp_styles`.
 
-```{r}
-# Summarize results over all respondents
-summary(trust_respstyles)
+### 1. Institutional Trust Scale
 
-# Summarize results over all respondents
-summary(NEP_respstyles)
+Let’s again begin with the institutional trust scale.
+
+```{r summary statistics trust resp_styles}
+# Summarize and print results over all respondents
+trust_respstyles_table <- summary(trust_respstyles)
+kable(trust_respstyles_table)
+
+# Reshape the data for density and box plots
+trust__respstyles_long <- pivot_longer(trust_respstyles, 
+                                         cols = c("MRS", "ARS", "DRS", "ERS","NERS"), 
+                                         names_to = "Indicator", 
+                                         values_to = "Value")
+
+# Remove NAs (for those we have no calculated indicators)
+trust__respstyles_long <- trust__respstyles_long %>%
+  filter(!is.na(Value))
+
+# Calculate mean for each Indicator
+mean_values <- trust__respstyles_long %>%
+  group_by(Indicator) %>%
+  summarize(mean_value = mean(Value, na.rm = TRUE))
+
+# Create combined boxplot and density plot with a dashed line for each mean
+ggplot(trust__respstyles_long, aes(x = Value, y = after_stat(scaled))) +
+  geom_density(aes(y = ..scaled..), alpha = 0.5) +
+  geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
+  geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
+  
+  scale_color_manual(values = c("Mean" = "black")) +
+  facet_wrap(~ Indicator, scales = "free") +
+  labs(title = "Combined Density and Box Plots of Indicators with Mean Values",
+       x = "Value",
+       y = "Scaled Density / Boxplot") +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank())  # Remove legend title
+
 ```
-
-## Indicators of response styles
 
 Looking at the response styles indicators across all respondents of the
 institutional trust scale, we see the following patterns:
 
 xy% of respondents show a tendency to select the mid-point of the
 response scale.
+
+-  *MRS:* Out of 10 items, a typical respondents in our sample tends to select the midpoint (4) response only for 2 questions. Having 0 to 8 midpoint answers is in the normal range as suggested by the boxplot, whereas having 9 and 10 midpoint responses is considered to be outlier. 
+-  *ARS:* Out of 10 items,
+
+
 <!--describe the results of the 5 different response styles--> Comparing
 the proportions of each systematic response style, results indicate that
 our data of the institutional trust measure is mostly affected by
@@ -804,8 +867,50 @@ acquiescence response style (ARS) and disacquiescence response style
 higher values of the response scale reflect higher levels of agreement
 with certain statements or issues.
 
+### 2. NEP Scale
+
+Now we will inspect response style indicators for NEP scale;
+
+```{r summary statistics NEP resp_styles}
+# Summarize and print results over all respondents
+NEP_respstyles_table <- summary(NEP_respstyles)
+kable(NEP_respstyles_table)
+
+# Reshape the data for density and box plots
+NEP_respstyles_long <- pivot_longer(NEP_respstyles, 
+                                         cols = c("MRS", "ARS", "DRS", "ERS","NERS"), 
+                                         names_to = "Indicator", 
+                                         values_to = "Value")
+
+# Remove NAs (for those we have no calculated indicators)
+NEP_respstyles_long <- NEP_respstyles_long %>%
+  filter(!is.na(Value))
+
+# Calculate mean for each Indicator
+mean_values <- NEP_respstyles_long %>%
+  group_by(Indicator) %>%
+  summarize(mean_value = mean(Value, na.rm = TRUE))
+
+# Create combined boxplot and density plot with a dashed line for each mean
+ggplot(NEP_respstyles_long, aes(x = Value, y = after_stat(scaled))) +
+  geom_density(aes(y = ..scaled..), alpha = 0.5) +
+  geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
+  geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
+  
+  scale_color_manual(values = c("Mean" = "black")) +
+  facet_wrap(~ Indicator, scales = "free") +
+  labs(title = "Combined Density and Box Plots of Indicators with Mean Values",
+       x = "Value",
+       y = "Scaled Density / Boxplot") +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.title = element_blank())  # Remove legend title
+
+```
+
 Looking at the response styles indicators across all respondents of the
 NEP scale, we see the following patterns: <!--fill in -->
+
 
 <!--Info box -->
 
@@ -836,8 +941,8 @@ that conclusions are not biased by response patterns.
 **Straightlining:** High straightlining percentages are not always
 indicative of low-quality data but may reflect genuine patterns in
 responses. **Extreme Responding:** High extreme response rates may
-represent polarized opinions rather than poor data quality. **Response
-Styles:** Indicators such as acquiescence and disacquiescence offer
+represent polarized opinions rather than poor data quality. 
+**Response Styles:** Indicators such as acquiescence and disacquiescence offer
 insights into response tendencies but should be interpreted
 contextually.
 
@@ -845,5 +950,68 @@ contextually.
 without considering the context could introduce bias into your analysis.
 Always interpret these indicators carefully and consider their
 implications for your research findings.
+
+## Who are the outliers?
+
+Outlier detecter function;
+
+```{r outlier function}
+# Define the function
+flag_outliers <- function(data, variables) {
+  
+  # Loop through each variable
+  for (var in variables) {
+    # Check if the variable exists in the dataframe
+    if (var %in% colnames(data)) {
+      
+      # Step 1: Calculate the IQR for the variable
+      Q1 <- quantile(data[[var]], 0.25, na.rm = TRUE)
+      Q3 <- quantile(data[[var]], 0.75, na.rm = TRUE)
+      IQR_value <- Q3 - Q1
+      
+      # Step 2: Calculate the lower and upper bounds for outliers
+      lower_bound <- Q1 - 1.5 * IQR_value
+      upper_bound <- Q3 + 1.5 * IQR_value
+      
+      # Step 3: Create a new variable flagging outliers (1 = outlier, 0 = not an outlier)
+      outlier_var <- paste0("outlier_", var)
+      data[[outlier_var]] <- ifelse(data[[var]] < lower_bound | data[[var]] > upper_bound, 1, 0)
+      
+    } else {
+      warning(paste("Variable", var, "not found in the data frame. Skipping..."))
+    }
+  }
+  
+  # Return the updated data frame
+  return(data)
+}
+```
+
+Now lets use it on Trust Scale response distribution indicators;
+
+```{r outlier trust resp_distributions}
+# Use the function to flag outliers
+df <- flag_outliers(NEP_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"))
+
+# View the updated data frame
+print(df)
+
+# Create a new column that flags any outliers across the specified variables
+df$outlier_any <- rowSums(df[, grep("outlier_", names(df))]) > 1
+
+# Subset the data to include only rows with outliers in at least one variable
+outlier_data <- df[df$outlier_any, ]
+drop_na(outlier_data)
+
+# View the subsetted data frame with outliers
+print(outlier_data)
+
+# Subset the data to include only rows with outliers in at least one variable
+outlier_data <- df[df$outlier_ii_mean == 1 | df$outlier_ii_median == 1 | df$outlier_ii_sd == 1 | df$outlier_mahal == 1, ]
+# View the subsetted data frame with outliers
+print(n)
+drop_na(outlier_data)
+
+```
 
 ## References
