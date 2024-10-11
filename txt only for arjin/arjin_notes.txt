@@ -26,6 +26,8 @@
 
 14. abstract in the beginning with bulletpoints
 
+15. We should also specify the version of the pacakage we are using for replicability /////
+
 
 
 
@@ -39,4 +41,20 @@ What I did:
 
 - included citation document and reference header in the end
 - uploaded csv data in a file in repository
+
+
+
+main causes for outliers could be;
+
+extreme views, misinterpretation of the scale, or potential disengagement.
+
+
+Main style indicators to be evaluated;
+MRS, ARS ERS
+
+
+
+I can create a table, 
+And we can compare respondents across the 2 items, to see if they are showing biases for both of the scale..
+naromalize true olmasi lazim ama karsilastirabilmek icin..
 

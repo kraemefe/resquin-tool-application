@@ -1,7 +1,7 @@
 ---
 title: '"Assessing Response Quality in Multi-Item Scales on Political Trust and Climate Attitudes "'
 author: "Arjin"
-date: "2024-09-19"
+date: "2024-10-11"
 output:
   html_document: default
   word_document: default
@@ -315,6 +315,8 @@ NEP_distribution <- resp_distributions(NEP)
 NEP_distribution[1:10,]
 ```
 
+<!-- I made some significant changes in the rest of the document -->
+
 <!--Info box start-->
 
 ***Package-specific feature***
@@ -370,8 +372,6 @@ We will proceed with the inspection of response distribution indicators
 only for those respondents who show no missing values for the
 institutional trust and environmental attitudes scale.
 
-<!-- I made some significant changes in the rest of the document -->
-
 ## Indicators of response distribution
 
 To analyze the response distribution of institutional trust and
@@ -407,7 +407,7 @@ mean_values <- trust_distribution_long %>%
 
 # Create combined boxplot and density plot with a dashed line for each mean
 ggplot(trust_distribution_long, aes(x = Value, y = after_stat(scaled))) +
-  geom_density(aes(y = ..scaled..), alpha = 0.5) +
+  geom_density(aes(y = after_stat(scaled)), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
   
@@ -475,12 +475,11 @@ overall response patterns).
 *In summary*, most respondents show moderate variability indicating
 consistent responding, but a few demonstrate significant deviations that
 may require further investigation with additional checks to assess the
-consistency and reliability of their responses.
-<!-- should we mention that we will closely inspect those outlier later in the tutorial?-->
-Mahalanobis distance helps identify these respondents whose patterns
-deviate substantially from the group norm.
+consistency and reliability of their responses. Mahalanobis distance
+helps identify these respondents whose patterns deviate substantially
+from the group norm.
 
-<!-- Should we still include Straightlining? -->
+<!-- Should we mention that we will closely inspect those outliers later in the tutorial?-->
 
 **Straightlining or non-differentiation**
 
@@ -562,7 +561,7 @@ mean_values <- NEP_distribution_long %>%
 
 # Create combined boxplot and density plot with a dashed line for each mean
 ggplot(NEP_distribution_long, aes(x = Value, y = after_stat(scaled))) +
-  geom_density(aes(y = ..scaled..), alpha = 0.5) +
+  geom_density(aes(y = after_stat(scaled)), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
   scale_color_manual(values = c("Mean" = "black")) +
@@ -595,7 +594,7 @@ outliers on both the extreme agreement and disagreement ends. This
 reveals having extreme responses on average as suspicious or
 extraordinary at first glance.
 
-**Variablity** measures;
+**Variability** measures;
 
 -   The mean `ii_sd` is 1.1516, which indicates that, on average,
     responses vary by about 1 point from each respondents' individual
@@ -619,13 +618,13 @@ reversely coded items (i.e., meaning that some of the items are
 positively formulated while others are negatively worded). To better
 understand the difference, we have to look at the item contents again;
 
-[*Question:*]{.underline} To what extend do you agree or disagree with
-the following statements?
+**Question:** To what extend do you agree or disagree with the following
+statements?
 
-[*Response Scale:*]{.underline} 1 = Fully agree; 2 = Agree; 3 = Neither
-nor; 4 = Don't agree; 5 = Fully disagree
+**Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 =
+Don't agree; 5 = Fully disagree
 
-[*Items:*]{.underline}
+**Items:**
 
 1.  We are approaching the limit of the number of people the earth can
     support [(*Pro-environmental)*]{.underline}
@@ -658,15 +657,17 @@ nor; 4 = Don't agree; 5 = Fully disagree
 15. If things continue on their present course, we will soon experience
     a major ecological catastrophe [(*Pro-environmental)*]{.underline}
 
-As observed, 8 of the items are positively worded, with a response of 1
-indicating a pro-environmental attitude. In contrast, the remaining 7
-items are negatively worded, where a response of 1 indicates an
-anti-environmental attitude. As a result, respondents showing
-straightlining (i.e., giving the same response to all items) indeed
-contradict attitudinal aspects of previous items, making **careless
-responding** as the most likely underlying mechanism. Therefore, this
-design, which includes reverse-coded items, makes straightlining for the
-NEP scale more concerning than for the institutional trust scale:
+8 of the items are positively worded, with a response of 1 indicating a
+pro-environmental attitude. In contrast, the remaining 7 items are
+negatively worded, where a response of 1 indicates an anti-environmental
+attitude. As a result, respondents showing straightlining (i.e., giving
+the same response to all items)
+<!--should we mention that this is particulary concerning for extreme responses, as middle reponses could just reflect repondent's ambiguity-->
+indeed contradict attitudinal aspects of previous items, making
+**careless responding** as the most likely underlying mechanism.
+Therefore, this design, which includes reverse-coded items, makes
+straightlining for the NEP scale more concerning than for the
+institutional trust scale:
 
 ```{r straightlining NEP}
 # Generating straightlining indicator for institutional trust scale 
@@ -692,11 +693,11 @@ attitudes.
 
 As the NEP scale includes items with both positive and negative
 wordings, the scores alone do not directly indicate pro or
-anti-environmental attitudes. To derive substantively meaningul
+anti-environmental attitudes. To derive substantively meaningful
 conclusions from response distributions (i.e., the typical and atypical
-attitudes among the respondents), it's necessary to reverse-code either
-the positively or negatively worded questions. This ensures that all
-items reflect the same directional attitude.
+environmental attitudes among the respondents), it's necessary to
+reverse-code either the positively or negatively worded questions. This
+ensures that all items reflect the same directional attitude.
 <!-- should we be more specific here, and mention for example about how to infer straightlining, resp_distributions indicators etc?-->
 
 ```{r}
@@ -770,7 +771,7 @@ NEP_respstyles <- resp_styles(NEP, 1, 7, min_valid_responses = 1, normalize = FA
 NEP_respstyles[1:10,]
 ```
 
-As with `resp_distributions` `resp_styles` returns a data frame
+As with `resp_distributions`, `resp_styles` returns a data frame
 containing the several response style indicators per respondent
 (displayed as separate rows of the data frame). Again, let's first
 inspect the calculated indicators for the first 10 respondents in our
@@ -784,8 +785,8 @@ without NA across items into the analysis.
 
 To make statements about the occurrence of the specific response styles
 in the institutional trust and NEP scale across *all respondents*, we
-have to again calculate summary statistics for each indicator in the
-data frame produced by `resp_styles`.
+have to again calculate and visualize summary statistics for each
+indicator in the data frame produced by `resp_styles`.
 
 ### 1. Institutional Trust Scale
 
@@ -813,7 +814,7 @@ mean_values <- trust__respstyles_long %>%
 
 # Create combined boxplot and density plot with a dashed line for each mean
 ggplot(trust__respstyles_long, aes(x = Value, y = after_stat(scaled))) +
-  geom_density(aes(y = ..scaled..), alpha = 0.5) +
+  geom_density(aes(y = after_stat(scaled)), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
   
@@ -831,20 +832,74 @@ ggplot(trust__respstyles_long, aes(x = Value, y = after_stat(scaled))) +
 Looking at the response styles indicators across all respondents of the
 institutional trust scale, we see the following patterns:
 
-xy% of respondents show a tendency to select the mid-point of the
-response scale.
+-   ***MRS:*** A typical respondent in our sample tends to select the
+    midpoint (response 4) for about two out of ten items. According to
+    the boxplot, selecting anywhere between 0 to 8 midpoint responses is
+    considered within the normal range. However, respondents who select
+    midpoint answers for 9 or 10 items are considered outliers,
+    reflecting an unusually neutral stance.
 
--  *MRS:* Out of 10 items, a typical respondents in our sample tends to select the midpoint (4) response only for 2 questions. Having 0 to 8 midpoint answers is in the normal range as suggested by the boxplot, whereas having 9 and 10 midpoint responses is considered to be outlier. 
--  *ARS:* Out of 10 items,
+-   ***ARS and DRS:*** These indicators reflect the tendency to agree or
+    disagree with statements by summing responses higher or lower than
+    the midpoint:
 
+    -   ARS captures responses of 5, 6, and 7, indicating varying levels
+        of agreement.
+    -   DRS captures responses of 1, 2, and 3, indicating varying levels
+        of disagreement.
 
-<!--describe the results of the 5 different response styles--> Comparing
-the proportions of each systematic response style, results indicate that
-our data of the institutional trust measure is mostly affected by
-respondents showing XY. Overall, the high/low proportion of XY suggest
-that the quality of the given responses is indeed affected by poor
-response behavior in the form of xy and do not reflect respondents being
-undecided or neutral when thinking about how much they trust the
+    The distribution of both indicators shows that expressing agreement
+    and disagreement generally falls within the normal range. On
+    average, a typical respondent agrees with about 3 items and
+    disagrees with around 4 items on the 10-item institutional trust
+    scale. Moreover, the ARS distribution skews slightly to the left,
+    while the DRS is more centered, indicating that disagreement is more
+    common than agreement among respondents.
+
+    This pattern also aligns with the findings from the MRS, suggesting
+    that consistently selecting middle responses is not typical, which
+    could flag potential data quality issues when it occurs more
+    frequently.
+
+-   ***ERS and NERS:*** Although we observe that having a clear attitude
+    (either agreeing or disagreeing) is more common than remaining
+    neutral, it’s important to examine other indicators, ERS or NERS, to
+    assess whether extreme responses are prevalent or whether
+    respondents tend to avoid both middle and extreme options.
+
+    ERS and NERS are symmetrically related and reflect extreme and
+    non-extreme responding respectively;
+
+    -   ERS captures the total number of items responded to with the
+        extremes (1 or 7).
+
+    -   NERS captures the opposite, the sum of items responded to with
+        non-extreme values (2, 3, 4, 5, and 6).
+
+    The symmetrical patterns is also observable from the plots: most
+    respondents provide 2 or fewer extreme responses while selecting
+    more than 5 extreme responses is considered an outlier, indicating
+    potential extreme responding behavior.
+
+***In summary***, all of the indicators reveal that most respondents
+tend to avoid both extreme and middle responses. Choosing 5 or more
+extreme responses (1 or 7) and selecting more than 8 middle responses
+(4) represent outlier patterns of responding. These findings suggest
+that, in aggregate, respondents typically express agreement or
+disagreement without resorting to extreme responses. Consequently, it is
+essential to closely examine these outliers to assess the reliability of
+their answers and identify potential data quality concerns.
+
+<!--I am not in general confident with my interpretations, because I was confused about their substantive meanings. Also I am not sure if I should refer to them agreement/disagrement as points actually refers to distrust/trust. -->
+
+<!-- Given my confusinon, I left the below 2 paragraph intact because I was not sure if my interpret of the results in general is accurate or not. -->
+
+Comparing the proportions of each systematic response style, results
+indicate that our data of the institutional trust measure is mostly
+affected by respondents showing XY. Overall, the high/low proportion of
+XY suggest that the quality of the given responses is indeed affected by
+poor response behavior in the form of xy and do not reflect respondents
+being undecided or neutral when thinking about how much they trust the
 different institutions.
 <!-- as an example of mid-point responses, but could also be that data is not affected if proportion is low and of course other response styles can be the dominant one - please adapt -->
 Looking at the remaining response behaviors, results show that the
@@ -866,6 +921,8 @@ acquiescence response style (ARS) and disacquiescence response style
 (DARS) assumes that the response scale is positively polarized, i.e.,
 higher values of the response scale reflect higher levels of agreement
 with certain statements or issues.
+
+<!-- I did the similar for NEP below -->
 
 ### 2. NEP Scale
 
@@ -893,7 +950,7 @@ mean_values <- NEP_respstyles_long %>%
 
 # Create combined boxplot and density plot with a dashed line for each mean
 ggplot(NEP_respstyles_long, aes(x = Value, y = after_stat(scaled))) +
-  geom_density(aes(y = ..scaled..), alpha = 0.5) +
+  geom_density(aes(y = after_stat(scaled)), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
   
@@ -910,7 +967,6 @@ ggplot(NEP_respstyles_long, aes(x = Value, y = after_stat(scaled))) +
 
 Looking at the response styles indicators across all respondents of the
 NEP scale, we see the following patterns: <!--fill in -->
-
 
 <!--Info box -->
 
@@ -941,8 +997,8 @@ that conclusions are not biased by response patterns.
 **Straightlining:** High straightlining percentages are not always
 indicative of low-quality data but may reflect genuine patterns in
 responses. **Extreme Responding:** High extreme response rates may
-represent polarized opinions rather than poor data quality. 
-**Response Styles:** Indicators such as acquiescence and disacquiescence offer
+represent polarized opinions rather than poor data quality. **Response
+Styles:** Indicators such as acquiescence and disacquiescence offer
 insights into response tendencies but should be interpreted
 contextually.
 
