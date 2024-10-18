@@ -827,6 +827,8 @@ ggplot(trust__respstyles_long, aes(x = Value, y = after_stat(scaled))) +
   theme(legend.position = "right",
         legend.title = element_blank())  # Remove legend title
 
+
+
 ```
 
 Looking at the response styles indicators across all respondents of the
@@ -1043,8 +1045,8 @@ implications for your research findings.
 Outlier detecter function;
 
 ```{r outlier function}
-# Define the function
-flag_outliers <- function(data, variables) {
+# Define the function with an additional argument for suffix
+flag_outliers <- function(data, variables, suffix = "") {
   
   # Loop through each variable
   for (var in variables) {
@@ -1061,7 +1063,7 @@ flag_outliers <- function(data, variables) {
       upper_bound <- Q3 + 1.5 * IQR_value
       
       # Step 3: Create a new variable flagging outliers (1 = outlier, 0 = not an outlier)
-      outlier_var <- paste0("outlier_", var)
+      outlier_var <- paste0("outlier_", var, ifelse(suffix != "", paste0("_", suffix), ""))
       data[[outlier_var]] <- ifelse(data[[var]] < lower_bound | data[[var]] > upper_bound, 1, 0)
       
     } else {
@@ -1074,17 +1076,19 @@ flag_outliers <- function(data, variables) {
 }
 ```
 
+### 1. Trust Response Distributions
+
 Now lets use it on Trust Scale response distribution indicators;
 
 ```{r outlier trust resp_distributions}
 # Use the function to flag outliers
-trust_distributions_outliers_flagged <- flag_outliers(trust_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"))
+trust_distributions_outliers_flagged <- flag_outliers(trust_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"), suffix = "trust")
 
-# Drop NAs
-trust_distributions_outliers_flagged <- drop_na(trust_distributions_outliers_flagged)
+# # Drop NAs
+# trust_distributions_outliers_flagged <- drop_na(trust_distributions_outliers_flagged)
 
-# Create a new column that flags any outliers across the specified variables
-trust_distributions_outliers_flagged$outlier_any <- rowSums(trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))]) > 0
+# # Create a new column that flags any outliers across the specified variables
+# trust_distributions_outliers_flagged$outlier_any <- rowSums(trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))]) > 0
 
 # View the updated data frame
 print(trust_distributions_outliers_flagged)
@@ -1095,7 +1099,7 @@ table(trust_distributions_outliers_flagged$outlier_any)
 
 ```{r}
 # Select the outlier columns
-outlier_data <- trust_distributions_outliers_flagged[, c("outlier_ii_median", "outlier_ii_mean", "outlier_ii_sd", "outlier_mahal")]
+outlier_data <- trust_distributions_outliers_flagged[, c("outlier_ii_median_trust", "outlier_ii_mean_trust", "outlier_ii_sd_trust", "outlier_mahal_trust")]
 
 # Shorten the column names for readability
 colnames(outlier_data) <- c("median", "mean", "sd", "mahal")
@@ -1120,17 +1124,19 @@ print(overlap_matrix)
 
 ```
 
+### 2. Trust Response Styles
+
 Trust Scale response style indicators;
 
 ```{r outlier trust resp_style}
 # Use the function to flag outliers
-trust_respstyle_outliers_flagged <- flag_outliers(trust_respstyles, c("MRS", "ARS", "DRS", "ERS", "NERS"))
+trust_respstyle_outliers_flagged <- flag_outliers(trust_respstyles, c("MRS", "ARS", "DRS", "ERS", "NERS"), suffix = "trust")
 
-# Drop NAs
-trust_respstyle_outliers_flagged <- drop_na(trust_respstyle_outliers_flagged)
+# # Drop NAs
+# trust_respstyle_outliers_flagged <- drop_na(trust_respstyle_outliers_flagged)
 
-# Create a new column that flags any outliers across the specified variables
-trust_respstyle_outliers_flagged$outlier_any <- rowSums(trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))]) > 0
+# # Create a new column that flags any outliers across the specified variables
+# trust_respstyle_outliers_flagged$outlier_any <- rowSums(trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))]) > 0
 
 # View the updated data frame
 print(trust_respstyle_outliers_flagged)
@@ -1142,7 +1148,7 @@ trust_respstyle_outliers_flagged
 
 ```{r}
 # Select the outlier columns
-outlier_data <- trust_respstyle_outliers_flagged[, c("outlier_MRS", "outlier_ARS", "outlier_DRS", "outlier_ERS", "outlier_NERS")]
+outlier_data <- trust_respstyle_outliers_flagged[, c("outlier_MRS_trust", "outlier_ARS_trust", "outlier_DRS_trust", "outlier_ERS_trust", "outlier_NERS_trust")]
 
 # Shorten the column names for readability
 colnames(outlier_data) <- c("MRS", "ARS", "DRS", "ERS", "NERS")
@@ -1215,6 +1221,248 @@ for (i in 1:ncol(trust_total_outlier_flags_data)) {
 # Print the overlap matrix
 print("Overlap Matrix:")
 print(overlap_matrix)
+```
+
+### 1. NEP Response Distributions
+
+```{r outlier trust resp_distributions}
+# Use the function to flag outliers
+NEP_distributions_outliers_flagged <- flag_outliers(NEP_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"), suffix = "NEP")
+
+# # Drop NAs
+# NEP_distributions_outliers_flagged <- drop_na(NEP_distributions_outliers_flagged)
+
+# # Create a new column that flags any outliers across the specified variables
+# NEP_distributions_outliers_flagged$outlier_any <- rowSums(NEP_distributions_outliers_flagged[, grep("outlier_", names(NEP_distributions_outliers_flagged))]) > 0
+
+# View the updated data frame
+print(NEP_distributions_outliers_flagged)
+
+# Number of respondents at least outlier in any 
+table(NEP_distributions_outliers_flagged$outlier_any)
+```
+
+```{r}
+# Select the outlier columns
+outlier_data <- NEP_distributions_outliers_flagged[, c("outlier_ii_median_NEP", "outlier_ii_mean_NEP", "outlier_ii_sd_NEP", "outlier_mahal_NEP")]
+
+# Shorten the column names for readability
+colnames(outlier_data) <- c("median", "mean", "sd", "mahal")
+
+# Convert to logical
+outlier_logical <- outlier_data == TRUE
+
+# Initialize an empty matrix to store results
+overlap_matrix <- matrix(NA, nrow = 4, ncol = 4)
+rownames(overlap_matrix) <- colnames(outlier_logical)
+colnames(overlap_matrix) <- colnames(outlier_logical)
+
+# Calculate overlap for each pair of variables
+for (i in 1:4) {
+  for (j in 1:4) {
+    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
+  }
+}
+
+# Print the overlap matrix
+print(overlap_matrix)
+
+```
+### 2. NEP Response Styles
+
+Trust Scale response style indicators;
+
+```{r outlier trust resp_style}
+# Use the function to flag outliers
+NEP_respstyle_outliers_flagged <- flag_outliers(NEP_respstyles, c("MRS", "ARS", "DRS", "ERS", "NERS"), suffix = "NEP")
+
+# # Drop NAs
+# NEP_respstyle_outliers_flagged <- drop_na(NEP_respstyle_outliers_flagged)
+
+# # Create a new column that flags any outliers across the specified variables
+# NEP_respstyle_outliers_flagged$outlier_any <- rowSums(NEP_respstyle_outliers_flagged[, grep("outlier_", names(NEP_respstyle_outliers_flagged))]) > 0
+
+# View the updated data frame
+print(NEP_respstyle_outliers_flagged)
+
+# Number of respondents at least outlier in any 
+table(NEP_respstyle_outliers_flagged$outlier_any)
+```
+
+```{r}
+# Select the outlier columns
+outlier_data <-NEP_respstyle_outliers_flagged[, c("outlier_MRS_NEP", "outlier_ARS_NEP", "outlier_DRS_NEP", "outlier_ERS_NEP", "outlier_NERS_NEP")]
+
+# Shorten the column names for readability
+colnames(outlier_data) <- c("MRS", "ARS", "DRS", "ERS", "NERS")
+
+# Convert to logical
+outlier_logical <- outlier_data == TRUE
+
+# Initialize an empty matrix to store results
+overlap_matrix <- matrix(NA, nrow = 5, ncol = 5)
+rownames(overlap_matrix) <- colnames(outlier_logical)
+colnames(overlap_matrix) <- colnames(outlier_logical)
+
+# Calculate overlap for each pair of variables
+for (i in 1:5) {
+  for (j in 1:5) {
+    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
+  }
+}
+
+# Print the overlap matrix
+print(overlap_matrix)
+```
+### Combine all outliers from each scale for both indicators of distribution and style
+
+<!-- I will clean below codes further, please ignore them for now :) -->
+
+```{r}
+# Combine the outlier columns in both flagged datasets
+all_total_outliers_resp_and_dist <- cbind(
+  
+  trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))],
+  
+  trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))],
+  
+  NEP_distributions_outliers_flagged[, grep("outlier_", names(NEP_distributions_outliers_flagged))],
+  
+  NEP_respstyle_outliers_flagged[, grep("outlier_", names(NEP_respstyle_outliers_flagged))]
+)
+
+# # Drop NA
+# all_total_outliers_resp_and_dist <- drop_na(all_total_outliers_resp_and_dist)
+
+# Print resulting dataset
+
+all_total_outliers_resp_and_dist
+
+# Shorten the column names for readability
+colnames(all_total_outliers_resp_and_dist) <- c(
+  "tmean", "tmedian", "tsd", "tmahal", "tMRS", "tARS", "tDRS", "tERS", "tNERS",
+  "Nmean", "Nmedian", "Nsd", "Nmahal", "NMRS", "NARS", "NDRS", "NERS", "NNERS")
+
+# Initialize the overlap matrix
+overlap_matrix <- matrix(0, nrow = ncol(all_total_outliers_resp_and_dist), ncol = ncol(all_total_outliers_resp_and_dist))
+rownames(overlap_matrix) <- colnames(all_total_outliers_resp_and_dist)
+colnames(overlap_matrix) <- colnames(all_total_outliers_resp_and_dist)
+
+
+# Calculate overlap for each pair of variables
+for (i in 1:ncol(all_total_outliers_resp_and_dist)) {
+  for (j in 1:ncol(all_total_outliers_resp_and_dist)) {
+    overlap_matrix[i, j] <- sum(all_total_outliers_resp_and_dist[, i] & all_total_outliers_resp_and_dist[, j]) # Count how often both variables have outliers
+  }
+}
+
+# Print the overlap matrix
+print("Overlap Matrix:")
+print(overlap_matrix)
+```
+
+```{r}
+# Combine the outlier columns in both flagged datasets
+all_total_outliers_resp_and_dist <- cbind(
+  
+  trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))],
+  
+  trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))],
+  
+  NEP_distributions_outliers_flagged[, grep("outlier_", names(NEP_distributions_outliers_flagged))],
+  
+  NEP_respstyle_outliers_flagged[, grep("outlier_", names(NEP_respstyle_outliers_flagged))]
+)
+
+# # Drop NA
+# all_total_outliers_resp_and_dist <- drop_na(all_total_outliers_resp_and_dist)
+
+# Print resulting dataset
+all_total_outliers_resp_and_dist
+
+# Shorten the column names for readability
+colnames(all_total_outliers_resp_and_dist) <- c(
+  "tmean", "tmedian", "tsd", "tmahal", "tMRS", "tARS", "tDRS", "tERS", "tNERS",
+  "Nmean", "Nmedian", "Nsd", "Nmahal", "NMRS", "NARS", "NDRS", "NERS", "NNERS")
+```
+
+
+```{r}
+# Create a new column that flags any outliers across the specified variables
+d<-  drop_na(all_total_outliers_resp_and_dist[all_total_outliers_resp_and_dist$tMRS == 1,1:9]) 
+
+
+& 
+  rowSums(all_total_outliers_resp_and_dist[, grep("^N", names(all_total_outliers_resp_and_dist))]) > 0
+
+table(all_total_outliers_resp_and_dist$outlier_any_both)
+
+# Subset the data where outlier_any_both is TRUE
+subset_data <- all_total_outliers_resp_and_dist[all_total_outliers_resp_and_dist$outlier_any_both == TRUE, ]
+
+# Drop NAS
+no_na_subset_data <- drop_na(subset_data)
+no_na_subset_data
+
+```
+
+Check their data closely
+
+```{r}
+
+drop_na(trust_distributions_outliers_flagged[trust_distributions_outliers_flagged$outlier_mahal_trust == 1, ])
+
+
+# check some people
+no_na_subset_data[rownames(no_na_subset_data)%in% c("529", "985"),]
+trust_distribution[rownames(trust_distribution) %in% c("529", "985"), ]
+trust_respstyles[rownames(trust_respstyles) %in% c("529", "985"), ]
+NEP_distribution[rownames(NEP_distribution) %in% c("529", "985"), ]
+NEP_respstyles[rownames(NEP_respstyles) %in% c("529", "985"), ]
+trust[985,]
+NEP[985,]
+
+
+no_na_subset_data[no_na_subset_data$tmahal == TRUE, ]
+a <- all_total_outliers_resp_and_dist[all_total_outliers_resp_and_dist$tmahal == TRUE, ]
+a1 <- drop_na(a[,1:9])
+
+table(all_total_outliers_resp_and_dist$tmahal)
+
+rownames(d)
+# definitely a data quality flag!
+all_total_outliers_resp_and_dist[rownames(all_total_outliers_resp_and_dist)%in% c("1025"),]
+trust_distribution[rownames(trust_distribution) %in% c("1025"), ]
+trust_respstyles[rownames(trust_respstyles) %in% c("1025"), ]
+NEP_distribution[rownames(NEP_distribution) %in% c("1025"), ]
+NEP_respstyles[rownames(NEP_respstyles) %in% c("1025"), ]
+trust[1025,]
+NEP[1025,] # seems quite outlier..
+
+a1
+all_total_outliers_resp_and_dist[c(172,  410,  565,  659,  768,  1025, 1095, 1117),]
+trust[c(172,  410,  565,  659,  768,  1025, 1095, 1117),]
+NEP[c(172,  410,  565,  659,  768,  1025, 1095, 1117),] 
+
+```
+
+outlier in both tsd and tmahal: "172"  "410"  "565"  "659"  "768"  "1025" "1095" "1117"
+
+
+1025
+
+
+
+```{r}
+# Create a new column that flags any outliers across the specified variables
+all_total_outliers_resp_and_dist$outlier_any_both <- 
+  rowSums(all_total_outliers_resp_and_dist[, grep("tsd", names(all_total_outliers_resp_and_dist))]) > 0 & 
+  rowSums(all_total_outliers_resp_and_dist[, grep("^N", names(all_total_outliers_resp_and_dist))]) > 0
+
+b <- (all_total_outliers_resp_and_dist[, grep("Nsd", names(all_total_outliers_resp_and_dist))] + all_total_outliers_resp_and_dist[, grep("Nmahal", names(all_total_outliers_resp_and_dist))]) > 1
+
+c <- drop_na(all_total_outliers_resp_and_dist[b,10:18])
+rownames(c)
 ```
 
 ## References
