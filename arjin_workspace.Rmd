@@ -852,7 +852,7 @@ institutional trust scale, we see the following patterns:
     and disagreement generally falls within the normal range. On
     average, a typical respondent agrees with about 3 items and
     disagrees with around 4 items on the 10-item institutional trust
-    scale. Moreover, the ARS distribution skews slightly to the left,
+    scale. Moreover, the ARS distribution skews slightly to the left
     while the DRS is more centered, indicating that disagreement is more
     common than agreement among respondents.
 
@@ -922,8 +922,6 @@ acquiescence response style (ARS) and disacquiescence response style
 higher values of the response scale reflect higher levels of agreement
 with certain statements or issues.
 
-<!-- I did the similar for NEP below -->
-
 ### 2. NEP Scale
 
 Now we will inspect response style indicators for NEP scale;
@@ -965,8 +963,38 @@ ggplot(NEP_respstyles_long, aes(x = Value, y = after_stat(scaled))) +
 
 ```
 
-Looking at the response styles indicators across all respondents of the
-NEP scale, we see the following patterns: <!--fill in -->
+<!-- I tried to interpret the response style indicators for the NEP Scale differently from the trust scale, but I have some confusion both about the interpretation of the indicators and the reverse-coded structure of the NEP itself. My main confusion is about outliers and their relevance: should we be more concerned with outliers for data quality or should we focus on cumulative tendencies that reflect specific response behaviors? For example, in the case of NERS we see a very high mean of 12. Does this mean that we suspect people are not fully engaging with the questions and are avoiding extremes, potentially giving safe answers without careful reading? When I interpreted the trust scale, I focused on the outliers as key indicators of problematic responses, but for NEP I tried a different approach by focusing more on the general behavior (high NERS and DRS). I am not unsure which one is the correct choice. -->
+
+Remember that NEP Scale consists of reverse coded items, therefore
+responses do not directly reflect agreement or disaggrement unless some
+items are recoded to reflect the same directional attitude. Keeping this
+in mind, summary statistics of response style indicators reveal the
+following patterns; 
+
+-   **MRS** indicates that over the 15 NEP items, respondents on average
+    give 3 middle responses and any respondent providing more than 9
+    middle responses would be considered an outlier. This suggests that
+    middle responding is not a dominant response style among our sample.
+
+-   **ARS** captures the number of responses with 3 and 4, whereas
+    **DRS** captures 1 and 2. Respondents tend to have 1 ARS response
+    and 10 DRS responses on average. This suggests that disacquiescence
+    is a noticeable pattern, while acquiescence is not a driving factor
+    in how people are responding to the NEP scale.
+
+-   **ERS** captures the number of extreme responses of 1 and 5, whereas
+    **NERS** captures the non-extreme responses of 2, 3 and 4. The
+    distribution shows that most respondents tend to use non-extreme
+    responses, with ERS being relatively low. This supports the idea
+    that respondents are avoiding extreme answers and generally sticking
+    to more moderate positions.
+
+In summary, the distribution of response style indicators for the NEP
+Scale suggests that the measure is mostly affected by respondents
+exhibiting disacquiescence and non-extreme responding styles. Therefore,
+our further analysis of data quality should focus on respondents who
+display these response styles, as it may signal potential disengagement
+and careless responding.
 
 <!--Info box -->
 
@@ -996,10 +1024,13 @@ that conclusions are not biased by response patterns.
 
 **Straightlining:** High straightlining percentages are not always
 indicative of low-quality data but may reflect genuine patterns in
-responses. **Extreme Responding:** High extreme response rates may
-represent polarized opinions rather than poor data quality. **Response
-Styles:** Indicators such as acquiescence and disacquiescence offer
-insights into response tendencies but should be interpreted
+responses.
+
+**Extreme Responding:** High extreme response rates may represent
+polarized opinions rather than poor data quality.
+
+**Response Styles:** Indicators such as acquiescence and disacquiescence
+offer insights into response tendencies but should be interpreted
 contextually.
 
 **Important Note:** Removing responses based on perceived quality
@@ -1047,27 +1078,143 @@ Now lets use it on Trust Scale response distribution indicators;
 
 ```{r outlier trust resp_distributions}
 # Use the function to flag outliers
-df <- flag_outliers(NEP_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"))
+trust_distributions_outliers_flagged <- flag_outliers(trust_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"))
 
-# View the updated data frame
-print(df)
+# Drop NAs
+trust_distributions_outliers_flagged <- drop_na(trust_distributions_outliers_flagged)
 
 # Create a new column that flags any outliers across the specified variables
-df$outlier_any <- rowSums(df[, grep("outlier_", names(df))]) > 1
+trust_distributions_outliers_flagged$outlier_any <- rowSums(trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))]) > 0
 
-# Subset the data to include only rows with outliers in at least one variable
-outlier_data <- df[df$outlier_any, ]
-drop_na(outlier_data)
+# View the updated data frame
+print(trust_distributions_outliers_flagged)
 
-# View the subsetted data frame with outliers
-print(outlier_data)
+# Number of respondents at least outlier in any 
+table(trust_distributions_outliers_flagged$outlier_any)
+```
 
-# Subset the data to include only rows with outliers in at least one variable
-outlier_data <- df[df$outlier_ii_mean == 1 | df$outlier_ii_median == 1 | df$outlier_ii_sd == 1 | df$outlier_mahal == 1, ]
-# View the subsetted data frame with outliers
-print(n)
-drop_na(outlier_data)
+```{r}
+# Select the outlier columns
+outlier_data <- trust_distributions_outliers_flagged[, c("outlier_ii_median", "outlier_ii_mean", "outlier_ii_sd", "outlier_mahal")]
 
+# Shorten the column names for readability
+colnames(outlier_data) <- c("median", "mean", "sd", "mahal")
+
+# Convert to logical
+outlier_logical <- outlier_data == TRUE
+
+# Initialize an empty matrix to store results
+overlap_matrix <- matrix(NA, nrow = 4, ncol = 4)
+rownames(overlap_matrix) <- colnames(outlier_logical)
+colnames(overlap_matrix) <- colnames(outlier_logical)
+
+# Calculate overlap for each pair of variables
+for (i in 1:4) {
+  for (j in 1:4) {
+    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
+  }
+}
+
+# Print the overlap matrix
+print(overlap_matrix)
+
+```
+
+Trust Scale response style indicators;
+
+```{r outlier trust resp_style}
+# Use the function to flag outliers
+trust_respstyle_outliers_flagged <- flag_outliers(trust_respstyles, c("MRS", "ARS", "DRS", "ERS", "NERS"))
+
+# Drop NAs
+trust_respstyle_outliers_flagged <- drop_na(trust_respstyle_outliers_flagged)
+
+# Create a new column that flags any outliers across the specified variables
+trust_respstyle_outliers_flagged$outlier_any <- rowSums(trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))]) > 0
+
+# View the updated data frame
+print(trust_respstyle_outliers_flagged)
+
+# Number of respondents at least outlier in any 
+table(trust_respstyle_outliers_flagged$outlier_any)
+trust_respstyle_outliers_flagged
+```
+
+```{r}
+# Select the outlier columns
+outlier_data <- trust_respstyle_outliers_flagged[, c("outlier_MRS", "outlier_ARS", "outlier_DRS", "outlier_ERS", "outlier_NERS")]
+
+# Shorten the column names for readability
+colnames(outlier_data) <- c("MRS", "ARS", "DRS", "ERS", "NERS")
+
+# Convert to logical
+outlier_logical <- outlier_data == TRUE
+
+# Initialize an empty matrix to store results
+overlap_matrix <- matrix(NA, nrow = 5, ncol = 5)
+rownames(overlap_matrix) <- colnames(outlier_logical)
+colnames(overlap_matrix) <- colnames(outlier_logical)
+
+# Calculate overlap for each pair of variables
+for (i in 1:5) {
+  for (j in 1:5) {
+    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
+  }
+}
+
+# Print the overlap matrix
+print(overlap_matrix)
+```
+
+Let's see if some of those people are outliers in both distribution and
+style indicators;
+
+```{r}
+# Create a new data frame to compare outliers from both datasets
+outlier_comparison <- data.frame(
+  outlier_dist = trust_distributions_outliers_flagged$outlier_any,
+  outlier_style = trust_respstyle_outliers_flagged$outlier_any
+)
+
+# Create a new column that indicates outliers in both 
+outlier_comparison$outlier_both <- outlier_comparison$outlier_dist & outlier_comparison$outlier_style
+
+# Summarize the number of respondents flagged as outliers in both 
+summary(outlier_comparison)
+```
+
+```{r}
+# Combine the outlier columns in both flagged datasets
+total_outliers_resp_and_dist <- cbind(
+  trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))],
+  trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))]
+)
+
+# Exclude outlier_any columns for both
+trust_total_outlier_flags_data <- total_outliers_resp_and_dist[,c(1:4, 6:10)]
+
+# Print resulting dataset
+trust_total_outlier_flags_data
+
+# Shorten the column names for readability
+colnames(trust_total_outlier_flags_data) <- c("mean", "median", "sd", "mahal", "MRS", "ARS", "DRS", "ERS", "NERS")
+
+# Initialize the overlap matrix
+overlap_matrix <- matrix(0, nrow = ncol(trust_total_outlier_flags_data), ncol = ncol(trust_total_outlier_flags_data))
+rownames(overlap_matrix) <- colnames(trust_total_outlier_flags_data)
+colnames(overlap_matrix) <- colnames(trust_total_outlier_flags_data)
+
+
+# Calculate overlap for each pair of variables
+for (i in 1:ncol(trust_total_outlier_flags_data)) {
+  for (j in 1:ncol(trust_total_outlier_flags_data)) {
+    overlap_matrix[i, j] <- sum(trust_total_outlier_flags_data[, i] & trust_total_outlier_flags_data[, j]) # Count how often both variables have outliers
+  }
+}
+
+# Print the overlap matrix
+print("Overlap Matrix:")
+print(overlap_matrix)
 ```
 
 ## References
