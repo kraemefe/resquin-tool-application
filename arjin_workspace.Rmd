@@ -12,11 +12,15 @@ editor_options:
     wrap: 72
 ---
 
-<!-- citation.bib added to repository and defined as aspr in yaml -->
 
 # At a glance
 
-<!--summary of main take home messages and lessons to be learned in this tutorial-->
+This tutorial gives an overview on the assessment of response quality in multi-item scales. Specifically, you will learn
+- how to calculate and interpret different indicators of response distribution regarding potential data quality issues
+- how to calculate and interpret indicators of different response styles which can be reflect poor response behavior
+- the caveats of certain response quality indicators and their suitability for different question types and response scales
+- what to do if you detect poor quality responses
+
 
 ## Introduction
 
@@ -54,10 +58,11 @@ attitudes.
 <!--side remark-->
 
 This sub-sample of the GESIS Panel is publicly accessible as the GESIS
-Panel Campus File @gesis_panel_campus_file. <!--reference added-->It
+Panel Campus File @gesis_panel_campus_file. It
 contains a random 25% sample of the GESIS panel members surveyed in 2014
 and comprises only a limited selection of variables from the originial
 GESIS Panel scientific use file.
+<!----->
 
 Political trust is measured with a 10-item scale and a 7-point Likert
 response scale:
@@ -92,11 +97,10 @@ groups?
 **Response Scale:** 1 = Don’t trust at all - 7 = Entirely trust
 
 Environmental attitudes are measured with the established NEP (New
-Ecological Paradigm) scale by @dunlap_et_al_2022 comprising 15 items on
+Ecological Paradigm) scale by @dunlap_et_al_2002 comprising 15 items on
 different aspects of environmental or climate attitudes. The multi-item
 scale uses a 5-point Likert response scale.
 
-<!-- reference added for NEP - should be checked -->
 
 **NEP scale:** Environmental attitudes
 
@@ -141,51 +145,48 @@ Don't agree; 5 = Fully disagree
 
 To ensure unbiased conclusions regarding a substantial relationship
 between two construct, we advise to initially investigate the quality of
-given responses to a measurement instrument. There are several
+given responses to the respective measurement instruments. There are several
 indicators which can help identify low-quality responses and assess the
 response quality in multi-item scales.
 
-In this case, we will specifically look at several indicators of
+In this tutorial, we will specifically look at several indicators of
 response distribution, such as:
 
--   n_na: the count of missing answers across multiple items per
-    respondent or
--   prop_na: the proportion of missing responses across multiple items
-    per respondent
--   ii_mean: the mean over multiple items per respondent
--   ii_median: the median over multiple items per respondent
--   ii_sd: the standard deviation across multiple items per respondent
--   mahal: the mahalanobis distance per respondent.
-    <!-- Mouseover: "Represents the distance of a respondents' answers from the center of a multivariate normal distribution. -->
-
-<!-- Mouseover could also be: "It calculates an average response pattern over the given set of items and produces a score for each respondent that measures how different their responses are from this average pattern. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the group. -->
+-   the proportion of missing responses across multiple items
+    per respondent (prop_na)
+-   the mean over multiple items per respondent (ii_mean)
+-   the median over multiple items per respondent (ii_median)
+-   the standard deviation across multiple items per respondent (ii_sd)
+-   the mahalanobis distance per respondent (mahal)
+    <!-- Popover: "The mahalanobis distance captures how different each respondent's pattern of answers is from the "typical" response pattern of all respondents. A higher score indicates that the
+    respondent’s answers are more unusual or inconsistent compared to the other respondents. -->
 
 Apart from peculiarities in the response distribution of our multi-item
 scales, we will further consider indicators of different response
 biases, namely:
 
 -   MRS: Indicator of mid-point response bias (tendency to select the
-    neutral/middle option on a scale); indicates sum of mid-point
+    neutral/middle option on a scale; only valid if scale has a numeric midpoint); indicates sum of mid-point
     responses across multiple items
-    <!-- Mouseover: "Only if scale has a numeric mid-point" -->
+   
 -   ARS: Indicator of acquiescence bias (tendency to agree with
-    statements irrespective of actual views); indicates sum of responses
+    statements irrespective of actual views; only valid for scales with agree-disagree format); indicates sum of responses
     above the scale mid-point across multiple items
-    <!-- Mouseover: "Only for scales with agree-disagree format" -->
+  
 -   ERS: Indicator of extreme response bias (tendency to select most
     extreme response options on a scale); indicates sum of responses at
     both endpoints of the multi-item scale.
-
+<!--Design feature: Here an accordeon would be nice to depict the definition of each response style-->
 <!--  DRS is mentioned as DARS in the help page but data frame returns it as DRS. I think this is a typo in the help page to be noted -->
 
 To calculate these indicators for the assessment of response quality of
 our multi-item scales, we will use the `Resquin` package in R. The
-`resquin` package comprises several functions to calculate response
+`resquin` package comprises different functions to calculate response
 quality indicators for multi-item scales. The quality indicators are
 calculated per respondent. Specifically, we will use the two functions
 `resp_distributions` (indicators of response distribution) and
 `resp_styles`(response style indicators), designed to assess response
-quality based on response distribution and identifying certain response
+quality based on response distribution and on identifying certain response
 biases.
 
 ## Getting started
@@ -315,13 +316,11 @@ NEP_distribution <- resp_distributions(NEP)
 NEP_distribution[1:10,]
 ```
 
-<!-- I made some significant changes in the rest of the document -->
-
 <!--Info box start-->
 
 ***Package-specific feature***
 
-`resp_distributions` returns a data frame containing the several
+`resp_distributions` returns a data frame containing several
 indicators of response distribution per respondent (displayed as
 separate rows of the data frame). Inspecting the calculated indicators
 for the first 10 respondents in our data frame, we see that for 1 out of
@@ -343,43 +342,41 @@ to calculate the respective indicators of response distribution.
 
 ***Be careful!***
 
-Generally, the more complete data we have from respondents on a certain
+Generally, the more complete data we have from respondents on a 
 multi-item scale, the better! Moreover, the majority of indicators is
 most meaningful when respondents show complete data across all items of
 a scale compared to calculating an indicator of response distribution
-for e.g., only two answered items. Nevertheless, by only including
-respondents with complete data, your sample can be drastically reduced
-and you might lose many observations with incomplete but "sufficient"
+for e.g., only two answered items. Usually, the absence of one value within
+a set of responses can already undermine the identification of response patterns.
+Nevertheless, by only including respondents with complete data, your sample can
+be drastically reduced and you might lose many observations with incomplete but "sufficient"
 data (e.g., respondents who responded to 4 out of 5 questions of a
 multi-item scale). To include respondents with incomplete data, you can
 simply decrease the necessary number of valid responses per respondent
 by specifying the `min_valid_responses` option.
-
 We advise to specify the cut-offs regarding how many valid answers a
 respondent should have depending on the number of items in your scale
 and to consider higher cut-offs or excluding respondents with NAs
-completely if the scale comprises only a few items (ideally fewer than
-10). Nevertheless, specifying cut-offs for valid responses is more or
+completely if the scale comprises only a few items, i.e., less than 10 items. 
+Nevertheless, specifying cut-offs for valid responses is more or
 less arbitrary and should always be considered after looking at the
 data. In any case, make sure to thoroughly document and report which
 cut-off you used to exclude respondents from the analysis.
 
-<!-- We aim to shortly explain that this option exists and what it does. But that we generally recommend to exclude respondents with NAs, especially if the number of items in the multi-item scale is below 10. -->
+<!-- Let's see if we can find any references from the literature on how to deal with NAs -->
 
-<!--Info box end-->
 
-We will proceed with the inspection of response distribution indicators
-only for those respondents who show no missing values for the
+Due to a sufficient sample size, we will follow a strict approach and investigate
+response distribution indicators only for those respondents who show no missing values for the
 institutional trust and environmental attitudes scale.
 
 ## Indicators of response distribution
 
 To analyze the response distribution of institutional trust and
-environmental attitudes across *all respondents*, we can calculate and
-visualize summary statistics for each indicator in the data frame
-generated by `resp_distributions`. This will help us understand the
-typical behavior among respondents, as well as the variability that may
-indicate unusual response patterns.
+environmental attitudes across *all respondents*, we calculate and
+visualize the distribution of summary statistics for each indicator in the data frame
+generated by `resp_distributions`. This will help us understand
+typical response behaviors among the respondents as well as unusual response patterns overall.
 
 ### 1. Institutional Trust Scale
 
@@ -422,12 +419,13 @@ ggplot(trust_distribution_long, aes(x = Value, y = after_stat(scaled))) +
 
 ```
 
+<!--Info box -->
 The density and box plots provide a quick visualization of central
-tendency and variability across all indicators. Box plots highlight key
-summary statistics like the median, quartiles, and potential outliers,
+tendency and variability parameters across the calculated indicators.
+Box plots highlight key summary statistics like the median, quartiles, and potential outliers,
 while density plots complement this by showing the distribution shape
-and peaks. Together, they give a fuller picture of how responses are
-distributed.
+and peaks. Together, they give us a full picture of how response patterns across the items of the scales
+are distributed in our sample.
 
 
 
@@ -438,60 +436,63 @@ tendency**: `ii_mean` (average response) and `ii_median` (central
 response) for each respondent.
 
 
-For the 10-item scale of institutional trust (ranging from 1 to 7):
+From our output of the average response distribution indicators of the 10-item scale
+of institutional trust (ranging from 1 to 7), we can conclude the following:
 
 -   The mean of `ii_mean` is 3.755, and the median of `ii_mean` is
-    3.800. This indicates that the distribution of `ii_mean` across all
-    respondents is nearly normal, with a slight skew towards lower
+    3.800. These parameters tell us, that *on average* respondents select an average response
+    with the value 3.8 across all items of the institutional trust scale. Looking at the median of
+    `ii_mean` shows us that 50% of our respondents select responses up to the value of 4. The plot
+    additionally indicated a nearly normal distribution of `ii_mean` with a slight skew towards lower
     values.
 -   The `ii_median` has a mean value of 3.645 and a median value of
-    4.000. These values indicates an almost normal distribution for
-    central values, which are neutral or leans slightly towards lower
-    end of the scale.
--   Box plots for both indicators show that half of the respondents have
-    scores between 3.0 and 4.5. Outliers exist at 7, representing the
-    highest possible value, while lower extremes are within a normal
-    range.
+    4.000. These parameters indicate that *on average* 50% of the given answers across
+    the items of the institutional trust scale ly below the value of 3.7 and that 50% of our respondents
+    give a value up to 4 for 50% of their responses across the items of the institutional trust scale. 
+-   Box plots for both indicators further undermine the calculated indcators by showing that half of the
+    respondents have scores between the values 3.0 and 4.5. Outliers exist at the value of 7,
+    representing the highest possible value, while lower extremes are within a normal
+    range. 
 
-*In summary*, the central tendency indicators shows a balanced
-distribution overall with few extreme outliers at the higher end. Most
-of the respondents fall within the normal range and do not stand out as
-suspicious or unusual at first glance.
+*In summary*, the central tendency indicators show a balanced
+distribution overall with few extreme outliers at the higher end. However, the fact that the median of given responses
+lies at the value of 4 could indicate respondents' tendency to select the mid-point or answers close to the mid-point of the scale avoiding
+giving extreme responses.
 
 `resp_distributions` also provides two measures of **variability**:
 `ii_sd` (individual response variability) and `mahal` (deviation from
-overall response patterns).
+overall response patterns). From the output, we can see the following:
 
--   The mean `ii_sd` is 1.13, meaning, on average, respondents’ trust
-    levels fluctuate by about 1 point from their own personal average.
+-   The mean `ii_sd` is 1.13, meaning, *on average*, respondents’ answers across the
+    items of the scale vary by about 1 point from their average response across the items.
 
 -   The third quartile of `ii_sd` is 1.45, meaning 75% of respondents
     have moderate variability in their responses, with some showing
-    higher fluctuations. Those with variability exceeding 2.5 points are
-    considered extreme within the group, and these respondents may need
-    further scrutiny to ensure the reliability of their data.
+    higher fluctuations around their personal mean response across items.
+    Those respondents with a variability exceeding the value of 2.5 are
+    outliers among the other respondents and need further investigation.
 
 -   Mahalanobis distance (`mahal`) does not have a straightforward
     interpretation like `ii_sd`. However, respondents with `mahal`
     scores slightly above 5 exhibit highly dissimilar response patterns
-    compared to the overall average. These outliers could flag potential
-    data quality concerns and requires further examination.
+    compared to the overall average response pattern. These outliers could indicate potential
+    data quality concerns and also require further examination.
 
 *In summary*, most respondents show moderate variability indicating
-consistent responding, but a few demonstrate significant deviations that
-may require further investigation with additional checks to assess the
-consistency and reliability of their responses. Mahalanobis distance
-helps identify these respondents whose patterns deviate substantially
-from the group norm.
+consistent responding, which again might point towards a tendency to select non-extreme answers
+close to the mid-point of the scale. A few respondents demonstrate significant deviations that
+may require further investigation with additional checks to assess whether
+their responses reflect poor response behavior. Mahalanobis distance can
+help identify these respondents whose patterns deviate substantially
+from the average response pattern across all respondents.
 
-<!-- Should we mention that we will closely inspect those outliers later in the tutorial?-->
 
 **Straightlining or non-differentiation**
 
 From the standard deviation across items we can additionally infer
 whether respondents show straightlining response behavior across the
-multiple items of the each scale. *Straightlining or
-non-differentiation* describes the response pattern of selecting the
+multiple items of each scale. *Straightlining or non-differentiation*
+describes the response pattern of selecting the
 identical answer to a series of questions or items of a scale. It can
 indicate whether a respondent properly processed the respective
 question(s) or used shortcuts to reduce cognitive burden which in turn
@@ -499,7 +500,8 @@ produces poor quality answers that do not represent a respondents' true
 values. To get a measure for straightlining response behavior, we
 generate a new indicator based on a respondents' standard deviation
 across the several items:
-<!-- comment on different operationalizations of straightlining, maybe even refer to literature here (as special feature) -->
+
+
 
 ```{r straightlining trust}
 # Generating straightlining indicator for institutional trust scale 
@@ -512,11 +514,20 @@ proportion_nondiff <- prop.table(table(trust_distribution$non_diff))[2]
 proportion_nondiff
 ```
 
-The results show that about 5% of respondents show **straightlining
-response behavior** in the institutional trust scale, meaning that 5% of
-respondents selected an identical answer across the several items.
+<!-- Side remark -->
+Apart from a binary measure indicating the selection of the identical answer versus to selecting at least two different responses across a set of items is only one of several possible operationalizations of straightlining or non-differentiation. For an overview of the different possible operationalizations used in research, see @Kim_ et al., 2019_et_al_2019.
+<!-- add reference: Kim, Y., Dykema, J., Stevenson, J., Black, P., & Moberg, D. P. (2019). Straightlining: Overview of measurement, comparison of indicators, and effects in mail–web mixed-mode surveys. Social Science Computer Review, 37(2), 214-233. -->
 
-<!--Info box start -->
+The results show that about 5% of respondents show **straightlining response behavior**
+in the institutional trust scale, meaning that 5% of
+respondents selected the identical answer across the several items. This is a relatively low
+proportion of straightlining behavior across respondents and does not indicate general
+data quality issues. However, it is necessary to flag these respondents who show
+straightlining across the items of a scale for further investigation.
+
+<!--create code here to flag them -->
+
+<!--Info box -->
 
 **Be careful!**
 
@@ -525,19 +536,17 @@ resulting in poor quality responses, we advise to always pay attention
 to the contents of the several items of a scale before drawing
 conclusions. For some multi-item scales, selecting identical answers
 across all the items can be plausible and reflect respondents' true
-values. For example, some scales comprise items that are both positive
-and negative formulated - in this case straightlining seems more
+values. For example, some scales comprise items that are both positively
+and negatively formulated - in this case straightlining seems more
 implausible and more likely represents poor quality responses. In this
-case, however, all items are identically formulated and showing the
-identical answer across all items can reflect genuine distrust or trust
-in institutions overall.
-<!--comment on additional checks to make sure, such as using response times or other response biases/styles -->
+case, however, all items are identically formulated and cover trust in several official institutions.
+Showing the identical answer across all items might reflect genuine distrust or trust
+in institutions overall. To make sure that you are in fact identifying careless respondents, 
+we advise to look at response times for the question at hand. Identifying extremely low response times
+against this background is is a common strategy to approach the question whether respondents did not pay attention
+to the question or show genuinenly undifferentiated answers.
 
-<!-- I don't know... Now reading this I'm not sure if we can confidently make this statement and maybe it would be better to include political engagement instead to have a clear case of plausible straightlining vs. a clear case of implausible straightlining (environmental attitudes scale) - What do you think? -->
 
-<!-- maybe we could also discuss here that users should be cautious since not only perfect straightlining (literally always the same answer) but also straightlining with e.g., 8 out of 9 items with the same answer could be problematic -->
-
-<!--Info box end -->
 
 ### 2. NEP Scale
 
