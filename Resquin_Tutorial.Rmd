@@ -4,10 +4,10 @@ author:
   - "Fabienne Kraemer"
   - "Arjin Eser"
   - "Çağla Yıldız"
-date: "2024-11-04"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   html_document: default
-  word_document: default
+  pdf_document: default
 bibliography: citation.bib
 biblio-style: apsr
 editor_options: 
@@ -20,14 +20,25 @@ citation: "Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024). *Assessin
 
 # At a glance
 
-This tutorial gives an overview on the assessment of response quality in multi-item scales. Specifically, you will learn
+What do we need to be aware of when analyzing responses of multi-item scales? Which response quality issues can affect data from multi-item scales?
+This tool gives an overview on the assessment of response quality in multi-item scales and guides you through the quality analysis with replicable R-code. Specifically, you will learn
 - how to calculate and interpret different indicators of response distribution regarding potential data quality issues
 - how to calculate and interpret indicators of different response styles which can reflect poor response behavior
 - the caveats of certain response quality indicators and their suitability for different question types and response scales
 - what to do if you detect poor quality responses
 
+### Table of Content
 
-## Introduction
+
+[Introduction](#introduction)
+
+[Set-up](#set-up)
+
+[Tool application](#tool-application)
+
+[Conclusion and recommendations](#conclusion-and-recommendations)
+
+# Introduction
 
 Psychological constructs, political or social attitudes as well as
 behavioral patterns are often measured by using multi-item scales in
@@ -50,6 +61,7 @@ political/institutional trust and environmental attitudes which both are
 measured by multi-item scales and assess the quality of given responses
 to these scales.
 
+# Set-up
 ## Data and Measurement Instruments
 
 For this tutorial, we use data from the GESIS Panel. The GESIS Panel is
@@ -79,25 +91,16 @@ groups?
 
 **Items:**
 
--   bbzc078a: Trust in Bundestag
-
--   bbzc079a: Trust in federal government
-
--   bbzc080a: Trust in political parties
-
--   bbzc081a: Trust in judicial authorities
-
--   bbzc082a: Trust in police
-
--   bbzc083a: Trust in politicians
-
--   bbzc084a: Trust in media
-
--   bbzc085a: Trust in European Union
-
--   bbzc086a: Trust in United Nations
-
--   bbzc087a: Trust in Federal Constitutional Court
+- bbzc078a: Trust in Bundestag
+- bbzc079a: Trust in federal government
+- bbzc080a: Trust in political parties
+- bbzc081a: Trust in judicial authorities
+- bbzc082a: Trust in police
+- bbzc083a: Trust in politicians
+- bbzc084a: Trust in media
+- bbzc085a: Trust in European Union
+- bbzc086a: Trust in United Nations
+- bbzc087a: Trust in Federal Constitutional Court
 
 **Response Scale:** 1 = Don’t trust at all - 7 = Entirely trust
 
@@ -114,33 +117,19 @@ To what extent do you agree or disagree with the following statements?
 **Items:**
 
 -   bczd005a: NEP-scale: Approaching maximum number of humans
-
 -   bczd006a: NEP-scale: The right to adapt environment to the needs
-
 -   bczd007a: NEP-scale: Consequences of human intervention
-
 -   bczd008a: NEP-scale: Human ingenuity
-
 -   bczd009a: NEP-scale: Abuse of the environment by humans
-
 -   bczd010a: NEP-scale: Sufficient natural resources
-
 -   bczd011a: NEP-scale: Equal rights for plants and animals
-
 -   bczd012a: NEP-scale: Balance of nature stable enough
-
 -   bczd013a: NEP-scale: Humans are subjected to natural laws
-
 -   bczd014a: NEP-scale: Environmental crisis greatly exaggerated
-
 -   bczd015a: NEP-scale: Earth is like spaceship
-
 -   bczd016a: NEP-scale: Humans were assigned to rule over nature
-
 -   bczd017a: NEP-scale: Balance of nature is very sensitive
-
 -   bczd018a: NEP-scale: Control nature
-
 -   bczd019a: NEP-scale: Environmental disaster
 
 **Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 =
@@ -295,6 +284,8 @@ NEP <- NEP %>%
 # View the new recoded data frame
 print(NEP)
 ```
+
+# Tool application
 
 ## Calculating indicators of response distribution
 
@@ -865,79 +856,55 @@ institutional trust scale, we see the following patterns:
     midpoint of the scale (response of the value 4) for about two out of ten items.
     The boxplot shows that selecting anywhere between 0 to 8 midpoint responses
     across the items of the scale lies within the normal range among the sample.
-    However, respondents who select mid-point responses for 9 or 10 items are outliers,
+    However, respondents who select the scale mid-point for 9 or 10 items are outliers,
     reflecting an usual high amount of given mid-point answers in the sample.
 
--   ***ARS:*** These indicators reflect the tendency to agree or
-    disagree with statements by summing responses higher or lower than
-    the midpoint:
-
-    -   ARS captures responses of 5, 6, and 7, indicating varying levels
-        of agreement.
-    -   DRS captures responses of 1, 2, and 3, indicating varying levels
-        of disagreement.
-
-    The distribution of both indicators shows that expressing agreement
-    and disagreement generally falls within the normal range. On
-    average, a typical respondent agrees with about 3 items and
-    disagrees with around 4 items on the 10-item institutional trust
-    scale. Moreover, the ARS distribution skews slightly to the left
-    while the DRS is more centered, indicating that disagreement is more
-    common than agreement among respondents.
-
-    This pattern also aligns with the findings from the MRS, suggesting
-    that consistently selecting middle responses is not typical, which
-    could flag potential data quality issues when it occurs more
-    frequently.
-
--   ***ERS and NERS:*** Although we observe that having a clear attitude
-    (either agreeing or disagreeing) is more common than remaining
-    neutral, it’s important to examine other indicators, ERS or NERS, to
-    assess whether extreme responses are prevalent or whether
-    respondents tend to avoid both middle and extreme options.
-
-    ERS and NERS are symmetrically related and reflect extreme and
-    non-extreme responding respectively;
+-   ***ARS:*** On average, respondents "agree" with about three out of ten items. The ARS indicator defines
+    agreement as selecting response options above the scale mid-point, that is every response that indicates some
+    level of trust toward a specific institutions or in other words, "agrees" with the trustworthiness
+    of that institution. While 75% of respondents do not agree with more than five out of the ten
+    items, agreement up to every item of the scale falls within the typical distribution range
+    of the sample and does so far not raise any concerns for the response quality of the
+    institutional trust scale.
+    
+  
+-   ***ERS:*** On average, respondents select extreme responses (i.e., the lower and upper endpoint of the scale)
+    for only one out of ten items. Moreover, the majority of respondents does not provide more than two
+    extreme responses across the items of the scale. Respondents providing more than five extreme responses
+    are outliers in the sample, indicating a potential bias of those responses.
 
 
-    -   ERS captures the total number of items responded to with the
-        extremes (1 or 7).
 
-    -   NERS captures the opposite, the sum of items responded to with
-        non-extreme values (2, 3, 4, 5, and 6).
+***In summary***, the investigated response style indicators reveal that the majority
+of respondents does not show an excessive use of the mid-point as well as the endpoints
+of the institutional trust scale. Respondents who (almost) continuously select middle
+responses (which could also indicate straightlining behavior) are respondents with more than five
+extreme responses across items are outliers. These respondents should be further checked for anomalies
+in their response behavior (e.g., their response times) to exclude data quality concerns.
 
-    The symmetrical patterns is also observable from the plots: most
-    respondents provide 2 or fewer extreme responses while selecting
-    more than 5 extreme responses is considered an outlier, indicating
-    potential extreme responding behavior.
-
-***In summary***, all of the indicators reveal that most respondents
-tend to avoid both extreme and middle responses. Choosing 5 or more
-extreme responses (1 or 7) and selecting more than 8 middle responses
-(4) represent outlier patterns of responding. These findings suggest
-that, in aggregate, respondents typically express agreement or
-disagreement without resorting to extreme responses. Consequently, it is
-essential to closely examine these outliers to assess the reliability of
-their answers and identify potential data quality concerns.
-
+<!--Info box -->
+**Be careful!**
+When interpreting the indicator of acquiescence response style (ARS), be
+aware that strictly speaking you can only meaningfully interpret the indicator
+for actual agreement/disagreement - scales. For the purpose of this tutorial,
+we calculated and interpreted it for the trust scale ranging from complete distrust to
+complete trust to show how to extract some information about potential data quality issues
+from it. However, for scientific publications or data quality reports, we recommend to not use
+the ARS-indicators for scales other than agreement/disagreement - scales. Be also aware that the
+calculation of the ARS indicator assumes that the response scale is positively polarized, i.e.,
+higher values of the response scale reflect higher levels of agreement with certain statements or issues.
 
 <!--Info box -->
 
-**Be careful** When interpreting the indicators for the different
-response styles, keep in mind that disacquiescence response style (DRS)
-is the direct inverse of the acquiescence response style indicators
-(ARS) (the same applies for the indicators of extreme response style
-(ERS) and non-extreme response style (NERS)) This means that both
-indicators together cannot be meaningfully interpreted regarding the
-quality of given responses. Instead, the two response styles should be
-evaluated regarding their magnitude across all respondents and the
-measures under investigation. In our case, this means that XY
-<!-- adapt --> Be also aware that the calculation of the indicators of
-acquiescence response style (ARS) and disacquiescence response style
-(DARS) assumes that the response scale is positively polarized, i.e.,
-higher values of the response scale reflect higher levels of agreement
-with certain statements or issues.
-
+**Package-specific feature**
+Apart from MRS, ARS, and ERS, the `resquin`-package additionally calculates an indicator
+for disacquiescence response style (DRS), i.e., the tendency to disagree with statements,
+and an indicator for non-extreme response style (NERS), i.e., the tendency to select non-
+extreme answers across a set of items. When interpreting the indicators for these
+response styles, keep in mind that the DRS-indicator is the _direct opposite_ of the
+ARS-indicator and the NERS-indicator is the _direct inverse_ of the ERS-indicator.
+Especially, for NERS and ERS it might be pointless to meaningfully interpret both indicators
+at the same time.
 
 
 ### 2. NEP Scale
@@ -981,13 +948,11 @@ ggplot(NEP_respstyles_long, aes(x = Value, y = after_stat(scaled))) +
 
 ```
 
-<!-- I tried to interpret the response style indicators for the NEP Scale differently from the trust scale, but I have some confusion both about the interpretation of the indicators and the reverse-coded structure of the NEP itself. My main confusion is about outliers and their relevance: should we be more concerned with outliers for data quality or should we focus on cumulative tendencies that reflect specific response behaviors? For example, in the case of NERS we see a very high mean of 12. Does this mean that we suspect people are not fully engaging with the questions and are avoiding extremes, potentially giving safe answers without careful reading? When I interpreted the trust scale, I focused on the outliers as key indicators of problematic responses, but for NEP I tried a different approach by focusing more on the general behavior (high NERS and DRS). I am not unsure which one is the correct choice. -->
-
 Remember that NEP Scale consists of reverse coded items, therefore
 responses do not directly reflect agreement or disaggrement unless some
 items are recoded to reflect the same directional attitude. Keeping this
 in mind, summary statistics of response style indicators reveal the
-following patterns; 
+following patterns
 
 -   **MRS** indicates that over the 15 NEP items, respondents on average
     give 3 middle responses and any respondent providing more than 9
@@ -1029,7 +994,7 @@ questionnaire but are in a consecutive order. As long as the several
 questions are sequential and share the same response scale, it is
 possible to calculate meaningful indicators of response styles.
 
-## Conclusion and recommendations
+# Conclusion and recommendations
 
 Overall, the indicators suggest that while there is some variability in
 responses, the data appears to be of reasonable quality. However, it's
@@ -1480,6 +1445,6 @@ rownames(c)
 
 
 
-### How to Cite This Document
+### How to Cite This Work
 
-Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024) *Assessing Response Quality and Careless Responding in Multi-Item Scales*. GitHub Repository. URL: <https://github.com/kraemefe/resquin-tool-application> 
+Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024) *Assessing Response Quality and Careless Responding in Multi-Item Scales*. KODAQS Data Quality Toolbox.
