@@ -34,13 +34,11 @@ For information on the functions of and how to use `resquin` see [resquin](https
 
 ## Installation
 
-`resquin` is available via github. To install `resquin` from github, you
-can use one of the following commands:
+`resquin` is available on CRAN. You can install `resquin`, by using the following commands:
 
-```{r eval=FALSE}
-# Installing resquin with devtools
-devtools::install_github("https://github.com/MatRoth/resquin")
-
-# Installing resquin with pak
-pak::pak("https://github.com/MatRoth/resquin")
+```{r install resquin}
+# Installing resquin
+install.packages("resquin")
+# Loading resquin into the R session
+library(resquin)
 ```
