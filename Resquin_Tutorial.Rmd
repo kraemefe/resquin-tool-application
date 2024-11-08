@@ -878,7 +878,7 @@ institutional trust scale, we see the following patterns:
 ***In summary***, the investigated response style indicators reveal that the majority
 of respondents does not show an excessive use of the mid-point as well as the endpoints
 of the institutional trust scale. Respondents who (almost) continuously select middle
-responses (which could also indicate straightlining behavior) are respondents with more than five
+responses (which could also indicate straightlining behavior) and respondents with more than five
 extreme responses across items are outliers. These respondents should be further checked for anomalies
 in their response behavior (e.g., their response times) to exclude data quality concerns.
 
@@ -890,7 +890,7 @@ for actual agreement/disagreement - scales. For the purpose of this tutorial,
 we calculated and interpreted it for the trust scale ranging from complete distrust to
 complete trust to show how to extract some information about potential data quality issues
 from it. However, for scientific publications or data quality reports, we recommend to not use
-the ARS-indicators for scales other than agreement/disagreement - scales. Be also aware that the
+the ARS-indicator for scales other than agreement/disagreement - scales. Be also aware that the
 calculation of the ARS indicator assumes that the response scale is positively polarized, i.e.,
 higher values of the response scale reflect higher levels of agreement with certain statements or issues.
 
@@ -908,6 +908,8 @@ at the same time.
 
 
 ### 2. NEP Scale
+
+<!-- negatively coded scale, ARS is computed assuming positively polarized scales, so we have to recode-->
 
 Let's now inspect response style indicators for the NEP scale:
 
@@ -948,36 +950,43 @@ ggplot(NEP_respstyles_long, aes(x = Value, y = after_stat(scaled))) +
 
 ```
 
-Remember that NEP Scale consists of reverse coded items, therefore
-responses do not directly reflect agreement or disaggrement unless some
-items are recoded to reflect the same directional attitude. Keeping this
-in mind, summary statistics of response style indicators reveal the
-following patterns
+The distribution of response style indicators across all respondents of the
+NEP-scale, reveals the following patterns:
 
--   **MRS** indicates that over the 15 NEP items, respondents on average
-    give 3 middle responses and any respondent providing more than 9
-    middle responses would be considered an outlier. This suggests that
-    middle responding is not a dominant response style among our sample.
+-   **MRS:** Respondents on average select the middle response for three out of the 15
+    items of the NEP scale. Respondents with more than nine mid-point responses
+    are outliers in the sample while respondents maximally selected 11 mid-point responses
+    for the 15 items. Similarly to the institutional trust scale, this distribution pattern
+    suggest that mid-point responding is not a dominant response style for the NEP scale among our
+    sample. Therefore, outliers should be carefully checked regarding their response behavior
+    to exclude data quality issues.
 
--   **ARS** captures the number of responses with 3 and 4, whereas
-    **DRS** captures 1 and 2. Respondents tend to have 1 ARS response
-    and 10 DRS responses on average. This suggests that disacquiescence
-    is a noticeable pattern, while acquiescence is not a driving factor
-    in how people are responding to the NEP scale.
+-   **ARS:** On average, respondents show a remarkable high amount of agreeing responses
+    by agreeing with about 11 out of 15 items. This suggests that the data of the NEP scale might be affected
+    by agreement bias that does not reflect respondents true values. Especially against the background of
+    reversely coded items (i.e., eight items are formulated pro-environmental
+    and 7 items are formulated anti-environmental) this amount of average agreement contradicts reported attitudes.
+    This concern of data quality is further undermined by respondents on maximum agreeing with all of the items of
+    the scale irrespective of their opposite wording. Therefore, respondents with more than eight agreeing responses across items
+    should be flaggedm closely checked regarding their response behavior, and additional proxies, such as their response times, should be
+    investigated to gain further insights into the quality of their responses. 
 
--   **ERS** captures the number of extreme responses of 1 and 5, whereas
-    **NERS** captures the non-extreme responses of 2, 3 and 4. The
-    distribution shows that most respondents tend to use non-extreme
-    responses, with ERS being relatively low. This supports the idea
-    that respondents are avoiding extreme answers and generally sticking
-    to more moderate positions.
+-   **ERS:** On average, respondents select the extreme end-points of the scale to
+    about two to three out of 15 items. Respondents with more than 8 extreme responses
+    across the items of the scale are considered outliers in the sample. Overall,
+    the distribution suggests that respondents indeed avoid extreme answers and
+    stick to more moderate positions. Consequently, those with a high amount of given
+    extreme responses and respondents who provided endpoint responses to all of the 15 items
+    of the scale should be carefully investigated regarding any data quality concerns.
 
-*In summary*, the distribution of response style indicators for the NEP
-Scale suggests that the measure is mostly affected by respondents
-exhibiting disacquiescence and non-extreme responding styles. Therefore,
-our further analysis of data quality should focus on respondents who
-display these response styles, as it may signal potential disengagement
-and careless responding.
+*In summary*, the distribution of response style indicators for the NEP-scale suggests
+that the measure is generally not affected by mid-point or extreme responding although some outliers
+give cause for data quality concerns and should be flagged for further investigation.
+Nevertheless, the data of the NEP-scale seems to be remarkably affected by agreement bias with
+the average respondent providing agreeing responses to 10 out of 15 items despite their reverse wording.
+Respondents with more agreeing responses than positively or negatively formulated items should be flagged
+and closely inspected regarding the quality of their responses. This in particular true for those respondents
+who straightlined across the items of the scale.
 
 <!--Info box -->
 
@@ -996,24 +1005,24 @@ possible to calculate meaningful indicators of response styles.
 
 # Conclusion and recommendations
 
-Overall, the indicators suggest that while there is some variability in
-responses, the data appears to be of reasonable quality. However, it's
-important to consider these response styles when analyzing the
-relationship between trust in institutions and other variables to ensure
-that conclusions are not biased by response patterns.
+Overall, responses of the institutional trust scale are not affected by any major response bias.
+However, we do find unusual response patterns regarding straightlining responses and outliers in
+the sample who showed an unusual extent of mid-point and extreme responding. These respondents should be flagged
+as their response behavior calls for additional checks regarding data quality.
+
 
 **Straightlining:** High straightlining percentages are not always
 indicative of low-quality data but may reflect genuine patterns in
 responses.
 
-**Extreme Responding:** High extreme response rates may represent
+**Acquiescence response style:** High extreme response rates may represent
 polarized opinions rather than poor data quality.
 
-**Response Styles:** Indicators such as acquiescence and disacquiescence
+**Outliers:** Indicators such as acquiescence and disacquiescence
 offer insights into response tendencies but should be interpreted
 contextually.
 
-**Important Note:** Removing responses based on perceived quality
+**Recommendation:** Removing responses based on perceived quality
 without considering the context could introduce bias into your analysis.
 Always interpret these indicators carefully and consider their
 implications for your research findings.
