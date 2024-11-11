@@ -877,7 +877,7 @@ institutional trust scale, we see the following patterns:
 
 ***In summary***, the investigated response style indicators reveal that the majority
 of respondents does not show an excessive use of the mid-point as well as the endpoints
-of the institutional trust scale. Respondents who (almost) continuously select middle
+of the institutional trust scale. Respondents who (almost) consistently select middle
 responses (which could also indicate straightlining behavior) and respondents with more than five
 extreme responses across items are outliers. These respondents should be further checked for anomalies
 in their response behavior (e.g., their response times) to exclude data quality concerns.
@@ -1005,450 +1005,65 @@ possible to calculate meaningful indicators of response styles.
 
 # Conclusion and recommendations
 
+*Institutional Trust Scale*
 Overall, responses of the institutional trust scale are not affected by any major response bias.
 However, we do find unusual response patterns regarding straightlining responses and outliers in
-the sample who showed an unusual extent of mid-point and extreme responding. These respondents should be flagged
-as their response behavior calls for additional checks regarding data quality.
+the sample who showed an unusual extent of mid-point and extreme responding. These respondents should
+definitely be flagged and ideally, their response behavior should be investigated in greater detail.
+
+*NEP Scale*
+Similarly, responses of the NEP scale are not affected by mid-point or extreme responding,
+although again, outliers give reason for data quality concerns. Additionally, we find straightlining
+response behavior with on overall, a low prevalence of only 0.5% of straightlining responses. However,
+these respondents most likely present a data quality concern due to the reversely coded nature of the scale.
+Most importantly, the data is affected by acquiescence bias with respondents on average agreeing to 10 out of
+15 items. Again, due to the reversely coded items of the scale, this pattern suggests poor data quality with responses
+detached from true values. Respondents with suspicious response behaviors should be flagged and ideally further checked.
+
+**Straightlining:** Straightlining response behavior is generally seen as a sign of low engagement and of respondents
+providing only minimal effort in the response generation process, which can potentially compromise data quality.
+However, we advise against interpreting straightlining behavior blindly as a data quality issue. Dependent on the
+underlying response scale and the construct to be measured, straightlining can sometimes reflect valid and genuine
+responses. One useful criterion to assess whether straightlining can be valid or reflects poor quality responses is
+to determine whether the underlying scale contains reversely coded items. In our example, we cannot fully exclude the
+possibility that straightlining response behavior in the institutional trust scale indicates genuine trust or distrust across
+all listed institutions or a respondents' genuine indifference, especially in the case of the absence of a "don't know" - response option.
+For the NEP-scale on the other hand, straightlined responses across item contradict each other as half of the items measure pro-environmental
+and the other half anti-environmental attitudes. Therefore, we recommend to always pay attention to the construct measured and how the scale
+measures it to assess whether all straightlining respondents are a severe threat to data quality.
+
+**Acquiescence response style:** Acquiescence bias is again considered a sign of respondents' low engagement with a question that results in
+poor quality responses. In multi-item scales, acquiescence bias is somewhat tricky to determine. Similarly to straightlining response behavior,
+high shares of agreeing responses across items does not necessarily reflect response bias. Scales measuring widely accepted values for instance, can
+show high agreement among respondents without reflecting an acquiescence bias that indicates poor response quality. However, again the underlying
+scale can provide information on the severeness of an acquiescence response pattern across items. In the case of the NEP-scale with conflicting
+statements/items, a high share of agreeing responses give reason for concern and most likely represent biased responses.
+In general, we advise to take acquiescence response styles seriously and to assess their implications for the responses of a multi-item scale
+based on the content and formulation of items.
+
+**Outliers:** We recommend to deal with outliers in the sample regarding both response distribution and response style indicators similarly
+to dealing with any outlier in a response distribution. First, you should attempt to understand the outlying observations and closely inspect
+the response behavior of these respondents. In any case, we advise against dropping these observations from the sample and instead, to flag these respondents
+for your further analyses.
+
+**Recommendation:** Knowing how to assess and interpret indicators of response distribution and response styles regarding response quality, you probably
+wonder how to move on from there?
+
+- Ideally, we recommend to conduct further analyses on respondents with suspicious response patterns. A typical proxy to understand the response
+generation process underlying a response pattern and to understand whether responses represent a data quality issue are _response times_. If respondents show
+extremely short response times for a question, you can assume that respondents provided no to minimal effort to process the question which consequently
+resulted in poor quality responses. A common threshold to assess whether response times are too short to process a question is introduced by @Zhang and Conrad, 2014.
+<!--Zhang, C., and Conrad, F. (2014), “Speeding in Web Surveys: The Tendency to Answer Very Fast
+and Its Association with Straightlining,” Survey Research Methods, 8, 127–135.-->
+Further measures to approach the question whether respondents' answers reflect low engagement with a question and therefore, poor quality responses are _respondent motivation_
+or _respondent cognitive ability_. These are both factors discussed to influence the occurrence and magnitude of *satisficing*, an umbrella term for
+different response strategies that can be used as shortcuts to reduce cognitive burden and can therefore, reflect careless responding (@Krosnick, 1991)
+<!--Krosnick, J. A. (1991). Response strategies for coping with 
+the cognitive demands of attitude measures in sur-
+veys. Applied Cognitive Psychology, 5(3), 213–236.-->
+- For your further analyses, we recommend in any case to not simply drop respondents with suspicious response patterns. Instead, we advise to always flag them and
+run sensitivity analyses both including and excluding the respective respondents to gain insights on whether their responses affect your overall findings.
 
-
-**Straightlining:** High straightlining percentages are not always
-indicative of low-quality data but may reflect genuine patterns in
-responses.
-
-**Acquiescence response style:** High extreme response rates may represent
-polarized opinions rather than poor data quality.
-
-**Outliers:** Indicators such as acquiescence and disacquiescence
-offer insights into response tendencies but should be interpreted
-contextually.
-
-**Recommendation:** Removing responses based on perceived quality
-without considering the context could introduce bias into your analysis.
-Always interpret these indicators carefully and consider their
-implications for your research findings.
-
-## Who are the outliers?
-
-Outlier detecter function;
-
-```{r outlier function}
-# Define the function with an additional argument for suffix
-flag_outliers <- function(data, variables, suffix = "") {
-  
-  # Loop through each variable
-  for (var in variables) {
-    # Check if the variable exists in the dataframe
-    if (var %in% colnames(data)) {
-      
-      # Step 1: Calculate the IQR for the variable
-      Q1 <- quantile(data[[var]], 0.25, na.rm = TRUE)
-      Q3 <- quantile(data[[var]], 0.75, na.rm = TRUE)
-      IQR_value <- Q3 - Q1
-      
-      # Step 2: Calculate the lower and upper bounds for outliers
-      lower_bound <- Q1 - 1.5 * IQR_value
-      upper_bound <- Q3 + 1.5 * IQR_value
-      
-      # Step 3: Create a new variable flagging outliers (1 = outlier, 0 = not an outlier)
-      outlier_var <- paste0("outlier_", var, ifelse(suffix != "", paste0("_", suffix), ""))
-      data[[outlier_var]] <- ifelse(data[[var]] < lower_bound | data[[var]] > upper_bound, 1, 0)
-      
-    } else {
-      warning(paste("Variable", var, "not found in the data frame. Skipping..."))
-    }
-  }
-  
-  # Return the updated data frame
-  return(data)
-}
-```
-
-### 1. Trust Response Distributions
-
-Now lets use it on Trust Scale response distribution indicators;
-
-```{r outlier trust resp_distributions}
-# Use the function to flag outliers
-trust_distributions_outliers_flagged <- flag_outliers(trust_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"), suffix = "trust")
-
-# # Drop NAs
-# trust_distributions_outliers_flagged <- drop_na(trust_distributions_outliers_flagged)
-
-# # Create a new column that flags any outliers across the specified variables
-# trust_distributions_outliers_flagged$outlier_any <- rowSums(trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))]) > 0
-
-# View the updated data frame
-print(trust_distributions_outliers_flagged)
-
-# Number of respondents at least outlier in any 
-table(trust_distributions_outliers_flagged$outlier_any)
-```
-
-```{r}
-# Select the outlier columns
-outlier_data <- trust_distributions_outliers_flagged[, c("outlier_ii_median_trust", "outlier_ii_mean_trust", "outlier_ii_sd_trust", "outlier_mahal_trust")]
-
-# Shorten the column names for readability
-colnames(outlier_data) <- c("median", "mean", "sd", "mahal")
-
-# Convert to logical
-outlier_logical <- outlier_data == TRUE
-
-# Initialize an empty matrix to store results
-overlap_matrix <- matrix(NA, nrow = 4, ncol = 4)
-rownames(overlap_matrix) <- colnames(outlier_logical)
-colnames(overlap_matrix) <- colnames(outlier_logical)
-
-# Calculate overlap for each pair of variables
-for (i in 1:4) {
-  for (j in 1:4) {
-    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
-  }
-}
-
-# Print the overlap matrix
-print(overlap_matrix)
-
-```
-
-### 2. Trust Response Styles
-
-Trust Scale response style indicators;
-
-```{r outlier trust resp_style}
-# Use the function to flag outliers
-trust_respstyle_outliers_flagged <- flag_outliers(trust_respstyles, c("MRS", "ARS", "DRS", "ERS", "NERS"), suffix = "trust")
-
-# # Drop NAs
-# trust_respstyle_outliers_flagged <- drop_na(trust_respstyle_outliers_flagged)
-
-# # Create a new column that flags any outliers across the specified variables
-# trust_respstyle_outliers_flagged$outlier_any <- rowSums(trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))]) > 0
-
-# View the updated data frame
-print(trust_respstyle_outliers_flagged)
-
-# Number of respondents at least outlier in any 
-table(trust_respstyle_outliers_flagged$outlier_any)
-trust_respstyle_outliers_flagged
-```
-
-```{r}
-# Select the outlier columns
-outlier_data <- trust_respstyle_outliers_flagged[, c("outlier_MRS_trust", "outlier_ARS_trust", "outlier_DRS_trust", "outlier_ERS_trust", "outlier_NERS_trust")]
-
-# Shorten the column names for readability
-colnames(outlier_data) <- c("MRS", "ARS", "DRS", "ERS", "NERS")
-
-# Convert to logical
-outlier_logical <- outlier_data == TRUE
-
-# Initialize an empty matrix to store results
-overlap_matrix <- matrix(NA, nrow = 5, ncol = 5)
-rownames(overlap_matrix) <- colnames(outlier_logical)
-colnames(overlap_matrix) <- colnames(outlier_logical)
-
-# Calculate overlap for each pair of variables
-for (i in 1:5) {
-  for (j in 1:5) {
-    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
-  }
-}
-
-# Print the overlap matrix
-print(overlap_matrix)
-```
-
-Let's see if some of those people are outliers in both distribution and
-style indicators;
-
-```{r}
-# Create a new data frame to compare outliers from both datasets
-outlier_comparison <- data.frame(
-  outlier_dist = trust_distributions_outliers_flagged$outlier_any,
-  outlier_style = trust_respstyle_outliers_flagged$outlier_any
-)
-
-# Create a new column that indicates outliers in both 
-outlier_comparison$outlier_both <- outlier_comparison$outlier_dist & outlier_comparison$outlier_style
-
-# Summarize the number of respondents flagged as outliers in both 
-summary(outlier_comparison)
-```
-
-```{r}
-# Combine the outlier columns in both flagged datasets
-total_outliers_resp_and_dist <- cbind(
-  trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))],
-  trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))]
-)
-
-# Exclude outlier_any columns for both
-trust_total_outlier_flags_data <- total_outliers_resp_and_dist[,c(1:4, 6:10)]
-
-# Print resulting dataset
-trust_total_outlier_flags_data
-
-# Shorten the column names for readability
-colnames(trust_total_outlier_flags_data) <- c("mean", "median", "sd", "mahal", "MRS", "ARS", "DRS", "ERS", "NERS")
-
-# Initialize the overlap matrix
-overlap_matrix <- matrix(0, nrow = ncol(trust_total_outlier_flags_data), ncol = ncol(trust_total_outlier_flags_data))
-rownames(overlap_matrix) <- colnames(trust_total_outlier_flags_data)
-colnames(overlap_matrix) <- colnames(trust_total_outlier_flags_data)
-
-
-# Calculate overlap for each pair of variables
-for (i in 1:ncol(trust_total_outlier_flags_data)) {
-  for (j in 1:ncol(trust_total_outlier_flags_data)) {
-    overlap_matrix[i, j] <- sum(trust_total_outlier_flags_data[, i] & trust_total_outlier_flags_data[, j]) # Count how often both variables have outliers
-  }
-}
-
-# Print the overlap matrix
-print("Overlap Matrix:")
-print(overlap_matrix)
-```
-
-### 1. NEP Response Distributions
-
-```{r outlier trust resp_distributions}
-# Use the function to flag outliers
-NEP_distributions_outliers_flagged <- flag_outliers(NEP_distribution, c("ii_mean", "ii_median", "ii_sd", "mahal"), suffix = "NEP")
-
-# # Drop NAs
-# NEP_distributions_outliers_flagged <- drop_na(NEP_distributions_outliers_flagged)
-
-# # Create a new column that flags any outliers across the specified variables
-# NEP_distributions_outliers_flagged$outlier_any <- rowSums(NEP_distributions_outliers_flagged[, grep("outlier_", names(NEP_distributions_outliers_flagged))]) > 0
-
-# View the updated data frame
-print(NEP_distributions_outliers_flagged)
-
-# Number of respondents at least outlier in any 
-table(NEP_distributions_outliers_flagged$outlier_any)
-```
-
-```{r}
-# Select the outlier columns
-outlier_data <- NEP_distributions_outliers_flagged[, c("outlier_ii_median_NEP", "outlier_ii_mean_NEP", "outlier_ii_sd_NEP", "outlier_mahal_NEP")]
-
-# Shorten the column names for readability
-colnames(outlier_data) <- c("median", "mean", "sd", "mahal")
-
-# Convert to logical
-outlier_logical <- outlier_data == TRUE
-
-# Initialize an empty matrix to store results
-overlap_matrix <- matrix(NA, nrow = 4, ncol = 4)
-rownames(overlap_matrix) <- colnames(outlier_logical)
-colnames(overlap_matrix) <- colnames(outlier_logical)
-
-# Calculate overlap for each pair of variables
-for (i in 1:4) {
-  for (j in 1:4) {
-    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
-  }
-}
-
-# Print the overlap matrix
-print(overlap_matrix)
-
-```
-### 2. NEP Response Styles
-
-Trust Scale response style indicators;
-
-```{r outlier trust resp_style}
-# Use the function to flag outliers
-NEP_respstyle_outliers_flagged <- flag_outliers(NEP_respstyles, c("MRS", "ARS", "DRS", "ERS", "NERS"), suffix = "NEP")
-
-# # Drop NAs
-# NEP_respstyle_outliers_flagged <- drop_na(NEP_respstyle_outliers_flagged)
-
-# # Create a new column that flags any outliers across the specified variables
-# NEP_respstyle_outliers_flagged$outlier_any <- rowSums(NEP_respstyle_outliers_flagged[, grep("outlier_", names(NEP_respstyle_outliers_flagged))]) > 0
-
-# View the updated data frame
-print(NEP_respstyle_outliers_flagged)
-
-# Number of respondents at least outlier in any 
-table(NEP_respstyle_outliers_flagged$outlier_any)
-```
-
-```{r}
-# Select the outlier columns
-outlier_data <-NEP_respstyle_outliers_flagged[, c("outlier_MRS_NEP", "outlier_ARS_NEP", "outlier_DRS_NEP", "outlier_ERS_NEP", "outlier_NERS_NEP")]
-
-# Shorten the column names for readability
-colnames(outlier_data) <- c("MRS", "ARS", "DRS", "ERS", "NERS")
-
-# Convert to logical
-outlier_logical <- outlier_data == TRUE
-
-# Initialize an empty matrix to store results
-overlap_matrix <- matrix(NA, nrow = 5, ncol = 5)
-rownames(overlap_matrix) <- colnames(outlier_logical)
-colnames(overlap_matrix) <- colnames(outlier_logical)
-
-# Calculate overlap for each pair of variables
-for (i in 1:5) {
-  for (j in 1:5) {
-    overlap_matrix[i, j] <- sum(outlier_logical[, i] & outlier_logical[, j]) # Count how often both variables have outliers
-  }
-}
-
-# Print the overlap matrix
-print(overlap_matrix)
-```
-### Combine all outliers from each scale for both indicators of distribution and style
-
-<!-- I will clean below codes further, please ignore them for now :) -->
-
-```{r}
-# Combine the outlier columns in both flagged datasets
-all_total_outliers_resp_and_dist <- cbind(
-  
-  trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))],
-  
-  trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))],
-  
-  NEP_distributions_outliers_flagged[, grep("outlier_", names(NEP_distributions_outliers_flagged))],
-  
-  NEP_respstyle_outliers_flagged[, grep("outlier_", names(NEP_respstyle_outliers_flagged))]
-)
-
-# # Drop NA
-# all_total_outliers_resp_and_dist <- drop_na(all_total_outliers_resp_and_dist)
-
-# Print resulting dataset
-
-all_total_outliers_resp_and_dist
-
-# Shorten the column names for readability
-colnames(all_total_outliers_resp_and_dist) <- c(
-  "tmean", "tmedian", "tsd", "tmahal", "tMRS", "tARS", "tDRS", "tERS", "tNERS",
-  "Nmean", "Nmedian", "Nsd", "Nmahal", "NMRS", "NARS", "NDRS", "NERS", "NNERS")
-
-# Initialize the overlap matrix
-overlap_matrix <- matrix(0, nrow = ncol(all_total_outliers_resp_and_dist), ncol = ncol(all_total_outliers_resp_and_dist))
-rownames(overlap_matrix) <- colnames(all_total_outliers_resp_and_dist)
-colnames(overlap_matrix) <- colnames(all_total_outliers_resp_and_dist)
-
-
-# Calculate overlap for each pair of variables
-for (i in 1:ncol(all_total_outliers_resp_and_dist)) {
-  for (j in 1:ncol(all_total_outliers_resp_and_dist)) {
-    overlap_matrix[i, j] <- sum(all_total_outliers_resp_and_dist[, i] & all_total_outliers_resp_and_dist[, j]) # Count how often both variables have outliers
-  }
-}
-
-# Print the overlap matrix
-print("Overlap Matrix:")
-print(overlap_matrix)
-```
-
-```{r}
-# Combine the outlier columns in both flagged datasets
-all_total_outliers_resp_and_dist <- cbind(
-  
-  trust_distributions_outliers_flagged[, grep("outlier_", names(trust_distributions_outliers_flagged))],
-  
-  trust_respstyle_outliers_flagged[, grep("outlier_", names(trust_respstyle_outliers_flagged))],
-  
-  NEP_distributions_outliers_flagged[, grep("outlier_", names(NEP_distributions_outliers_flagged))],
-  
-  NEP_respstyle_outliers_flagged[, grep("outlier_", names(NEP_respstyle_outliers_flagged))]
-)
-
-# # Drop NA
-# all_total_outliers_resp_and_dist <- drop_na(all_total_outliers_resp_and_dist)
-
-# Print resulting dataset
-all_total_outliers_resp_and_dist
-
-# Shorten the column names for readability
-colnames(all_total_outliers_resp_and_dist) <- c(
-  "tmean", "tmedian", "tsd", "tmahal", "tMRS", "tARS", "tDRS", "tERS", "tNERS",
-  "Nmean", "Nmedian", "Nsd", "Nmahal", "NMRS", "NARS", "NDRS", "NERS", "NNERS")
-```
-
-
-```{r}
-# Create a new column that flags any outliers across the specified variables
-d<-  drop_na(all_total_outliers_resp_and_dist[all_total_outliers_resp_and_dist$tMRS == 1,1:9]) 
-
-  rowSums(all_total_outliers_resp_and_dist[, grep("^N", names(all_total_outliers_resp_and_dist))]) > 0
-
-table(all_total_outliers_resp_and_dist$outlier_any_both)
-
-# Subset the data where outlier_any_both is TRUE
-subset_data <- all_total_outliers_resp_and_dist[all_total_outliers_resp_and_dist$outlier_any_both == TRUE, ]
-
-# Drop NAS
-no_na_subset_data <- drop_na(subset_data)
-no_na_subset_data
-
-```
-
-Check their data closely
-
-```{r}
-
-drop_na(trust_distributions_outliers_flagged[trust_distributions_outliers_flagged$outlier_mahal_trust == 1, ])
-
-
-# check some people
-no_na_subset_data[rownames(no_na_subset_data)%in% c("529", "985"),]
-trust_distribution[rownames(trust_distribution) %in% c("529", "985"), ]
-trust_respstyles[rownames(trust_respstyles) %in% c("529", "985"), ]
-NEP_distribution[rownames(NEP_distribution) %in% c("529", "985"), ]
-NEP_respstyles[rownames(NEP_respstyles) %in% c("529", "985"), ]
-trust[985,]
-NEP[985,]
-
-
-no_na_subset_data[no_na_subset_data$tmahal == TRUE, ]
-a <- all_total_outliers_resp_and_dist[all_total_outliers_resp_and_dist$tmahal == TRUE, ]
-a1 <- drop_na(a[,1:9])
-
-table(all_total_outliers_resp_and_dist$tmahal)
-
-rownames(d)
-# definitely a data quality flag!
-all_total_outliers_resp_and_dist[rownames(all_total_outliers_resp_and_dist)%in% c("1025"),]
-trust_distribution[rownames(trust_distribution) %in% c("1025"), ]
-trust_respstyles[rownames(trust_respstyles) %in% c("1025"), ]
-NEP_distribution[rownames(NEP_distribution) %in% c("1025"), ]
-NEP_respstyles[rownames(NEP_respstyles) %in% c("1025"), ]
-trust[1025,]
-NEP[1025,] # seems quite outlier..
-
-a1
-all_total_outliers_resp_and_dist[c(172,  410,  565,  659,  768,  1025, 1095, 1117),]
-trust[c(172,  410,  565,  659,  768,  1025, 1095, 1117),]
-NEP[c(172,  410,  565,  659,  768,  1025, 1095, 1117),] 
-
-```
-
-outlier in both tsd and tmahal: "172"  "410"  "565"  "659"  "768"  "1025" "1095" "1117"
-
-
-1025
-
-
-
-```{r}
-# Create a new column that flags any outliers across the specified variables
-all_total_outliers_resp_and_dist$outlier_any_both <- 
-  rowSums(all_total_outliers_resp_and_dist[, grep("tsd", names(all_total_outliers_resp_and_dist))]) > 0 & 
-  rowSums(all_total_outliers_resp_and_dist[, grep("^N", names(all_total_outliers_resp_and_dist))]) > 0
-
-b <- (all_total_outliers_resp_and_dist[, grep("Nsd", names(all_total_outliers_resp_and_dist))] + all_total_outliers_resp_and_dist[, grep("Nmahal", names(all_total_outliers_resp_and_dist))]) > 1
-
-c <- drop_na(all_total_outliers_resp_and_dist[b,10:18])
-rownames(c)
-```
 
 ## References
 
