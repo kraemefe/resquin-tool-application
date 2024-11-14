@@ -7,7 +7,6 @@ author:
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   html_document: default
-  pdf_document: default
 bibliography: citation.bib
 biblio-style: apsr
 editor_options: 
@@ -151,26 +150,83 @@ response distribution, such as:
 -   the mean over multiple items per respondent (ii_mean)
 -   the median over multiple items per respondent (ii_median)
 -   the standard deviation across multiple items per respondent (ii_sd)
--   the mahalanobis distance per respondent (mahal)
-    <!-- Popover: "The mahalanobis distance captures how different each respondent's pattern of answers is from the "typical" response pattern of all respondents. A higher score indicates that the
-    respondent’s answers are more unusual or inconsistent compared to the other respondents. -->
+-   the
+<span 
+  data-toggle="popover" 
+  data-content="The mahalanobis distance captures how different each respondent's pattern of answers is from the "typical" response pattern of all respondents. A higher score indicates that the
+    respondent’s answers are more unusual or inconsistent compared to the other respondents."
+  style="text-decoration: underline; cursor: pointer;">
+  mahalanobis distance
+</span>
+per respondent (mahal)
+
+<script>
+// Enable Bootstrap popovers on page load
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover({ trigger: "click" }); 
+});
+</script>
+
+<!-- I got this code from ChatGPT on how to code popovers in RMarkdown. Could you check if it works? Then we could implement it also for the other popover effects (if there are any). Thank you :-)-->
 
 Apart from peculiarities in the response distribution of our multi-item
 scales, we will further consider indicators of different response
 biases, namely:
 
--   MRS: Indicator of mid-point response bias (tendency to select the
-    neutral/middle option on a scale; only valid if scale has a numeric midpoint); indicates sum of mid-point
-    responses across multiple items
-   
--   ARS: Indicator of acquiescence bias (tendency to agree with
-    statements irrespective of actual views; only valid for scales with agree-disagree format); indicates sum of responses
-    above the scale mid-point across multiple items
-  
--   ERS: Indicator of extreme response bias (tendency to select most
-    extreme response options on a scale); indicates sum of responses at
-    both endpoints of the multi-item scale.
-<!--Design feature: Here an accordeon would be nice to depict the definition of each response style-->
+<div class="accordion" id="termsAccordion">
+
+  <!-- Term 1 -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Term 1: MRS: Middle response style 
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#termsAccordion">
+      <div class="accordion-body">
+        Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
+      </div>
+    </div>
+  </div>
+
+  <!-- Term 2 -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Term 2: ARS: Acquiescence response style
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#termsAccordion">
+      <div class="accordion-body">
+        Tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format. 
+      </div>
+    </div>
+  </div>
+
+  <!-- Term 3 -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Term 3: ERS: Extreme response style
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#termsAccordion">
+      <div class="accordion-body">
+        Tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Ensure that Bootstrap’s JavaScript is initialized for the accordion.
+$(document).ready(function(){
+  // Nothing else needed; Bootstrap manages accordion functionality by default.
+});
+</script>
+
+<!-- This is also code I got from ChatGPT on how to implement an accordeon for the list of response style indicators. Could you also check if this works? Thanks a lot!! -->
 
 
 To calculate these indicators for the assessment of response quality of
@@ -312,10 +368,6 @@ NEP_distribution <- resp_distributions(NEP)
 NEP_distribution[1:10,]
 ```
 
-<!--Info box-->
-
-***Package-specific feature***
-
 `resp_distributions` returns a data frame containing several
 indicators of response distribution per respondent (displayed as
 separate rows of the data frame). Inspecting the calculated indicators
@@ -330,11 +382,18 @@ for all respondents who show a value higher than 0 for the indicator
 `n_na` (count of missing values), indicators of central tendency and
 variability are NA.
 
-By specifying the option `min_valid_responses`, respondents with missing
+
+<!-- Info Box with Title, No Background Color -->
+<div style="border: 2px solid #007BFF; padding: 20px; border-radius: 8px;">
+  <strong>Title:</strong> Package-specific feature
+  <p>By specifying the option `min_valid_responses`, respondents with missing
 values in the multi-item scale can be included in the analysis of
 response quality. `min_valid_responses` takes on a numeric value between
 0 and 1 and defines the share of valid responses a respondent must have
-to calculate the respective indicators of response distribution.
+to calculate the respective indicators of response distribution.</p>
+</div>
+
+<!-- Here I got some code for creating a separate information box. Please also check if this works - thanks! :-) Then we can adapt it for the other info boxes we wanted to create -->
 
 ## Handling respondents with missing data
 
