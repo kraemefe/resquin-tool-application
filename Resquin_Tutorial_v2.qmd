@@ -18,41 +18,42 @@ editor:
   citation: "Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024). *Assessing Response Quality and Careless Responding in Multi-Item Scales*. GitHub Repository. URL:  https: //github.com/kraemefe/resquin-tool-application"
 ---
 
+<!--below codes helped me to fix issues in installing packages and also text alignment when rendering the document into html-->
+
 ```{r setup, include=FALSE}
 # Set a CRAN mirror to avoid issues with package installations
 options(repos = c(CRAN = "https://cran.r-project.org"))
 ```
 
-```{=html}
 <style>
 /* Align text to justify for a consistent look */
 p, h1, h2, h3, h4, h5, h6 {
   text-align: justify !important;
 }
 </style>
-```
 
 # At a glance
+
+<!--I made small changes below like adding commas and adjusting questions a bullet list.-->
 
 What do we need to be aware of when analyzing responses of multi-item
 scales? Which response quality issues can affect data from multi-item
 scales? This tool gives an overview on the assessment of response
 quality in multi-item scales and guides you through the quality analysis
-with replicable R-code. Specifically, you will learn
+with replicable R-code. Specifically, you will learn;
 
 -   how to calculate and interpret different indicators of response
-    distribution regarding potential data quality issues
+    distribution regarding potential data quality issues,
 
 -   how to calculate and interpret indicators of different response
-    styles which can reflect poor response behavior
+    styles which can reflect poor response behavior,
 
 -   the caveats of certain response quality indicators and their
-    suitability for different question types and response scales
+    suitability for different question types and response scales,
 
--   what to do if you detect poor quality responses
+-   what to do if you detect poor quality responses.
 
-<!--I added this as a side table of content in YAML as well, should we keep the below one as well?-->
-
+<!--I added a side table of content in YAML as well, you can see it after rendering document.  Should we still keep the below one?-->
 
 ### Table of Content
 
@@ -101,31 +102,33 @@ attitudes.
 
 <!--side remark-->
 
-This sub-sample of the @ZA5666 is publicly accessible as the GESIS Panel Campus File. It contains a random 25%
-sample of the GESIS panel members surveyed in 2014 and comprises only a
-limited selection of variables from the originial GESIS Panel scientific
-use file. <!----->
+This sub-sample of the @ZA5666 is publicly accessible as the GESIS Panel
+Campus File. It contains a random 25% sample of the GESIS panel members
+surveyed in 2014 and comprises only a limited selection of variables
+from the originial GESIS Panel scientific use file. <!----->
 
 Political trust is measured with a 10-item scale and a 7-point Likert
 response scale:
 
-**Trust in Institutions:** Trust in various political institutions.
+**Trust in Institutions:** Trust in various political institutions
 
 How much do you personally trust the following public institutions or
 groups?
 
-**Items:**
+<!--I tried a new way to display the items, if you approave I can edit the others as well-->
 
--   bbzc078a: Trust in Bundestag
--   bbzc079a: Trust in federal government
--   bbzc080a: Trust in political parties
--   bbzc081a: Trust in judicial authorities
--   bbzc082a: Trust in police
--   bbzc083a: Trust in politicians
--   bbzc084a: Trust in media
--   bbzc085a: Trust in European Union
--   bbzc086a: Trust in United Nations
--   bbzc087a: Trust in Federal Constitutional Court
+| Items       | Institution                                    |
+|-------------|------------------------------------------------|
+| **bbzc078a** | Trust in Bundestag                             |
+| **bbzc079a** | Trust in federal government                    |
+| **bbzc080a** | Trust in political parties                     |
+| **bbzc081a** | Trust in judicial authorities                  |
+| **bbzc082a** | Trust in police                                |
+| **bbzc083a** | Trust in politicians                           |
+| **bbzc084a** | Trust in media                                 |
+| **bbzc085a** | Trust in European Union                        |
+| **bbzc086a** | Trust in United Nations                        |
+| **bbzc087a** | Trust in Federal Constitutional Court          |
 
 **Response Scale:** 1 = Don’t trust at all - 7 = Entirely trust
 
@@ -170,13 +173,19 @@ assess the response quality in multi-item scales.
 In this tutorial, we will specifically look at several indicators of
 response distribution, such as:
 
-- The proportion of missing responses across multiple items per respondent (`prop_na`)
-- The mean over multiple items per respondent (`ii_mean`)
-- The median over multiple items per respondent (`ii_median`)
-- The standard deviation across multiple items per respondent (`ii_sd`)
-- The <span data-bs-toggle="popover" data-bs-content="The Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the other respondents." style="text-decoration: underline; cursor: pointer;"> Mahalanobis distance</span> per respondent (`mahal`)
+<!--We should mention all indicators etc. as `prop_na` not simply as prop_na, right? I  will check them all according to your feedback and edit if necessary-->
 
-```{=html}
+-   The proportion of missing responses across multiple items per
+    respondent (`prop_na`)
+-   The mean over multiple items per respondent (`ii_mean`)
+-   The median over multiple items per respondent (`ii_median`)
+-   The standard deviation across multiple items per respondent
+    (`ii_sd`)
+-   The [ Mahalanobis distance]{data-bs-toggle="popover"
+    data-bs-content="The Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the other respondents."
+    style="text-decoration: underline; cursor: pointer;"} per respondent
+    (`mahal`)
+
 <script>
 // Enable Bootstrap popovers on page load
 document.addEventListener("DOMContentLoaded", function(){
@@ -186,74 +195,92 @@ document.addEventListener("DOMContentLoaded", function(){
   })
 });
 </script>
-```
 
-
-<!-- I got this code from ChatGPT on how to code popovers in RMarkdown. Could you check if it works? Then we could implement it also for the other popover effects (if there are any). Thank you :-)-->
 
 Apart from peculiarities in the response distribution of our multi-item
 scales, we will further consider indicators of different response
 biases, namely:
 
-```{=html}
+<!--below code hides the link icon which I found unnecessary for accordion items, but you could check what is the difference simply deleting the code from here ...-->
+
 <style>
 /* Hide link icons */
 .accordion-header a {
   display: none;
 }
 </style>
-```
 
-:::::: {#termsAccordion .accordion}
+<!-- ... to here. I also wanted to wrap the explanation texts into multiple lines to avoid scroll bar, tried many codes with the help of chatgpt but it it somehow did not work out, fyi.  -->
+
+:::::::::::: {#termsAccordion .accordion}
 <!-- Term 1 -->
-::: {.accordion-item}
+
+::::: accordion-item
 <h2 class="accordion-header" id="headingOne">
-  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-    MRS: Middle response style 
-  </button>
+
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+
+MRS: Middle response style
+
+</button>
+
 </h2>
-<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#termsAccordion">
-  <div class="accordion-body">
-    Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
-  </div>
-</div>
+
+:::: {#collapseOne .accordion-collapse .collapse .show aria-labelledby="headingOne" data-bs-parent="#termsAccordion"}
+::: accordion-body
+```         
+Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
+```
 :::
+::::
+:::::
 
 <!-- Term 2 -->
-::: {.accordion-item}
+
+::::: accordion-item
 <h2 class="accordion-header" id="headingTwo">
-  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-    ARS: Acquiescence response style
-  </button>
+
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+
+ARS: Acquiescence response style
+
+</button>
+
 </h2>
-<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#termsAccordion">
-  <div class="accordion-body">
-    Tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format. 
-  </div>
-</div>
+
+:::: {#collapseTwo .accordion-collapse .collapse aria-labelledby="headingTwo" data-bs-parent="#termsAccordion"}
+::: accordion-body
+```         
+Tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format. 
+```
 :::
+::::
+:::::
 
 <!-- Term 3 -->
-::: {.accordion-item}
+
+::::: accordion-item
 <h2 class="accordion-header" id="headingThree">
-  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-    ERS: Extreme response style
-  </button>
+
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+
+ERS: Extreme response style
+
+</button>
+
 </h2>
-<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#termsAccordion">
-  <div class="accordion-body">
-    Tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale.
-  </div>
-</div>
+
+:::: {#collapseThree .accordion-collapse .collapse aria-labelledby="headingThree" data-bs-parent="#termsAccordion"}
+::: accordion-body
+```         
+Tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale.
+```
 :::
-::::::
+::::
+:::::
+::::::::::::
 
-
-
-<!-- This is also code I got from ChatGPT on how to implement an accordeon for the list of response style indicators. Could you also check if this works? Thanks a lot!! -->
-
-
-\space
+<br>
 To calculate these indicators for the assessment of response quality of
 our multi-item scales, we will use the `Resquin` package in R. The
 `resquin` package comprises different functions to calculate response
@@ -270,6 +297,8 @@ To use `resquin`, we first need to install the package from the
 repository of CRAN, the Comprehensive R Archive Network. For
 installation, we can use the following commands:
 
+<!--I have hidden any results such as warning messages, etc. Only the code will be displayed in the output file-->
+
 ```{r install resquin, message=FALSE, warning=FALSE, results='hide'}
 # Installing resquin
 install.packages("resquin")
@@ -281,13 +310,15 @@ Alongside `resquin` itself, we will use other packages for setup, data
 preparation and analysis in this tutorial. To install and load these
 packages from CRAN simultaneously, we will use the `pacman` package:
 
+<!--I have hidden any results such as warning messages, etc. Only the code will be displayed in the output file-->
+
 ```{r install CRAN packages, message=FALSE, warning=FALSE, results='hide'}
 # Installing pacman and loading pacman into the R session
 install.packages("pacman")
 library(pacman)
 
 # Install and load other CRAN packages using pacman
-pacman::p_load(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr)
+pacman::p_load(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr, kableExtra)
 ```
 
 After installation, we can import the survey data we want to analyze
@@ -304,10 +335,12 @@ raw_data <- read.csv("raw-data/ZA5666_v1-0-0.csv", header=TRUE, sep=";", na.stri
 
 ## Inspecting data
 
+<!--I used a new package for a better styling of the tables in the output -->
+
 Before delving into the analysis of response quality, let's have a first
 look at the distribution of given responses to both multi-item scales:
 
-```{r data inspection}
+```{r data inspection, warning=FALSE}
 # Creating subset of political trust scale
 start_col_trust <- which(colnames(raw_data) == "bbzc078a")
 end_col_trust <- which(colnames(raw_data) == "bbzc087a")
@@ -320,15 +353,27 @@ NEP <- raw_data[,start_col_NEP:end_col_NEP]
 
 # Inspect responses to political trust scale
 trust_responses <- lapply(trust, function(x) table(x, useNA = "ifany"))
- 
-# Print the results
-trust_responses
+
+# Convert to data frame with column names
+trust_responses_df <- as.data.frame(do.call(cbind, trust_responses))
+
+# Print the table with styling
+trust_responses_df %>%
+  kable("html", escape = FALSE) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
+  column_spec(1:ncol(trust_responses_df), width = "4em")
 
 # Inspect responses to NEP 
 NEP_responses <- lapply(NEP, function(x) table(x, useNA = "ifany"))
- 
-# Print the results
-NEP_responses
+
+# Convert to data frame with column names
+NEP_responses_df <- as.data.frame(do.call(cbind, NEP_responses))
+
+# Print the table with styling
+NEP_responses_df %>%
+  kable("html", escape = FALSE) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
+  column_spec(1:ncol(NEP_responses_df), width = "4em")
 ```
 
 ## Data preparation
@@ -338,32 +383,28 @@ there are several missing values which are not defined as NA yet. For
 `resquin` to calculate meaningful indicators, we have to make sure that
 missings are coded to NA before we run any analyses:
 
+<!-- I have deleted unique values part from below code as previous tables were quite clear about which values to recode. Also improved the formatting of output -->
+
 ```{r data preparation}
-# Get unique values for responses to political trust scale
-unique_values_trust <- unique(unlist(lapply(trust, unique)))
-
-# Print the unique values sorted in an ascending order
-sort(unique_values_trust)
-
 # Recode missing values to NA for responses to political trust scale
 trust <- trust %>%
   mutate(across(everything(), ~ replace(., . %in% c(-22, -33, -77, -99, -111), NA)))
 
-# View the new recoded data frame
-head(trust)
-
-# Get unique values for responses to NEP scale
-unique_values_NEP <- unique(unlist(lapply(NEP, unique)))
-
-# Print the unique values sorted in an ascending order
-sort(unique_values_NEP)
+# Display the first few rows of recoded data frame as a formatted table
+trust %>%
+  head() %>%  # Show only the first 6 rows
+  kable("html", caption = "First Six Rows of Re-coded Trust Data") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 
 # Recode missing values to NA for responses to NEP scale
 NEP <- NEP %>%
   mutate(across(everything(), ~ replace(., . %in% c(-22, -33, -77, -99, -111), NA)))
 
-# View the new recoded data frame
-head(NEP)
+# Display the first few rows of recoded data frame as a formatted table
+NEP %>%
+  head() %>%  # Show only the first 6 rows
+  kable("html", caption = "First Six Rows of Re-coded NEP Data") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
 # Tool application {#tool-application}
@@ -384,13 +425,13 @@ greater detail by using `resp_distributions`. We can use
 trust_distribution <- resp_distributions(trust)
 
 # Print results for the first 10 respondents
-trust_distribution[1:10,]
+kable(trust_distribution[1:10,])
 
 # Environmental attitudes 
 NEP_distribution <- resp_distributions(NEP)
 
 # Print results
-NEP_distribution[1:10,]
+kable(NEP_distribution[1:10,])
 ```
 
 `resp_distributions` returns a data frame containing several indicators
@@ -407,7 +448,7 @@ for all respondents who show a value higher than 0 for the indicator
 `n_na` (count of missing values), indicators of central tendency and
 variability are NA.
 
-<!-- Info Box with Title, No Background Color -->
+<!-- Info Box with Title, No Background Color code worked, we can use this for other boxes as well-->
 
 ::: {style="border: 2px solid #007BFF; padding: 20px; border-radius: 8px;"}
 <strong>Package-specific feature</strong>
@@ -419,8 +460,6 @@ between 0 and 1 and defines the share of valid responses a respondent
 must have to calculate the respective indicators of response
 distribution.</p>
 :::
-
-<!-- Here I got some code for creating a separate information box. Please also check if this works - thanks! :-) Then we can adapt it for the other info boxes we wanted to create -->
 
 ## Handling respondents with missing data
 
@@ -513,8 +552,6 @@ distribution shape and peaks. Together, they give us a full picture of
 how response patterns across the items of the scales are distributed in
 our sample.
 
-
-
 The `resp_distributions` function provides two measures of **central
 tendency**: `ii_mean` (average response) and `ii_median` (central
 response) for each respondent.
@@ -598,15 +635,22 @@ measure for straightlining response behavior, we generate a new
 indicator based on a respondents' standard deviation across the several
 items:
 
+<!-- I made a change in the code to better display the results --> 
+
 ```{r straightlining trust}
 # Generating straightlining indicator for institutional trust scale 
 trust_distribution$non_diff <- NA 
 trust_distribution$non_diff[trust_distribution$ii_sd == 0] <- 1
 trust_distribution$non_diff[trust_distribution$ii_sd != 0] <- 0
 
-# Get proportion of respondents who show straightlining response behavior
-proportion_nondiff <- prop.table(table(trust_distribution$non_diff))[2]
-proportion_nondiff
+# Calculate proportion of respondents who show straightlining response behavior
+trust_straightline_df <- data.frame(
+  Indicator = "Straightlining Respondents",
+  Proportion = round(prop.table(table(trust_distribution$non_diff))[2], 4)
+)
+
+# Print the result as a table
+kable(trust_straightline_df, col.names = c("Trust Scale", "Proportion"))
 ```
 
 <!-- Side remark -->
@@ -616,8 +660,7 @@ response option across items versus selecting at least two different
 response options across a set of items is only one of several possible
 operationalizations of straightlining or non-differentiation. For an
 overview of the different possible operationalizations used in research,
-see @kim_et_al_2019.
-<!-- REFERENCE ADDED: Kim, Y., Dykema, J., Stevenson, J., Black, P., & Moberg, D. P. (2019). Straightlining: Overview of measurement, comparison of indicators, and effects in mail–web mixed-mode surveys. Social Science Computer Review, 37(2), 214-233. -->
+see @kim_et_al_2019. <!-- reference added-->
 
 The results show that about 5% of respondents show **straightlining
 response behavior** in the institutional trust scale, meaning that 5% of
@@ -626,7 +669,7 @@ is a relatively low proportion of straightlining behavior across
 respondents and does not indicate general data quality issues. However,
 it is necessary to flag these respondents who show straightlining across
 the items of a scale for a further investigation of their response
-behavior. The code below creates a new variable in the dataset, flagging respondents with zero variation in their responses as `TRUE`; otherwise, it flags them as `FALSE`.
+behavior. <!-- I added a brief explanation and a code for flagging--> The code below creates a new variable in the dataset, flagging respondents with zero variation in their responses as `TRUE`; otherwise, as `FALSE`.
 
 ```{r straightlining flag for trust scale}
 # Flag respondents with zero variation in responses (ii_sd == 0)
@@ -815,21 +858,31 @@ should perform further checks to examine the possibility of poor quality
 responses. Nevertheless, straightlining in the NEP scale might
 especially pose a threat for data quality and should be investigated:
 
+<!-- I made a change in the code to better display the results --> 
+
 ```{r straightlining NEP}
 # Generating straightlining indicator for institutional trust scale 
 NEP_distribution$non_diff <- NA 
 NEP_distribution$non_diff[NEP_distribution$ii_sd == 0] <- 1
 NEP_distribution$non_diff[NEP_distribution$ii_sd != 0] <- 0
-# Get proportion of respondents who show straightlining response behavior
-proportion_nondiff <- prop.table(table(NEP_distribution$non_diff))[2]
-proportion_nondiff
+
+# Calculate proportion of respondents who show straightlining response behavior
+NEP_straightline_df <- data.frame(
+  Indicator = "Straightlining Respondents",
+  Proportion = round(prop.table(table(NEP_distribution$non_diff))[2], 4)
+)
+
+# Print the result as a table
+kable(NEP_straightline_df, col.names = c("NEP Scale", "Proportion"))
 ```
 
 For the NEP scale, we can see that 0.5% of respondents show
 straightlining across the several items of the scale. Despite the low
 prevalence of straightlining in the data, respondents who straightlined
 in the NEP scale are highly likely to show poor quality responses and
-should be flagged for further analyses. Below code flags respondents who show zero variation in their responses with a new variable named `straightlining_flag`:
+should be flagged for further analyses. <!-- I added a brief explanation and a code for flagging-->Below code flags respondents who
+show zero variation in their responses with a new variable named
+`straightlining_flag`:
 
 ```{r straightlining flag for NEP scale}
 # Flag respondents with zero variation in responses (ii_sd == 0)
@@ -900,20 +953,20 @@ respondent has answered. Although the proportion of a certain response
 behavior is generally more informative than the mere count, we specify
 the option `normalize = FALSE` for our analysis in this tutorial.
 
-<!-- I have noticed the we had an error in the below NEP calculation, scale was 7 in the previous files and I have changed it to 5 here -->
+<!-- I have noticed that we had an error in the below NEP calculation, scale was 7 in the previous .rmd files and I have changed it to 5 here. We need to adjust our comments later for NEP scale response style indicators -->
 
 ```{r}
 # Calculating response style indicators for institutional trust
 trust_respstyles <- resp_styles(trust, 1, 7, min_valid_responses = 1, normalize = FALSE)
 
 # Print results of the first 10 respondents
-trust_respstyles[1:10,]
+kable(trust_respstyles[1:10,])
 
 # Calculating response style indicators for environmental attitudes
 NEP_respstyles <- resp_styles(NEP, 1, 5, min_valid_responses = 1, normalize = FALSE)
 
 # Print results of the first 10 respondents
-NEP_respstyles[1:10,]
+kable(NEP_respstyles[1:10,])
 ```
 
 As with `resp_distributions`, `resp_styles` returns a data frame
@@ -936,6 +989,8 @@ indicator in the data frame produced by `resp_styles`.
 ### 1. Institutional Trust Scale
 
 Let’s again begin with the institutional trust scale.
+
+<!-- I have reduced the resulting density and boxplots to include only MRS, ARS and ERS. Should I do the same for the table or is current version okay?  -->
 
 ```{r summary statistics trust resp_styles}
 # Summarize and print results over all respondents
@@ -972,8 +1027,6 @@ ggplot(trust__respstyles_long, aes(x = Value, y = after_stat(scaled))) +
   theme(legend.position = "right",
         legend.title = element_blank())  # Remove legend title
 ```
-
-<!-- I have reduced the plots to include only MRS, ARS and ERS -->
 
 Looking at the response style indicators across all respondents of the
 institutional trust scale, we see the following patterns:
@@ -1043,9 +1096,16 @@ interpret both indicators at the same time.
 
 ### 2. NEP Scale
 
-<!-- I have positively coded the scale and add a brief explanation. We may add this as Be Careful! box maybe-->
+<!-- I have positively coded the scale, run the res_styles function with new data and add a brief explanation. We may add this as Be Careful! box maybe-->
 
-**Be careful!**  Remember that ARS reflects the tendency to agree with statements and therefore assumes a positively polarized scale, where higher values indicate stronger agreement. However, the NEP scale is negatively polarized, with lower values indicating agreement (1 = fully agree). To compute ARS accurately, we need to reverse-code all the items so that `5` indicates agreement and `1` indicates disagreement. After this transformation, we should then recalculate the response style indicators on the reverse-coded data. 
+**Be careful!** Remember that ARS reflects the tendency to agree with
+statements and therefore assumes a positively polarized scale, where
+higher values indicate stronger agreement. However, the NEP scale is
+negatively polarized, with lower values indicating agreement (1 = fully
+agree). To compute ARS accurately, we need to reverse-code all the items
+so that `5` indicates agreement and `1` indicates disagreement. After
+this transformation, we should then recalculate the response style
+indicators on the reverse-coded data.
 
 ```{r positively polarized NEP}
 # Define the columns to reverse-code
@@ -1059,7 +1119,8 @@ NEP_positively_polarized[NEP_columns] <- 6 - NEP[NEP_columns]
 NEP_positively_polarized_respstyles <- resp_styles(NEP_positively_polarized, 1, 5,min_valid_responses = 1,normalize = FALSE)
 ```
 
-Let's now inspect response style indicators for the positively polarized NEP scale:
+Let's now inspect response style indicators for the positively polarized
+NEP scale:
 
 ```{r summary statistics NEP resp_styles}
 # Summarize and print results over all respondents
@@ -1100,6 +1161,8 @@ ggplot(NEP_positively_polarized_respstyles_long, aes(x = Value, y = after_stat(s
 
 The distribution of response style indicators across all respondents of
 the NEP-scale, reveals the following patterns:
+
+<!-- as we now have different results after correction of scale in the function, we need to adjust some of our below comments-->
 
 -   **MRS:** Respondents on average select the middle response for three
     out of the 15 items of the NEP scale. Respondents with more than
@@ -1180,8 +1243,7 @@ for data quality concerns. Additionally, we find straightlining response
 behavior with on overall, a low prevalence of only 0.5% of
 straightlining responses. However, these respondents most likely present
 a data quality concern due to the reversely coded nature of the scale.
-Most importantly, the data is affected by acquiescence bias with
-respondents on average agreeing to 10 out of 15 items. Again, due to the
+<!--should be checked according to new results--> Most importantly, the data is affected by acquiescence bias with respondents on average agreeing to 10 out of 15 items. Again, due to the
 reversely coded items of the scale, this pattern suggests poor data
 quality with responses detached from true values. Respondents with
 suspicious response behaviors should be flagged and ideally further
@@ -1217,7 +1279,7 @@ response bias. Scales measuring widely accepted values for instance, can
 show high agreement among respondents without reflecting an acquiescence
 bias that indicates poor response quality. However, again the underlying
 scale can provide information on the severeness of an acquiescence
-response pattern across items. In the case of the NEP-scale with
+response pattern across items. <!-- should be rechecked according to new NEP res_styles results--> In the case of the NEP-scale with
 conflicting statements/items, a high share of agreeing responses give
 reason for concern and most likely represent biased responses. In
 general, we advise to take acquiescence response styles seriously and to
@@ -1236,6 +1298,8 @@ respondents for your further analyses.
 response distribution and response styles regarding response quality,
 you probably wonder how to move on from there?
 
+<!-- references added-->
+
 -   Ideally, we recommend to conduct further analyses on respondents
     with suspicious response patterns. A typical proxy to understand the
     response generation process underlying a response pattern and to
@@ -1245,13 +1309,16 @@ you probably wonder how to move on from there?
     minimal effort to process the question which consequently resulted
     in poor quality responses. A common threshold to assess whether
     response times are too short to process a question is introduced by @zhang2014speeding.
-    
+
     Further measures to approach the question whether respondents'
     answers reflect low engagement with a question and therefore, poor
-    quality responses are *respondent motivation* or *respondent cognitive ability*. These are both factors discussed to influence the occurrence and magnitude of *satisficing*, an umbrella term for
+    quality responses are *respondent motivation* or *respondent
+    cognitive ability*. These are both factors discussed to influence
+    the occurrence and magnitude of *satisficing*, an umbrella term for
     different response strategies that can be used as shortcuts to
     reduce cognitive burden and can therefore, reflect careless
     responding (@krosnick1991response).
+
 -   For your further analyses, we recommend in any case to not simply
     drop respondents with suspicious response patterns. Instead, we
     advise to always flag them and run sensitivity analyses both

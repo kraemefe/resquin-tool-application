@@ -9,7 +9,7 @@
 <meta name="author" content="Fabienne Kraemer">
 <meta name="author" content="Arjin Eser">
 <meta name="author" content="Çağla Yıldız">
-<meta name="dcterms.date" content="2024-11-14">
+<meta name="dcterms.date" content="2024-11-15">
 
 <title>Assessing Response Quality and Careless Responding in Multi-Item Scales</title>
 <style>
@@ -91,6 +91,10 @@ div.csl-indent {
 <script src="Resquin_Tutorial_v2_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Resquin_Tutorial_v2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="Resquin_Tutorial_v2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="Resquin_Tutorial_v2_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="Resquin_Tutorial_v2_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 
 </head>
@@ -153,7 +157,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 14, 2024</p>
+      <p class="date">November 15, 2024</p>
     </div>
   </div>
   
@@ -165,6 +169,7 @@ div.csl-indent {
 </header>
 
 
+<!--below codes helped me to fix issues in installing packages and also text alignment when rendering the document into html-->
 <style>
 /* Align text to justify for a consistent look */
 p, h1, h2, h3, h4, h5, h6 {
@@ -173,14 +178,15 @@ p, h1, h2, h3, h4, h5, h6 {
 </style>
 <section id="at-a-glance" class="level1">
 <h1>At a glance</h1>
-<p>What do we need to be aware of when analyzing responses of multi-item scales? Which response quality issues can affect data from multi-item scales? This tool gives an overview on the assessment of response quality in multi-item scales and guides you through the quality analysis with replicable R-code. Specifically, you will learn</p>
+<!--I made small changes below like adding commas and adjusting questions a bullet list.-->
+<p>What do we need to be aware of when analyzing responses of multi-item scales? Which response quality issues can affect data from multi-item scales? This tool gives an overview on the assessment of response quality in multi-item scales and guides you through the quality analysis with replicable R-code. Specifically, you will learn;</p>
 <ul>
-<li><p>how to calculate and interpret different indicators of response distribution regarding potential data quality issues</p></li>
-<li><p>how to calculate and interpret indicators of different response styles which can reflect poor response behavior</p></li>
-<li><p>the caveats of certain response quality indicators and their suitability for different question types and response scales</p></li>
-<li><p>what to do if you detect poor quality responses</p></li>
+<li><p>how to calculate and interpret different indicators of response distribution regarding potential data quality issues,</p></li>
+<li><p>how to calculate and interpret indicators of different response styles which can reflect poor response behavior,</p></li>
+<li><p>the caveats of certain response quality indicators and their suitability for different question types and response scales,</p></li>
+<li><p>what to do if you detect poor quality responses.</p></li>
 </ul>
-<!--I added this as a side table of content in YAML as well, should we keep the below one as well?-->
+<!--I added a side table of content in YAML as well, you can see it after rendering document.  Should we still keep the below one?-->
 <section id="table-of-content" class="level3">
 <h3 class="anchored" data-anchor-id="table-of-content">Table of Content</h3>
 <p><a href="#introduction">Introduction</a></p>
@@ -201,21 +207,59 @@ p, h1, h2, h3, h4, h5, h6 {
 <!--side remark-->
 <p>This sub-sample of the <span class="citation" data-cites="ZA5666">GESIS Panel (<a href="#ref-ZA5666" role="doc-biblioref">2017</a>)</span> is publicly accessible as the GESIS Panel Campus File. It contains a random 25% sample of the GESIS panel members surveyed in 2014 and comprises only a limited selection of variables from the originial GESIS Panel scientific use file. <!-----></p>
 <p>Political trust is measured with a 10-item scale and a 7-point Likert response scale:</p>
-<p><strong>Trust in Institutions:</strong> Trust in various political institutions.</p>
+<p><strong>Trust in Institutions:</strong> Trust in various political institutions</p>
 <p>How much do you personally trust the following public institutions or groups?</p>
-<p><strong>Items:</strong></p>
-<ul>
-<li>bbzc078a: Trust in Bundestag</li>
-<li>bbzc079a: Trust in federal government</li>
-<li>bbzc080a: Trust in political parties</li>
-<li>bbzc081a: Trust in judicial authorities</li>
-<li>bbzc082a: Trust in police</li>
-<li>bbzc083a: Trust in politicians</li>
-<li>bbzc084a: Trust in media</li>
-<li>bbzc085a: Trust in European Union</li>
-<li>bbzc086a: Trust in United Nations</li>
-<li>bbzc087a: Trust in Federal Constitutional Court</li>
-</ul>
+<!--I tried a new way to display the items, if you approave I can edit the others as well-->
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Items</th>
+<th>Institution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>bbzc078a</strong></td>
+<td>Trust in Bundestag</td>
+</tr>
+<tr class="even">
+<td><strong>bbzc079a</strong></td>
+<td>Trust in federal government</td>
+</tr>
+<tr class="odd">
+<td><strong>bbzc080a</strong></td>
+<td>Trust in political parties</td>
+</tr>
+<tr class="even">
+<td><strong>bbzc081a</strong></td>
+<td>Trust in judicial authorities</td>
+</tr>
+<tr class="odd">
+<td><strong>bbzc082a</strong></td>
+<td>Trust in police</td>
+</tr>
+<tr class="even">
+<td><strong>bbzc083a</strong></td>
+<td>Trust in politicians</td>
+</tr>
+<tr class="odd">
+<td><strong>bbzc084a</strong></td>
+<td>Trust in media</td>
+</tr>
+<tr class="even">
+<td><strong>bbzc085a</strong></td>
+<td>Trust in European Union</td>
+</tr>
+<tr class="odd">
+<td><strong>bbzc086a</strong></td>
+<td>Trust in United Nations</td>
+</tr>
+<tr class="even">
+<td><strong>bbzc087a</strong></td>
+<td>Trust in Federal Constitutional Court</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Response Scale:</strong> 1 = Don’t trust at all - 7 = Entirely trust</p>
 <p>Environmental attitudes are measured with the established NEP (New Ecological Paradigm) scale by <span class="citation" data-cites="dunlap_et_al_2002">Dunlap et al. (<a href="#ref-dunlap_et_al_2002" role="doc-biblioref">2002</a>)</span> comprising 15 items on different aspects of environmental or climate attitudes. The multi-item scale uses a 5-point Likert response scale.</p>
 <p><strong>NEP scale:</strong> Environmental attitudes</p>
@@ -244,12 +288,13 @@ p, h1, h2, h3, h4, h5, h6 {
 <h2 class="anchored" data-anchor-id="assessing-response-quality-and-response-quality-indicators">Assessing Response Quality and Response Quality Indicators</h2>
 <p>To ensure unbiased conclusions regarding a substantial relationship between two construct, we advise to initially investigate the quality of given responses to the respective measurement instruments. There are several indicators which can help identify low-quality responses and assess the response quality in multi-item scales.</p>
 <p>In this tutorial, we will specifically look at several indicators of response distribution, such as:</p>
+<!--We should mention all indicators etc. as `prop_na` not simply as prop_na, right? I  will check them all according to your feedback and edit if necessary-->
 <ul>
 <li>The proportion of missing responses across multiple items per respondent (<code>prop_na</code>)</li>
 <li>The mean over multiple items per respondent (<code>ii_mean</code>)</li>
 <li>The median over multiple items per respondent (<code>ii_median</code>)</li>
 <li>The standard deviation across multiple items per respondent (<code>ii_sd</code>)</li>
-<li>The <span data-bs-toggle="popover" data-bs-content="The Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the other respondents." style="text-decoration: underline; cursor: pointer;"> Mahalanobis distance</span> per respondent (<code>mahal</code>)</li>
+<li>The <span data-bs-toggle="popover" data-bs-content="The Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the other respondents." style="text-decoration: underline; cursor: pointer;">Mahalanobis distance</span> per respondent (<code>mahal</code>)</li>
 </ul>
 <script>
 // Enable Bootstrap popovers on page load
@@ -260,20 +305,21 @@ document.addEventListener("DOMContentLoaded", function(){
   })
 });
 </script>
-<!-- I got this code from ChatGPT on how to code popovers in RMarkdown. Could you check if it works? Then we could implement it also for the other popover effects (if there are any). Thank you :-)-->
 <p>Apart from peculiarities in the response distribution of our multi-item scales, we will further consider indicators of different response biases, namely:</p>
+<!--below code hides the link icon which I found unnecessary for accordion items, but you could check what is the difference simply deleting the code from here ...-->
 <style>
 /* Hide link icons */
 .accordion-header a {
   display: none;
 }
 </style>
+<!-- ... to here. I also wanted to wrap the explanation texts into multiple lines to avoid scroll bar, tried many codes with the help of chatgpt but it it somehow did not work out, fyi.  -->
 <div id="termsAccordion" class="accordion">
 <!-- Term 1 -->
 <div class="accordion-item">
 <h2 class="accordion-header anchored" id="headingOne">
 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-MRS: Middle response style
+<p>MRS: Middle response style</p>
 </button>
 </h2>
 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#termsAccordion">
@@ -286,7 +332,7 @@ MRS: Middle response style
 <div class="accordion-item">
 <h2 class="accordion-header anchored" id="headingTwo">
 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-ARS: Acquiescence response style
+<p>ARS: Acquiescence response style</p>
 </button>
 </h2>
 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#termsAccordion">
@@ -299,7 +345,7 @@ ARS: Acquiescence response style
 <div class="accordion-item">
 <h2 class="accordion-header anchored" id="headingThree">
 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-ERS: Extreme response style
+<p>ERS: Extreme response style</p>
 </button>
 </h2>
 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#termsAccordion">
@@ -309,12 +355,12 @@ ERS: Extreme response style
 </div>
 </div>
 </div>
-<!-- This is also code I got from ChatGPT on how to implement an accordeon for the list of response style indicators. Could you also check if this works? Thanks a lot!! -->
-<p>To calculate these indicators for the assessment of response quality of our multi-item scales, we will use the <code>Resquin</code> package in R. The <code>resquin</code> package comprises different functions to calculate response quality indicators for multi-item scales. The quality indicators are calculated per respondent. Specifically, we will use the two functions <code>resp_distributions</code> (indicators of response distribution) and <code>resp_styles</code>(response style indicators), designed to assess response quality based on response distribution and on identifying certain response biases.</p>
+<p><br> To calculate these indicators for the assessment of response quality of our multi-item scales, we will use the <code>Resquin</code> package in R. The <code>resquin</code> package comprises different functions to calculate response quality indicators for multi-item scales. The quality indicators are calculated per respondent. Specifically, we will use the two functions <code>resp_distributions</code> (indicators of response distribution) and <code>resp_styles</code>(response style indicators), designed to assess response quality based on response distribution and on identifying certain response biases.</p>
 </section>
 <section id="getting-started" class="level2">
 <h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
 <p>To use <code>resquin</code>, we first need to install the package from the repository of CRAN, the Comprehensive R Archive Network. For installation, we can use the following commands:</p>
+<!--I have hidden any results such as warning messages, etc. Only the code will be displayed in the output file-->
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installing resquin</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"resquin"</span>)</span>
@@ -322,13 +368,14 @@ ERS: Extreme response style
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(resquin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alongside <code>resquin</code> itself, we will use other packages for setup, data preparation and analysis in this tutorial. To install and load these packages from CRAN simultaneously, we will use the <code>pacman</code> package:</p>
+<!--I have hidden any results such as warning messages, etc. Only the code will be displayed in the output file-->
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installing pacman and loading pacman into the R session</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pacman)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and load other CRAN packages using pacman</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr, kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After installation, we can import the survey data we want to analyze regarding its response quality. For both <code>resp_distributions</code> and <code>resp_styles</code> to calculate meaningful indicators, we need to import survey data in a wide format, i.e., with only one row per observation unit (respondent). For this tutorial, we import our data set directly from GitHub: <!--maybe let's rename the data for better usability --></p>
 <div class="cell">
@@ -338,6 +385,7 @@ ERS: Extreme response style
 </section>
 <section id="inspecting-data" class="level2">
 <h2 class="anchored" data-anchor-id="inspecting-data">Inspecting data</h2>
+<!--I used a new package for a better styling of the tables in the output -->
 <p>Before delving into the analysis of response quality, let’s have a first look at the distribution of given responses to both multi-item scales:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating subset of political trust scale</span></span>
@@ -352,206 +400,662 @@ ERS: Extreme response style
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect responses to political trust scale</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>trust_responses <span class="ot">&lt;-</span> <span class="fu">lapply</span>(trust, <span class="cf">function</span>(x) <span class="fu">table</span>(x, <span class="at">useNA =</span> <span class="st">"ifany"</span>))</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>trust_responses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$bbzc078a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 22   2 170  10 105 109 192 290 201  92  29 
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to data frame with column names</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>trust_responses_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(cbind, trust_responses))</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the table with styling</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>trust_responses_df <span class="sc">%&gt;%</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="st">"html"</span>, <span class="at">escape =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(trust_responses_df), <span class="at">width =</span> <span class="st">"4em"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc078a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc079a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc080a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc081a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc082a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc083a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc084a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc085a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc086a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc087a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">-111</td>
+<td style="text-align: right; width: 4em;">22</td>
+<td style="text-align: right; width: 4em;">16</td>
+<td style="text-align: right; width: 4em;">31</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">19</td>
+<td style="text-align: right; width: 4em;">25</td>
+<td style="text-align: right; width: 4em;">22</td>
+<td style="text-align: right; width: 4em;">1</td>
+<td style="text-align: right; width: 4em;">29</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">-99</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">24</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">28</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">-77</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right;">170</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">-33</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">170</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">-22</td>
+<td style="text-align: right; width: 4em;">105</td>
+<td style="text-align: right; width: 4em;">111</td>
+<td style="text-align: right; width: 4em;">126</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">33</td>
+<td style="text-align: right; width: 4em;">176</td>
+<td style="text-align: right; width: 4em;">121</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">109</td>
+<td style="text-align: right;">41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">1</td>
+<td style="text-align: right; width: 4em;">109</td>
+<td style="text-align: right; width: 4em;">112</td>
+<td style="text-align: right; width: 4em;">208</td>
+<td style="text-align: right; width: 4em;">42</td>
+<td style="text-align: right; width: 4em;">50</td>
+<td style="text-align: right; width: 4em;">242</td>
+<td style="text-align: right; width: 4em;">232</td>
+<td style="text-align: right; width: 4em;">130</td>
+<td style="text-align: right; width: 4em;">162</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">192</td>
+<td style="text-align: right; width: 4em;">210</td>
+<td style="text-align: right; width: 4em;">260</td>
+<td style="text-align: right; width: 4em;">68</td>
+<td style="text-align: right; width: 4em;">88</td>
+<td style="text-align: right; width: 4em;">258</td>
+<td style="text-align: right; width: 4em;">253</td>
+<td style="text-align: right; width: 4em;">178</td>
+<td style="text-align: right; width: 4em;">212</td>
+<td style="text-align: right;">110</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">3</td>
+<td style="text-align: right; width: 4em;">290</td>
+<td style="text-align: right; width: 4em;">273</td>
+<td style="text-align: right; width: 4em;">271</td>
+<td style="text-align: right; width: 4em;">117</td>
+<td style="text-align: right; width: 4em;">221</td>
+<td style="text-align: right; width: 4em;">229</td>
+<td style="text-align: right; width: 4em;">269</td>
+<td style="text-align: right; width: 4em;">244</td>
+<td style="text-align: right; width: 4em;">273</td>
+<td style="text-align: right;">181</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">201</td>
+<td style="text-align: right; width: 4em;">208</td>
+<td style="text-align: right; width: 4em;">111</td>
+<td style="text-align: right; width: 4em;">208</td>
+<td style="text-align: right; width: 4em;">257</td>
+<td style="text-align: right; width: 4em;">89</td>
+<td style="text-align: right; width: 4em;">95</td>
+<td style="text-align: right; width: 4em;">270</td>
+<td style="text-align: right; width: 4em;">162</td>
+<td style="text-align: right;">210</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">5</td>
+<td style="text-align: right; width: 4em;">92</td>
+<td style="text-align: right; width: 4em;">81</td>
+<td style="text-align: right; width: 4em;">24</td>
+<td style="text-align: right; width: 4em;">269</td>
+<td style="text-align: right; width: 4em;">277</td>
+<td style="text-align: right; width: 4em;">16</td>
+<td style="text-align: right; width: 4em;">38</td>
+<td style="text-align: right; width: 4em;">134</td>
+<td style="text-align: right; width: 4em;">72</td>
+<td style="text-align: right;">273</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">6</td>
+<td style="text-align: right; width: 4em;">29</td>
+<td style="text-align: right; width: 4em;">29</td>
+<td style="text-align: right; width: 4em;">9</td>
+<td style="text-align: right; width: 4em;">221</td>
+<td style="text-align: right; width: 4em;">95</td>
+<td style="text-align: right; width: 4em;">5</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">45</td>
+<td style="text-align: right; width: 4em;">21</td>
+<td style="text-align: right;">140</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">7</td>
+<td style="text-align: right; width: 4em;">22</td>
+<td style="text-align: right; width: 4em;">16</td>
+<td style="text-align: right; width: 4em;">31</td>
+<td style="text-align: right; width: 4em;">89</td>
+<td style="text-align: right; width: 4em;">19</td>
+<td style="text-align: right; width: 4em;">25</td>
+<td style="text-align: right; width: 4em;">22</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">29</td>
+<td style="text-align: right;">21</td>
+</tr>
+</tbody>
+</table>
 
-$bbzc079a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 16   2 170  10 111 112 210 273 208  81  29 
 
-$bbzc080a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 31   2 170  10 126 208 260 271 111  24   9 
-
-$bbzc081a
-x
--111  -99  -77  -33  -22    1    2    3    4    5    6    7 
-   2   24    2  170   10   42   68  117  208  269  221   89 
-
-$bbzc082a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 19   2 170  10  33  50  88 221 257 277  95 
-
-$bbzc083a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 25   2 170  10 176 242 258 229  89  16   5 
-
-$bbzc084a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 22   2 170  10 121 232 253 269  95  38  10 
-
-$bbzc085a
-x
--111  -99  -77  -33  -22    1    2    3    4    5    6    7 
-   1   28    2  170   10  130  178  244  270  134   45   10 
-
-$bbzc086a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 29   2 170  10 109 162 212 273 162  72  21 
-
-$bbzc087a
-x
--99 -77 -33 -22   1   2   3   4   5   6   7 
- 21   2 170  10  41  64 110 181 210 273 140 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect responses to NEP </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>NEP_responses <span class="ot">&lt;-</span> <span class="fu">lapply</span>(NEP, <span class="cf">function</span>(x) <span class="fu">table</span>(x, <span class="at">useNA =</span> <span class="st">"ifany"</span>))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>NEP_responses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$bczd005a
-x
--99 -77 -33 -22   1   2   3   4   5 
- 14   4 195  15 139 403 233 198  21 
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect responses to NEP </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>NEP_responses <span class="ot">&lt;-</span> <span class="fu">lapply</span>(NEP, <span class="cf">function</span>(x) <span class="fu">table</span>(x, <span class="at">useNA =</span> <span class="st">"ifany"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to data frame with column names</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>NEP_responses_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(cbind, NEP_responses))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the table with styling</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>NEP_responses_df <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="st">"html"</span>, <span class="at">escape =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(NEP_responses_df), <span class="at">width =</span> <span class="st">"4em"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd005a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd006a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd007a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd008a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd009a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd010a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd011a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd012a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd013a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd014a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd015a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd016a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd017a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd018a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd019a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">-111</td>
+<td style="text-align: right; width: 4em;">14</td>
+<td style="text-align: right; width: 4em;">8</td>
+<td style="text-align: right; width: 4em;">11</td>
+<td style="text-align: right; width: 4em;">1</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">9</td>
+<td style="text-align: right; width: 4em;">8</td>
+<td style="text-align: right; width: 4em;">8</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">1</td>
+<td style="text-align: right; width: 4em;">7</td>
+<td style="text-align: right; width: 4em;">7</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">-99</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">12</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">9</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">-77</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right;">195</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">-33</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">195</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">-22</td>
+<td style="text-align: right; width: 4em;">139</td>
+<td style="text-align: right; width: 4em;">36</td>
+<td style="text-align: right; width: 4em;">349</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">306</td>
+<td style="text-align: right; width: 4em;">114</td>
+<td style="text-align: right; width: 4em;">397</td>
+<td style="text-align: right; width: 4em;">9</td>
+<td style="text-align: right; width: 4em;">397</td>
+<td style="text-align: right; width: 4em;">30</td>
+<td style="text-align: right; width: 4em;">215</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">318</td>
+<td style="text-align: right; width: 4em;">16</td>
+<td style="text-align: right;">241</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">1</td>
+<td style="text-align: right; width: 4em;">403</td>
+<td style="text-align: right; width: 4em;">208</td>
+<td style="text-align: right; width: 4em;">529</td>
+<td style="text-align: right; width: 4em;">46</td>
+<td style="text-align: right; width: 4em;">554</td>
+<td style="text-align: right; width: 4em;">477</td>
+<td style="text-align: right; width: 4em;">450</td>
+<td style="text-align: right; width: 4em;">76</td>
+<td style="text-align: right; width: 4em;">546</td>
+<td style="text-align: right; width: 4em;">135</td>
+<td style="text-align: right; width: 4em;">546</td>
+<td style="text-align: right; width: 4em;">16</td>
+<td style="text-align: right; width: 4em;">544</td>
+<td style="text-align: right; width: 4em;">153</td>
+<td style="text-align: right;">504</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">2</td>
+<td style="text-align: right; width: 4em;">233</td>
+<td style="text-align: right; width: 4em;">205</td>
+<td style="text-align: right; width: 4em;">68</td>
+<td style="text-align: right; width: 4em;">318</td>
+<td style="text-align: right; width: 4em;">79</td>
+<td style="text-align: right; width: 4em;">180</td>
+<td style="text-align: right; width: 4em;">90</td>
+<td style="text-align: right; width: 4em;">129</td>
+<td style="text-align: right; width: 4em;">45</td>
+<td style="text-align: right; width: 4em;">196</td>
+<td style="text-align: right; width: 4em;">137</td>
+<td style="text-align: right; width: 4em;">98</td>
+<td style="text-align: right; width: 4em;">78</td>
+<td style="text-align: right; width: 4em;">267</td>
+<td style="text-align: right;">164</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">3</td>
+<td style="text-align: right; width: 4em;">198</td>
+<td style="text-align: right; width: 4em;">453</td>
+<td style="text-align: right; width: 4em;">43</td>
+<td style="text-align: right; width: 4em;">291</td>
+<td style="text-align: right; width: 4em;">47</td>
+<td style="text-align: right; width: 4em;">200</td>
+<td style="text-align: right; width: 4em;">54</td>
+<td style="text-align: right; width: 4em;">566</td>
+<td style="text-align: right; width: 4em;">9</td>
+<td style="text-align: right; width: 4em;">508</td>
+<td style="text-align: right; width: 4em;">81</td>
+<td style="text-align: right; width: 4em;">168</td>
+<td style="text-align: right; width: 4em;">54</td>
+<td style="text-align: right; width: 4em;">455</td>
+<td style="text-align: right;">82</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 4em;">4</td>
+<td style="text-align: right; width: 4em;">21</td>
+<td style="text-align: right; width: 4em;">98</td>
+<td style="text-align: right; width: 4em;">8</td>
+<td style="text-align: right; width: 4em;">284</td>
+<td style="text-align: right; width: 4em;">12</td>
+<td style="text-align: right; width: 4em;">27</td>
+<td style="text-align: right; width: 4em;">7</td>
+<td style="text-align: right; width: 4em;">219</td>
+<td style="text-align: right; width: 4em;">3</td>
+<td style="text-align: right; width: 4em;">131</td>
+<td style="text-align: right; width: 4em;">14</td>
+<td style="text-align: right; width: 4em;">440</td>
+<td style="text-align: right; width: 4em;">7</td>
+<td style="text-align: right; width: 4em;">110</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 4em;">5</td>
+<td style="text-align: right; width: 4em;">14</td>
+<td style="text-align: right; width: 4em;">8</td>
+<td style="text-align: right; width: 4em;">11</td>
+<td style="text-align: right; width: 4em;">56</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">10</td>
+<td style="text-align: right; width: 4em;">9</td>
+<td style="text-align: right; width: 4em;">8</td>
+<td style="text-align: right; width: 4em;">8</td>
+<td style="text-align: right; width: 4em;">15</td>
+<td style="text-align: right; width: 4em;">276</td>
+<td style="text-align: right; width: 4em;">7</td>
+<td style="text-align: right; width: 4em;">7</td>
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
 
-$bczd006a
-x
--99 -77 -33 -22   1   2   3   4   5 
-  8   4 195  15  36 208 205 453  98 
 
-$bczd007a
-x
--99 -77 -33 -22   1   2   3   4   5 
- 11   4 195  15 349 529  68  43   8 
-
-$bczd008a
-x
--111  -99  -77  -33  -22    1    2    3    4    5 
-   1   12    4  195   15   46  318  291  284   56 
-
-$bczd009a
-x
--99 -77 -33 -22   1   2   3   4   5 
- 10   4 195  15 306 554  79  47  12 
-
-$bczd010a
-x
--99 -77 -33 -22   1   2   3   4   5 
- 10   4 195  15 114 477 180 200  27 
-
-$bczd011a
-x
--99 -77 -33 -22   1   2   3   4   5 
- 10   4 195  15 397 450  90  54   7 
-
-$bczd012a
-x
--99 -77 -33 -22   1   2   3   4   5 
-  9   4 195  15   9  76 129 566 219 
-
-$bczd013a
-x
--99 -77 -33 -22   1   2   3   4   5 
-  8   4 195  15 397 546  45   9   3 
-
-$bczd014a
-x
--99 -77 -33 -22   1   2   3   4   5 
-  8   4 195  15  30 135 196 508 131 
-
-$bczd015a
-x
--99 -77 -33 -22   1   2   3   4   5 
- 15   4 195  15 215 546 137  81  14 
-
-$bczd016a
-x
--111  -99  -77  -33  -22    1    2    3    4    5 
-   1    9    4  195   15   16   98  168  440  276 
-
-$bczd017a
-x
--99 -77 -33 -22   1   2   3   4   5 
-  7   4 195  15 318 544  78  54   7 
-
-$bczd018a
-x
--99 -77 -33 -22   1   2   3   4   5 
-  7   4 195  15  16 153 267 455 110 
-
-$bczd019a
-x
--99 -77 -33 -22   1   2   3   4   5 
-  9   4 195  15 241 504 164  82   8 </code></pre>
 </div>
 </div>
 </section>
 <section id="data-preparation" class="level2">
 <h2 class="anchored" data-anchor-id="data-preparation">Data preparation</h2>
 <p>A first overview of the response distribution of both scales shows that there are several missing values which are not defined as NA yet. For <code>resquin</code> to calculate meaningful indicators, we have to make sure that missings are coded to NA before we run any analyses:</p>
+<!-- I have deleted unique values part from below code as previous tables were quite clear about which values to recode. Also improved the formatting of output -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get unique values for responses to political trust scale</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>unique_values_trust <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(trust, unique)))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the unique values sorted in an ascending order</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(unique_values_trust)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] -111  -99  -77  -33  -22    1    2    3    4    5    6    7</code></pre>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode missing values to NA for responses to political trust scale</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>trust <span class="ot">&lt;-</span> trust <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">replace</span>(., . <span class="sc">%in%</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">22</span>, <span class="sc">-</span><span class="dv">33</span>, <span class="sc">-</span><span class="dv">77</span>, <span class="sc">-</span><span class="dv">99</span>, <span class="sc">-</span><span class="dv">111</span>), <span class="cn">NA</span>)))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows of recoded data frame as a formatted table</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>trust <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">%&gt;%</span>  <span class="co"># Show only the first 6 rows</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"First Six Rows of Re-coded Trust Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>First Six Rows of Re-coded Trust Data</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc078a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc079a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc080a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc081a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc082a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc083a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc084a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc085a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc086a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bbzc087a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode missing values to NA for responses to political trust scale</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>trust <span class="ot">&lt;-</span> trust <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">replace</span>(., . <span class="sc">%in%</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">22</span>, <span class="sc">-</span><span class="dv">33</span>, <span class="sc">-</span><span class="dv">77</span>, <span class="sc">-</span><span class="dv">99</span>, <span class="sc">-</span><span class="dv">111</span>), <span class="cn">NA</span>)))</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View the new recoded data frame</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(trust)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  bbzc078a bbzc079a bbzc080a bbzc081a bbzc082a bbzc083a bbzc084a bbzc085a
-1        3        3        2        4        5        2        3        3
-2       NA        6        3        5        5        3        4        4
-3        5        6        3        6        6        3        4        4
-4        1        1        1        5        4        1        2        1
-5        3        3        3        4        4        3        3        3
-6        4        4        4        4        4        4        4        4
-  bbzc086a bbzc087a
-1        3        5
-2        3        6
-3        4        6
-4        1        5
-5        3        3
-6        4        4</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get unique values for responses to NEP scale</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>unique_values_NEP <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(NEP, unique)))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the unique values sorted in an ascending order</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(unique_values_NEP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] -111  -99  -77  -33  -22    1    2    3    4    5</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode missing values to NA for responses to NEP scale</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>NEP <span class="ot">&lt;-</span> NEP <span class="sc">%&gt;%</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">replace</span>(., . <span class="sc">%in%</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">22</span>, <span class="sc">-</span><span class="dv">33</span>, <span class="sc">-</span><span class="dv">77</span>, <span class="sc">-</span><span class="dv">99</span>, <span class="sc">-</span><span class="dv">111</span>), <span class="cn">NA</span>)))</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View the new recoded data frame</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(NEP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  bczd005a bczd006a bczd007a bczd008a bczd009a bczd010a bczd011a bczd012a
-1        2        2        1        4        2        2        1        4
-2        1        4        2        4        1        4        2        5
-3        2        4        4        4        2        4        2        4
-4        4        4        2        2        3        2        3        4
-5        4        4        1        1        2        2        1        2
-6       NA       NA       NA       NA       NA       NA       NA       NA
-  bczd013a bczd014a bczd015a bczd016a bczd017a bczd018a bczd019a
-1        2        4        2        4        1        3        2
-2        1        4        2        4        2        4        2
-3        2        4        4        4        2        2        2
-4        2        4        2        3        2        3        3
-5        1        4        4        4        2        4        3
-6       NA       NA       NA       NA       NA       NA       NA</code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recode missing values to NA for responses to NEP scale</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>NEP <span class="ot">&lt;-</span> NEP <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">replace</span>(., . <span class="sc">%in%</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">22</span>, <span class="sc">-</span><span class="dv">33</span>, <span class="sc">-</span><span class="dv">77</span>, <span class="sc">-</span><span class="dv">99</span>, <span class="sc">-</span><span class="dv">111</span>), <span class="cn">NA</span>)))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows of recoded data frame as a formatted table</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>NEP <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">%&gt;%</span>  <span class="co"># Show only the first 6 rows</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"First Six Rows of Re-coded NEP Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>First Six Rows of Re-coded NEP Data</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd005a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd006a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd007a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd008a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd009a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd010a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd011a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd012a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd013a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd014a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd015a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd016a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd017a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd018a</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">bczd019a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
 </div>
 </section>
@@ -562,54 +1066,219 @@ x
 <h2 class="anchored" data-anchor-id="calculating-indicators-of-response-distribution">Calculating indicators of response distribution</h2>
 <p>Now that we have prepared our data for analysis, we can proceed to the main analysis of response quality and calculate several response quality indicators using <code>resquin</code>. Let’s first look at the response distributions of both the institutional trust scale and the NEP scale in greater detail by using <code>resp_distributions</code>. We can use <code>resp_distributions</code> as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate indicators of response distribution with resp_distribution</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Institutional trust</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>trust_distribution <span class="ot">&lt;-</span> <span class="fu">resp_distributions</span>(trust)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results for the first 10 respondents</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>trust_distribution[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   n_na prop_na ii_mean    ii_sd ii_median    mahal
-1     0     0.0     3.3 1.059350       3.0 1.291229
-2     1     0.1      NA       NA        NA       NA
-3     0     0.0     4.7 1.251666       4.5 2.722131
-4     0     0.0     2.2 1.751190       1.0 2.963078
-5     0     0.0     3.2 0.421637       3.0 1.400355
-6     0     0.0     4.0 0.000000       4.0 1.534575
-7     0     0.0     5.2 1.619328       5.0 3.799596
-8     0     0.0     4.3 1.494434       3.5 2.828356
-9     0     0.0     2.1 0.875595       2.0 2.387371
-10    0     0.0     5.2 1.316561       5.0 3.295471</code></pre>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate indicators of response distribution with resp_distribution</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Institutional trust</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>trust_distribution <span class="ot">&lt;-</span> <span class="fu">resp_distributions</span>(trust)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results for the first 10 respondents</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_distribution[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">n_na</th>
+<th style="text-align: right;">prop_na</th>
+<th style="text-align: right;">ii_mean</th>
+<th style="text-align: right;">ii_sd</th>
+<th style="text-align: right;">ii_median</th>
+<th style="text-align: right;">mahal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">3.3</td>
+<td style="text-align: right;">1.059350</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.291229</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">1.251666</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">2.722131</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">2.2</td>
+<td style="text-align: right;">1.751190</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">2.963078</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">0.421637</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.400355</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">0.000000</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">1.534574</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">1.619328</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.799596</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">4.3</td>
+<td style="text-align: right;">1.494434</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">2.828356</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: right;">0.875595</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">2.387371</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">1.316561</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.295472</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environmental attitudes </span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution <span class="ot">&lt;-</span> <span class="fu">resp_distributions</span>(NEP)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>NEP_distribution[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   n_na prop_na  ii_mean     ii_sd ii_median    mahal
-1     0       0 2.400000 1.1212238         2 3.150151
-2     0       0 2.800000 1.3732131         2 3.062830
-3     0       0 3.066667 1.0327956         4 5.015197
-4     0       0 2.866667 0.8338094         3 3.146133
-5     0       0 2.600000 1.2983506         2 5.232383
-6    15       1       NA        NA        NA       NA
-7     0       0 2.466667 1.3557637         2 2.928595
-8     0       0 2.600000 1.5491933         2 5.230894
-9     0       0 2.466667 1.4573296         2 3.406982
-10    0       0 2.666667 1.7182494         2 5.830589</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environmental attitudes </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution <span class="ot">&lt;-</span> <span class="fu">resp_distributions</span>(NEP)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_distribution[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">n_na</th>
+<th style="text-align: right;">prop_na</th>
+<th style="text-align: right;">ii_mean</th>
+<th style="text-align: right;">ii_sd</th>
+<th style="text-align: right;">ii_median</th>
+<th style="text-align: right;">mahal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.400000</td>
+<td style="text-align: right;">1.1212238</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3.150151</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.800000</td>
+<td style="text-align: right;">1.3732131</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3.062830</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3.066667</td>
+<td style="text-align: right;">1.0327956</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5.015197</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.866667</td>
+<td style="text-align: right;">0.8338094</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3.146133</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.600000</td>
+<td style="text-align: right;">1.2983506</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5.232383</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.466667</td>
+<td style="text-align: right;">1.3557637</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2.928595</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.600000</td>
+<td style="text-align: right;">1.5491933</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5.230894</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.466667</td>
+<td style="text-align: right;">1.4573296</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3.406982</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.666667</td>
+<td style="text-align: right;">1.7182494</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5.830589</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p><code>resp_distributions</code> returns a data frame containing several indicators of response distribution per respondent (displayed as separate rows of the data frame). Inspecting the calculated indicators for the first 10 respondents in our data frame, we see that for 1 out of the first 10 respondents of the institutional trust scale and for 1 out of the first 10 respondents of the NEP scale no parameters of central tendency (i.e., ii_mean, ii_median) or variability (i.e., ii_sd, mahal) were calculated. The reason for this is that <code>resp_distributions</code> by default only calculates response distribution indicators for respondents who do not show any missing value in the analyzed multi-item scale. Accordingly, for all respondents who show a value higher than 0 for the indicator <code>n_na</code> (count of missing values), indicators of central tendency and variability are NA.</p>
-<!-- Info Box with Title, No Background Color -->
+<!-- Info Box with Title, No Background Color code worked, we can use this for other boxes as well-->
 <div style="border: 2px solid #007BFF; padding: 20px; border-radius: 8px;">
 <p><strong>Package-specific feature</strong></p>
 <p>
 By specifying the option <code>min_valid_responses</code>, respondents with missing values in the multi-item scale can be included in the analysis of response quality. <code>min_valid_responses</code> takes on a numeric value between 0 and 1 and defines the share of valid responses a respondent must have to calculate the respective indicators of response distribution.
 </p>
 </div>
-<!-- Here I got some code for creating a separate information box. Please also check if this works - thanks! :-) Then we can adapt it for the other info boxes we wanted to create -->
 </section>
 <section id="handling-respondents-with-missing-data" class="level2">
 <h2 class="anchored" data-anchor-id="handling-respondents-with-missing-data">Handling respondents with missing data</h2>
@@ -624,9 +1293,9 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 <h3 class="anchored" data-anchor-id="institutional-trust-scale">1. Institutional Trust Scale</h3>
 <p>Let’s begin with the institutional trust scale:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>trust_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(trust_distribution)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>trust_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(trust_distribution)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -716,37 +1385,37 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>trust_distribution_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(trust_distribution, </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"ii_mean"</span>, <span class="st">"ii_sd"</span>, <span class="st">"ii_median"</span>, <span class="st">"mahal"</span>), </span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>trust_distribution_long <span class="ot">&lt;-</span> trust_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator               </span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> trust_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trust_distribution_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>trust_distribution_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(trust_distribution, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"ii_mean"</span>, <span class="st">"ii_sd"</span>, <span class="st">"ii_median"</span>, <span class="st">"mahal"</span>), </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>trust_distribution_long <span class="ot">&lt;-</span> trust_distribution_long <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator               </span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> trust_distribution_long <span class="sc">%&gt;%</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trust_distribution_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -773,26 +1442,44 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 <p><em>In summary</em>, most respondents show moderate variability indicating consistent responding, which again might point towards a tendency to select non-extreme answers close to the mid-point of the scale. A few respondents show a somewhat high variability in their responses which could call for additional checks to assess whether their responses reflect poor response behavior. Mahalanobis distance can further hint at respondents whose patterns deviate substantially from the average response pattern across all respondents which might be a sign of poor response behavior.</p>
 <p><strong>Straightlining or non-differentiation</strong></p>
 <p>From the standard deviation across items we can additionally infer whether respondents show straightlining response behavior across the multiple items of each scale. <em>Straightlining or non-differentiation</em> describes the response pattern of selecting the identical answer to a series of questions or items of a scale. It can indicate whether a respondent properly processed the respective question(s) or used shortcuts to reduce cognitive burden which in turn produces poor quality answers that do not represent a respondents’ true values. To get a measure for straightlining response behavior, we generate a new indicator based on a respondents’ standard deviation across the several items:</p>
+<!-- I made a change in the code to better display the results -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get proportion of respondents who show straightlining response behavior</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>proportion_nondiff <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(<span class="fu">table</span>(trust_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>]</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>proportion_nondiff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         1 
-0.05144033 </code></pre>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportion of respondents who show straightlining response behavior</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>trust_straightline_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Indicator =</span> <span class="st">"Straightlining Respondents"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Proportion =</span> <span class="fu">round</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(trust_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>], <span class="dv">4</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result as a table</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_straightline_df, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Trust Scale"</span>, <span class="st">"Proportion"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Trust Scale</th>
+<th style="text-align: right;">Proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Straightlining Respondents</td>
+<td style="text-align: right;">0.0514</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <!-- Side remark -->
-<p>Apart from a binary measure indicating the selection of the identical response option across items versus selecting at least two different response options across a set of items is only one of several possible operationalizations of straightlining or non-differentiation. For an overview of the different possible operationalizations used in research, see <span class="citation" data-cites="kim_et_al_2019">Kim et al. (<a href="#ref-kim_et_al_2019" role="doc-biblioref">2019</a>)</span>. <!-- REFERENCE ADDED: Kim, Y., Dykema, J., Stevenson, J., Black, P., & Moberg, D. P. (2019). Straightlining: Overview of measurement, comparison of indicators, and effects in mail–web mixed-mode surveys. Social Science Computer Review, 37(2), 214-233. --></p>
-<p>The results show that about 5% of respondents show <strong>straightlining response behavior</strong> in the institutional trust scale, meaning that 5% of respondents selected the identical answer across the several items. This is a relatively low proportion of straightlining behavior across respondents and does not indicate general data quality issues. However, it is necessary to flag these respondents who show straightlining across the items of a scale for a further investigation of their response behavior. The code below creates a new variable in the dataset, flagging respondents with zero variation in their responses as <code>TRUE</code>; otherwise, it flags them as <code>FALSE</code>.</p>
+<p>Apart from a binary measure indicating the selection of the identical response option across items versus selecting at least two different response options across a set of items is only one of several possible operationalizations of straightlining or non-differentiation. For an overview of the different possible operationalizations used in research, see <span class="citation" data-cites="kim_et_al_2019">Kim et al. (<a href="#ref-kim_et_al_2019" role="doc-biblioref">2019</a>)</span>. <!-- reference added--></p>
+<p>The results show that about 5% of respondents show <strong>straightlining response behavior</strong> in the institutional trust scale, meaning that 5% of respondents selected the identical answer across the several items. This is a relatively low proportion of straightlining behavior across respondents and does not indicate general data quality issues. However, it is necessary to flag these respondents who show straightlining across the items of a scale for a further investigation of their response behavior. <!-- I added a brief explanation and a code for flagging--> The code below creates a new variable in the dataset, flagging respondents with zero variation in their responses as <code>TRUE</code>; otherwise, as <code>FALSE</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>straightlining_flag <span class="ot">&lt;-</span> trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>straightlining_flag <span class="ot">&lt;-</span> trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!--Info box -->
 <p><strong>Be careful!</strong></p>
@@ -802,9 +1489,9 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 <h3 class="anchored" data-anchor-id="nep-scale">2. NEP Scale</h3>
 <p>Now let’s move on to inspecting the central tendency and variability parameters for the NEP scale:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>NEP_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_distribution)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>NEP_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_distribution)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -894,34 +1581,34 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_distribution, </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"ii_mean"</span>, <span class="st">"ii_sd"</span>, <span class="st">"ii_median"</span>, <span class="st">"mahal"</span>), </span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove non-finite values</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value) <span class="sc">&amp;</span> <span class="fu">is.finite</span>(Value))</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_distribution_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_distribution, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"ii_mean"</span>, <span class="st">"ii_sd"</span>, <span class="st">"ii_median"</span>, <span class="st">"mahal"</span>), </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove non-finite values</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value) <span class="sc">&amp;</span> <span class="fu">is.finite</span>(Value))</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_distribution_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -965,39 +1652,58 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 <li>If things continue on their present course, we will soon experience a major ecological catastrophe <u>(<em>Pro-environmental)</em></u></li>
 </ol>
 <p>8 of the items are “positively” worded, with a response of 1 indicating a pro-environmental attitude. In contrast, the remaining 7 items are “negatively” worded, where a response of 1 indicates an anti-environmental attitude. As a result, respondents showing straightlining (i.e., giving the identical response to all items) contradict attitudinal aspects of previous items, suggesting respondents indeed show <strong>careless responding</strong>. This is especially true if respondents select identical responses at the extremes of the scale. However, we have to again be careful with hasty conclusions: In the case of respondents straightlining across the mid-point of the scale, we cannot immediately rule out the possibility of genuine ambiguity and should perform further checks to examine the possibility of poor quality responses. Nevertheless, straightlining in the NEP scale might especially pose a threat for data quality and should be investigated:</p>
+<!-- I made a change in the code to better display the results -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get proportion of respondents who show straightlining response behavior</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>proportion_nondiff <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(<span class="fu">table</span>(NEP_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>]</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>proportion_nondiff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>          1 
-0.005336179 </code></pre>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportion of respondents who show straightlining response behavior</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>NEP_straightline_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Indicator =</span> <span class="st">"Straightlining Respondents"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Proportion =</span> <span class="fu">round</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(NEP_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>], <span class="dv">4</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result as a table</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_straightline_df, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"NEP Scale"</span>, <span class="st">"Proportion"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">NEP Scale</th>
+<th style="text-align: right;">Proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Straightlining Respondents</td>
+<td style="text-align: right;">0.0053</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p>For the NEP scale, we can see that 0.5% of respondents show straightlining across the several items of the scale. Despite the low prevalence of straightlining in the data, respondents who straightlined in the NEP scale are highly likely to show poor quality responses and should be flagged for further analyses. Below code flags respondents who show zero variation in their responses with a new variable named <code>straightlining_flag</code>:</p>
+<p>For the NEP scale, we can see that 0.5% of respondents show straightlining across the several items of the scale. Despite the low prevalence of straightlining in the data, respondents who straightlined in the NEP scale are highly likely to show poor quality responses and should be flagged for further analyses. <!-- I added a brief explanation and a code for flagging-->Below code flags respondents who show zero variation in their responses with a new variable named <code>straightlining_flag</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>straightlining_flag <span class="ot">&lt;-</span> NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>straightlining_flag <span class="ot">&lt;-</span> NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!--Info box start-->
 <p><strong>Be careful!</strong></p>
 <p>As the NEP scale includes items with both positive and negative wordings, the response distribution indicators cannot be directly used for the description of the distribution of pro- or anti-environmental attitudes. To derive substantively meaningful conclusions from the indicators (e.g., average environmental attitudes among the respondents), it’s necessary to reverse-code either the positively or negatively worded items. This ensures that all items reflect the same directional attitude. For the recoding, you can use the following code chunk:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new data frame by copying the original NEP data</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>NEP_recoded <span class="ot">&lt;-</span> NEP</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverse code the negatively worded items in the new data frame</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd006a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd006a  <span class="co"># Q2: Humans have the right to modify the natural environment</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd008a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd008a  <span class="co"># Q4: Human ingenuity</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd010a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd010a  <span class="co"># Q6: There are enough resources</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd012a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd012a  <span class="co"># Q8: The balance of nature is strong enough</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd014a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd014a  <span class="co"># Q10: Ecological crisis exaggerated</span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd016a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd016a  <span class="co"># Q12: Humans were meant to rule over nature</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd018a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd018a  <span class="co"># Q14: Control nature</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new data frame by copying the original NEP data</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>NEP_recoded <span class="ot">&lt;-</span> NEP</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverse code the negatively worded items in the new data frame</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd006a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd006a  <span class="co"># Q2: Humans have the right to modify the natural environment</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd008a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd008a  <span class="co"># Q4: Human ingenuity</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd010a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd010a  <span class="co"># Q6: There are enough resources</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd012a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd012a  <span class="co"># Q8: The balance of nature is strong enough</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd014a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd014a  <span class="co"># Q10: Ecological crisis exaggerated</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd016a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd016a  <span class="co"># Q12: Humans were meant to rule over nature</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd018a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd018a  <span class="co"># Q14: Control nature</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1011,43 +1717,187 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 <li><p><strong>Extreme Response Style (ERS):</strong> Tendency to select the endpoints of a response scale</p></li>
 </ul>
 <p>To use <code>resp_styles</code>, we first need to specify the range of the response scale of the underlying multi-item scale or matrix question. Only with information on the range, and therefore on the existence of a mid-point and the endpoints of the response scale, <code>resp_styles</code> can calculate indicators for the different response styles. Similar to <code>resp_distributions</code>, we can additionally specify the proportion of valid responses respondents should have on the multi-item scale (<code>min_valid_responses</code>) to calculate response style indicators. To enable the calculation of all response style indicators per respondent, we only include those respondents who show no NAs across items. We can further determine whether we want <code>resp_styles</code> to simply return the counts of each response style across items or if it should return the proportion of a specific response behavior out of all the items a respondent has answered. Although the proportion of a certain response behavior is generally more informative than the mere count, we specify the option <code>normalize = FALSE</code> for our analysis in this tutorial.</p>
-<!-- I have noticed the we had an error in the below NEP calculation, scale was 7 in the previous files and I have changed it to 5 here -->
+<!-- I have noticed that we had an error in the below NEP calculation, scale was 7 in the previous .rmd files and I have changed it to 5 here. We need to adjust our comments later for NEP scale response style indicators -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for institutional trust</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(trust, <span class="dv">1</span>, <span class="dv">7</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>trust_respstyles[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   MRS ARS DRS ERS NERS
-1    1   2   7   0   10
-2   NA  NA  NA  NA   NA
-3    3   5   2   0   10
-4    1   2   7   6    4
-5    2   0   8   0   10
-6   10   0   0   0   10
-7    2   7   1   3    7
-8    1   4   5   0   10
-9    0   0  10   3    7
-10   2   7   1   2    8</code></pre>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for institutional trust</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(trust, <span class="dv">1</span>, <span class="dv">7</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_respstyles[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">MRS</th>
+<th style="text-align: right;">ARS</th>
+<th style="text-align: right;">DRS</th>
+<th style="text-align: right;">ERS</th>
+<th style="text-align: right;">NERS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for environmental attitudes</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>NEP_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP, <span class="dv">1</span>, <span class="dv">5</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>NEP_respstyles[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   MRS ARS DRS ERS NERS
-1    1   4  10   3   12
-2    0   7   8   4   11
-3    0   8   7   0   15
-4    5   4   6   0   15
-5    1   6   8   4   11
-6   NA  NA  NA  NA   NA
-7    0   6   9   5   10
-8    3   4   8   8    7
-9    2   4   9   7    8
-10   2   5   8  10    5</code></pre>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for environmental attitudes</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>NEP_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP, <span class="dv">1</span>, <span class="dv">5</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_respstyles[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">MRS</th>
+<th style="text-align: right;">ARS</th>
+<th style="text-align: right;">DRS</th>
+<th style="text-align: right;">ERS</th>
+<th style="text-align: right;">NERS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>As with <code>resp_distributions</code>, <code>resp_styles</code> returns a data frame containing the several response style indicators per respondent (displayed as separate rows of the data frame). Again, let’s first inspect the calculated indicators for the first 10 respondents in our data frame: Similar to <code>resp_distributions</code> we see that for 1 out of the first 10 respondents of the institutional trust scale and for 1 out of the first 10 respondents of the NEP scale, no indicators were calculated due to our specification of <code>min_valid_responses</code>, which only included respondents without NA across items into the analysis.</p>
@@ -1058,10 +1908,11 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 <section id="institutional-trust-scale-1" class="level3">
 <h3 class="anchored" data-anchor-id="institutional-trust-scale-1">1. Institutional Trust Scale</h3>
 <p>Let’s again begin with the institutional trust scale.</p>
+<!-- I have reduced the resulting density and boxplots to include only MRS, ARS and ERS. Should I do the same for the table or is current version okay?  -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(trust_respstyles)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(trust_respstyles)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -1142,35 +1993,35 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(trust_respstyles, </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"MRS"</span>, <span class="st">"ARS"</span>, <span class="st">"ERS"</span>), </span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trust__respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
-<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
-<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
-<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(trust_respstyles, </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"MRS"</span>, <span class="st">"ARS"</span>, <span class="st">"ERS"</span>), </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trust__respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1179,7 +2030,6 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 </div>
 </div>
 </div>
-<!-- I have reduced the plots to include only MRS, ARS and ERS -->
 <p>Looking at the response style indicators across all respondents of the institutional trust scale, we see the following patterns:</p>
 <ul>
 <li><p><strong><em>MRS:</em></strong> On average, respondents in our sample tend to select the midpoint of the scale (response of the value 4) for about two out of ten items. The boxplot shows that selecting anywhere between 0 to 8 midpoint responses across the items of the scale lies within the normal range among the sample. However, respondents who select the scale mid-point for 9 or 10 items are outliers, reflecting an usual high amount of given mid-point answers in the sample.</p></li>
@@ -1194,24 +2044,24 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 </section>
 <section id="nep-scale-1" class="level3">
 <h3 class="anchored" data-anchor-id="nep-scale-1">2. NEP Scale</h3>
-<!-- I have positively coded the scale and add a brief explanation. We may add this as Be Careful! box maybe-->
+<!-- I have positively coded the scale, run the res_styles function with new data and add a brief explanation. We may add this as Be Careful! box maybe-->
 <p><strong>Be careful!</strong> Remember that ARS reflects the tendency to agree with statements and therefore assumes a positively polarized scale, where higher values indicate stronger agreement. However, the NEP scale is negatively polarized, with lower values indicating agreement (1 = fully agree). To compute ARS accurately, we need to reverse-code all the items so that <code>5</code> indicates agreement and <code>1</code> indicates disagreement. After this transformation, we should then recalculate the response style indicators on the reverse-coded data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the columns to reverse-code</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>NEP_columns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(NEP)  <span class="co"># Replace with specific columns if needed</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a reversed version of NEP data and perform reverse-coding to positively polarize the scale</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized <span class="ot">&lt;-</span> NEP</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized[NEP_columns] <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP[NEP_columns]</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate response style indicators on the positively polarized NEP data</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP_positively_polarized, <span class="dv">1</span>, <span class="dv">5</span>,<span class="at">min_valid_responses =</span> <span class="dv">1</span>,<span class="at">normalize =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the columns to reverse-code</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>NEP_columns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(NEP)  <span class="co"># Replace with specific columns if needed</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a reversed version of NEP data and perform reverse-coding to positively polarize the scale</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized <span class="ot">&lt;-</span> NEP</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized[NEP_columns] <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP[NEP_columns]</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate response style indicators on the positively polarized NEP data</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP_positively_polarized, <span class="dv">1</span>, <span class="dv">5</span>,<span class="at">min_valid_responses =</span> <span class="dv">1</span>,<span class="at">normalize =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s now inspect response style indicators for the positively polarized NEP scale:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_positively_polarized_respstyles)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_positively_polarized_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_positively_polarized_respstyles)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_positively_polarized_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -1292,35 +2142,35 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_positively_polarized_respstyles, </span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"MRS"</span>, <span class="st">"ARS"</span>, <span class="st">"ERS"</span>), </span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
-<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_positively_polarized_respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
-<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
-<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
-<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
-<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
-<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_positively_polarized_respstyles, </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"MRS"</span>, <span class="st">"ARS"</span>, <span class="st">"ERS"</span>), </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Indicator"</span>, </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_positively_polarized_respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"Mean"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Mean"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Combined Density and Box Plots of Indicators with Mean Values"</span>,</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>,</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scaled Density / Boxplot"</span>) <span class="sc">+</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1330,6 +2180,7 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 </div>
 </div>
 <p>The distribution of response style indicators across all respondents of the NEP-scale, reveals the following patterns:</p>
+<!-- as we now have different results after correction of scale in the function, we need to adjust some of our below comments-->
 <ul>
 <li><p><strong>MRS:</strong> Respondents on average select the middle response for three out of the 15 items of the NEP scale. Respondents with more than nine mid-point responses are outliers in the sample while respondents maximally selected 11 mid-point responses for the 15 items. Similarly to the institutional trust scale, this distribution pattern suggest that mid-point responding is not a dominant response style for the NEP scale among our sample. Therefore, outliers should be carefully checked regarding their response behavior to exclude data quality issues.</p></li>
 <li><p><strong>ARS:</strong> On average, respondents show a remarkable high amount of agreeing responses by agreeing with about 11 out of 15 items. This suggests that the data of the NEP scale might be affected by agreement bias that does not reflect respondents true values. Especially against the background of reversely coded items (i.e., eight items are formulated pro-environmental and 7 items are formulated anti-environmental) this amount of average agreement contradicts reported attitudes. This concern of data quality is further undermined by respondents on maximum agreeing with all of the items of the scale irrespective of their opposite wording. Therefore, respondents with more than eight agreeing responses across items should be flagged, closely checked regarding their response behavior, and additional proxies, such as their response times, should be investigated to gain further insights into the quality of their responses.</p></li>
@@ -1344,11 +2195,12 @@ By specifying the option <code>min_valid_responses</code>, respondents with miss
 <section id="conclusion-and-recommendations" class="level1">
 <h1>Conclusion and recommendations</h1>
 <p><em>Institutional Trust Scale</em> Overall, responses of the institutional trust scale are not affected by any major response bias. However, we do find unusual response patterns regarding straightlining responses and outliers in the sample who showed an unusual extent of mid-point and extreme responding. These respondents should definitely be flagged and ideally, their response behavior should be investigated in greater detail.</p>
-<p><em>NEP Scale</em> Similarly, responses of the NEP scale are not affected by mid-point or extreme responding, although again, outliers give reason for data quality concerns. Additionally, we find straightlining response behavior with on overall, a low prevalence of only 0.5% of straightlining responses. However, these respondents most likely present a data quality concern due to the reversely coded nature of the scale. Most importantly, the data is affected by acquiescence bias with respondents on average agreeing to 10 out of 15 items. Again, due to the reversely coded items of the scale, this pattern suggests poor data quality with responses detached from true values. Respondents with suspicious response behaviors should be flagged and ideally further checked.</p>
+<p><em>NEP Scale</em> Similarly, responses of the NEP scale are not affected by mid-point or extreme responding, although again, outliers give reason for data quality concerns. Additionally, we find straightlining response behavior with on overall, a low prevalence of only 0.5% of straightlining responses. However, these respondents most likely present a data quality concern due to the reversely coded nature of the scale. <!--should be checked according to new results--> Most importantly, the data is affected by acquiescence bias with respondents on average agreeing to 10 out of 15 items. Again, due to the reversely coded items of the scale, this pattern suggests poor data quality with responses detached from true values. Respondents with suspicious response behaviors should be flagged and ideally further checked.</p>
 <p><strong>Straightlining:</strong> Straightlining response behavior is generally seen as a sign of low engagement and of respondents providing only minimal effort in the response generation process, which can potentially compromise data quality. However, we advise against interpreting straightlining behavior blindly as a data quality issue. Dependent on the underlying response scale and the construct to be measured, straightlining can sometimes reflect valid and genuine responses. One useful criterion to assess whether straightlining can be valid or reflects poor quality responses is to determine whether the underlying scale contains reversely coded items. In our example, we cannot fully exclude the possibility that straightlining response behavior in the institutional trust scale indicates genuine trust or distrust across all listed institutions or a respondents’ genuine indifference, especially in the case of the absence of a “don’t know” - response option. For the NEP-scale on the other hand, straightlined responses across item contradict each other as half of the items measure pro-environmental and the other half anti-environmental attitudes. Therefore, we recommend to always pay attention to the construct measured and how the scale measures it to assess whether all straightlining respondents are a severe threat to data quality.</p>
-<p><strong>Acquiescence response style:</strong> Acquiescence bias is again considered a sign of respondents’ low engagement with a question that results in poor quality responses. In multi-item scales, acquiescence bias is somewhat tricky to determine. Similarly to straightlining response behavior, high shares of agreeing responses across items does not necessarily reflect response bias. Scales measuring widely accepted values for instance, can show high agreement among respondents without reflecting an acquiescence bias that indicates poor response quality. However, again the underlying scale can provide information on the severeness of an acquiescence response pattern across items. In the case of the NEP-scale with conflicting statements/items, a high share of agreeing responses give reason for concern and most likely represent biased responses. In general, we advise to take acquiescence response styles seriously and to assess their implications for the responses of a multi-item scale based on the content and formulation of items.</p>
+<p><strong>Acquiescence response style:</strong> Acquiescence bias is again considered a sign of respondents’ low engagement with a question that results in poor quality responses. In multi-item scales, acquiescence bias is somewhat tricky to determine. Similarly to straightlining response behavior, high shares of agreeing responses across items does not necessarily reflect response bias. Scales measuring widely accepted values for instance, can show high agreement among respondents without reflecting an acquiescence bias that indicates poor response quality. However, again the underlying scale can provide information on the severeness of an acquiescence response pattern across items. <!-- should be rechecked according to new NEP res_styles results--> In the case of the NEP-scale with conflicting statements/items, a high share of agreeing responses give reason for concern and most likely represent biased responses. In general, we advise to take acquiescence response styles seriously and to assess their implications for the responses of a multi-item scale based on the content and formulation of items.</p>
 <p><strong>Outliers:</strong> We recommend to deal with outliers in the sample regarding both response distribution and response style indicators similarly to dealing with any outlier in a response distribution. First, you should attempt to understand the outlying observations and closely inspect the response behavior of these respondents. In any case, we advise against dropping these observations from the sample and instead, to flag these respondents for your further analyses.</p>
 <p><strong>Recommendation:</strong> Knowing how to assess and interpret indicators of response distribution and response styles regarding response quality, you probably wonder how to move on from there?</p>
+<!-- references added-->
 <ul>
 <li><p>Ideally, we recommend to conduct further analyses on respondents with suspicious response patterns. A typical proxy to understand the response generation process underlying a response pattern and to understand whether responses represent a data quality issue are <em>response times</em>. If respondents show extremely short response times for a question, you can assume that respondents provided no to minimal effort to process the question which consequently resulted in poor quality responses. A common threshold to assess whether response times are too short to process a question is introduced by <span class="citation" data-cites="zhang2014speeding">Zhang and Conrad (<a href="#ref-zhang2014speeding" role="doc-biblioref">2014</a>)</span>.</p>
 <p>Further measures to approach the question whether respondents’ answers reflect low engagement with a question and therefore, poor quality responses are <em>respondent motivation</em> or <em>respondent cognitive ability</em>. These are both factors discussed to influence the occurrence and magnitude of <em>satisficing</em>, an umbrella term for different response strategies that can be used as shortcuts to reduce cognitive burden and can therefore, reflect careless responding (<span class="citation" data-cites="krosnick1991response">Krosnick (<a href="#ref-krosnick1991response" role="doc-biblioref">1991</a>)</span>).</p></li>
