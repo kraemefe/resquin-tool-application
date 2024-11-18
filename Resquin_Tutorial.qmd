@@ -8,8 +8,7 @@ author:
 image: images/icon_resquin.png 
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 format:
-  html:
-    theme: default
+  html:    
     toc: true
     toc-location: left
     toc-depth: 2
@@ -17,8 +16,6 @@ format:
 bibliography: citation.bib
 biblio-style: apa
 editor: 
-  markdown:
-    wrap: 72
   citation: "Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024). *Assessing Response Quality and Careless Responding in Multi-Item Scales*. GitHub Repository. URL:  https: //github.com/kraemefe/resquin-tool-application"
 ---
 
@@ -28,13 +25,6 @@ editor:
 # Set a CRAN mirror to avoid issues with package installations
 options(repos = c(CRAN = "https://cran.r-project.org"))
 ```
-
-<style>
-/* Align text to justify for a consistent look */
-p, h1, h2, h3, h4, h5, h6 {
-  text-align: justify !important;
-}
-</style>
 
 # At a glance
 
@@ -193,22 +183,23 @@ Apart from peculiarities in the response distribution of our multi-item
 scales, we will further consider indicators of different response
 biases, namely:
 
-<details>
-  <summary><strong>MRS: Middle response style</strong></summary>
-  Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
-</details>
+::: {.details}
+## **MRS: Middle response style**
 
-<details>
-  <summary><strong>ARS: Acquiescence response style</strong></summary>
-  Tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format.
-</details>
+Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
+:::
 
-<details>
-  <summary><strong>ERS: Extreme response style</strong></summary>
-  Tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale.
-</details>
+::: {.details}
+## **ARS: Acquiescence response style**
 
+Tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format.
+:::
 
+::: {.details}
+## **ERS: Extreme response style**
+
+Tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale.
+:::
 
 To calculate these indicators for the assessment of response quality of
 our multi-item scales, we will use the `Resquin` package in R. The
@@ -1253,8 +1244,6 @@ you probably wonder how to move on from there?
 
 ## References
 
-### How to Cite This Work
+::: {#refs}
+:::
 
-Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024) *Assessing
-Response Quality and Careless Responding in Multi-Item Scales*. KODAQS
-Data Quality Toolbox.
