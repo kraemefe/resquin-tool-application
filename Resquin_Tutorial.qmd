@@ -173,11 +173,7 @@ response distribution, such as:
 -   The median over multiple items per respondent (`ii_median`)
 -   The standard deviation across multiple items per respondent
     (`ii_sd`)
--   The [Mahalanobis distance](#) 
-    {data-bs-toggle="popover" 
-    data-bs-content="The Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the        respondent’s answers are more unusual or inconsistent compared to the other respondents." 
-    style="text-decoration: underline; cursor: pointer;"}
-    per respondent (`mahal`).
+-   The Mahalanobis distance: The Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the other respondents.
 
 Apart from peculiarities in the response distribution of our multi-item
 scales, we will further consider indicators of different response
