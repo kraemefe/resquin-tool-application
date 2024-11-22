@@ -48,16 +48,6 @@ with replicable R-code. Specifically, you will learn:
 
 <!--I added a side table of content in YAML as well, you can see it after rendering document.  Should we still keep the below one?-->
 
-### Table of Content
-
-[Introduction](#introduction)
-
-[Set-up](#set-up)
-
-[Tool application](#tool-application)
-
-[Conclusion and recommendations](#conclusion-and-recommendations)
-
 # Introduction {#introduction}
 
 Psychological constructs, political or social attitudes as well as
@@ -100,6 +90,10 @@ surveyed in 2014 and comprises only a limited selection of variables
 from the originial GESIS Panel scientific use file.
 :::
 
+::: {.panel-tabset}
+
+### Political Trust
+
 Political trust is measured with a 10-item scale and a 7-point Likert
 response scale:
 
@@ -126,6 +120,8 @@ groups?
 
 
 **Response Scale:** 1 = Don’t trust at all - 7 = Entirely trust
+
+### NEP
 
 Environmental attitudes are measured with the established NEP (New
 Ecological Paradigm) scale by @dunlap_et_al_2002 comprising 15 items on
@@ -160,6 +156,8 @@ To what extent do you agree or disagree with the following statements?
 **Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 =
 Don't agree; 5 = Fully disagree
 
+:::
+
 ## Assessing Response Quality and Response Quality Indicators
 
 To ensure unbiased conclusions regarding a substantial relationship
@@ -184,23 +182,15 @@ Apart from peculiarities in the response distribution of our multi-item
 scales, we will further consider indicators of different response
 biases, namely:
 
-::: {.details}
-## **MRS: Middle response style**
+- **MRS: Middle Response Style** {collapse="true"}
+  Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
 
-Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
-:::
+- **ARS: Acquiescence Response Style** {collapse="true"}
+  Tendency to agree with statements irrespective of actual views: The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format.
 
-::: {.details}
-## **ARS: Acquiescence response style**
+- **ERS: Extreme Response Style** {collapse="true"}
+  Tendency to select the lower or upper endpoint of a scale: The indicator captures the sum of scale endpoint responses across the items of a scale.
 
-Tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format.
-:::
-
-::: {.details}
-## **ERS: Extreme response style**
-
-Tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale.
-:::
 
 To calculate these indicators for the assessment of response quality of
 our multi-item scales, we will use the `Resquin` package in R. The
@@ -254,19 +244,21 @@ raw_data <- read.csv("raw-data/ZA5666_v1-0-0.csv", header=TRUE, sep=";", na.stri
 
 ## Inspecting data
 
+
 Before delving into the analysis of response quality, let's have a first
 look at the distribution of given responses to both multi-item scales:
 
+::: {.panel-tabset}
+
+### Political Trust
+
 ```{r data inspection, warning=FALSE}
+
 # Creating subset of political trust scale
 start_col_trust <- which(colnames(raw_data) == "bbzc078a")
 end_col_trust <- which(colnames(raw_data) == "bbzc087a")
 trust <- raw_data[, start_col_trust:end_col_trust]
 
-# Creating subset of NEP scale
-start_col_NEP <- which(colnames(raw_data) == "bczd005a")
-end_col_NEP <- which(colnames(raw_data) == "bczd019a")
-NEP <- raw_data[, start_col_NEP:end_col_NEP]
 
 # Inspect responses to political trust scale
 trust_responses <- lapply(trust, function(x) table(x, useNA = "ifany"))
@@ -275,14 +267,28 @@ trust_responses <- lapply(trust, function(x) table(x, useNA = "ifany"))
 trust_responses_df <- as.data.frame(do.call(cbind, trust_responses))
 
 # Add a column for response levels 
-trust_responses_df <- cbind("Response" = rownames(trust_responses_df), trust_responses_df)
+trust_responses_df <- cbind("Response" = rownames(trust_responses_df), 
+                            trust_responses_df)
 rownames(trust_responses_df) <- NULL
 
 # Print the table with styling
 trust_responses_df %>%
-  kable("html", escape = FALSE, caption = "Summary of Response Codes Across Political Trust Scale Items") %>%
-  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
+  kable("html", escape = FALSE, 
+        caption = "Summary of Response Codes Across Political Trust Scale Items") %>%
+  kable_styling(full_width = FALSE, 
+                bootstrap_options = c("striped", "hover", "condensed")) %>%
   column_spec(1:ncol(trust_responses_df), width = "4em")
+
+```
+
+### NEP
+
+```{r data inspection nep, warning=FALSE}
+
+# Creating subset of NEP scale
+start_col_NEP <- which(colnames(raw_data) == "bczd005a")
+end_col_NEP <- which(colnames(raw_data) == "bczd019a")
+NEP <- raw_data[, start_col_NEP:end_col_NEP]
 
 # Inspect responses to NEP 
 NEP_responses <- lapply(NEP, function(x) table(x, useNA = "ifany"))
@@ -302,12 +308,19 @@ NEP_responses_df %>%
 
 ```
 
+:::
+
+
 ## Data preparation
 
 A first overview of the response distribution of both scales shows that
 there are several missing values which are not defined as NA yet. For
 `resquin` to calculate meaningful indicators, we have to make sure that
 missings are coded to NA before we run any analyses:
+
+::: {.panel-tabset}
+
+### Political Trust
 
 ```{r data preparation}
 # Recode missing values to NA for responses to political trust scale
@@ -320,6 +333,11 @@ trust %>%
   kable("html", caption = "First Six Rows of Re-coded Trust Data") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 
+```
+
+### NEP
+
+```{r data preparation nep}
 # Recode missing values to NA for responses to NEP scale
 NEP <- NEP %>%
   mutate(across(everything(), ~ replace(., . %in% c(-22, -33, -77, -99, -111), NA)))
@@ -330,6 +348,7 @@ NEP %>%
   kable("html", caption = "First Six Rows of Re-coded NEP Data") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 ```
+:::
 
 # Tool application {#tool-application}
 
