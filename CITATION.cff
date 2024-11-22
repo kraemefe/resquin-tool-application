@@ -8,7 +8,6 @@ authors:
     given-names: "Arjin"
   - family-names: "Yıldız"
     given-names: "Çağla"
-collection-title: "KODAQS Data Quality Toolbox"
 date-released: "2024-11-04"
 version: "1.0.0"
 url: "https://github.com/kraemefe/resquin-tool-application"
