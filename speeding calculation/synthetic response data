@@ -1,0 +1,57 @@
+### Assumptions and Goals
+1. **Straightliners**: Generate lower average response times for participants flagged as straightliners (based on their standard deviations across items) with some but not much variability.
+2. **Non-Straightliners**: Assign higher average response times, ensuring variability across participants.
+3. **Institutional Trust Scale**: Divide straightliners into two subgroups: Fast straightliners representing the majority who has low response times and reasonable straightliners representing a smaller share with more reasonable response times.
+4. **NEP Scale**: On average higher response times for the NEP scale to represent its greater length and complexity
+5. **Add Realistic Noise**: Add additional random variability that mimics real-world conditions
+
+# Load necessary libraries
+library(dplyr)
+
+# Assume your dataset is named 'data'
+# It contains `straightlining_flag` indicating who is a straightliner.
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Define proportions for Institutional Trust Scale (Q1) straightliners
+fast_straightliner_ratio <- 0.6  # 60% of straightliners are fast
+reasonable_straightliner_ratio <- 0.4  # 40% of straightliners are reasonable
+
+# Define log-normal parameters
+lognormal_params <- list(
+  trust_fast = list(meanlog = 1.5, sdlog = 0.3),       # Fast straightliners (shorter response times)
+  trust_reasonable = list(meanlog = 2, sdlog = 0.4),   # Reasonable straightliners (moderate response times)
+  trust_non_straightliners = list(meanlog = 2.5, sdlog = 0.5), # Non-straightliners
+
+  NEP_straightliners = list(meanlog = 2.2, sdlog = 0.4), # Straightliners in NEP scale
+  NEP_non_straightliners = list(meanlog = 3, sdlog = 0.5)  # Non-straightliners in NEP scale
+)
+
+# Generate synthetic response times
+data <- data %>%
+  rowwise() %>%
+  mutate(
+    # Trust response times
+    response_time_trust = case_when(
+      straightlining_flag == 1 & runif(1) < fast_straightliner_ratio ~ 
+        rlnorm(1, lognormal_params$trust_fast$meanlog, lognormal_params$trust_fast$sdlog),
+      straightlining_flag == 1 ~ 
+        rlnorm(1, lognormal_params$trust_reasonable$meanlog, lognormal_params$trust_reasonable$sdlog),
+      TRUE ~ rlnorm(1, lognormal_params$trust_non_straightliners$meanlog, lognormal_params$trust_non_straightliners$sdlog)
+    ),
+    
+    # NEP response times
+    response_time_NEP = case_when(
+      straightlining_flag == 1 ~ 
+        rlnorm(1, lognormal_params$NEP_straightliners$meanlog, lognormal_params$NEP_straightliners$sdlog),
+      TRUE ~ rlnorm(1, lognormal_params$NEP_non_straightliners$meanlog, lognormal_params$NEP_non_straightliners$sdlog)
+    )
+  ) %>%
+  ungroup()
+
+# Inspect the first rows
+head(data)
+
+
+
