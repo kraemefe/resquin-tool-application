@@ -1048,7 +1048,7 @@ NEP scale:
 ```{r summary statistics NEP resp_styles}
 # Summarize and print results over all respondents
 NEP_positively_polarized_respstyles_table <- summary(NEP_positively_polarized_respstyles)
-kable(NEP_positively_polarized_respstyles_table)
+kable(NEP_positively_polarized_respstyles_table, format = output_format)
 
 # Reshape the data for density and box plots
 NEP_positively_polarized_respstyles_long <- pivot_longer(NEP_positively_polarized_respstyles,
