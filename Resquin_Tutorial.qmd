@@ -5,19 +5,18 @@ author:
   - name: "Fabienne Kraemer"
   - name: "Arjin Eser"
   - name: "Çağla Yıldız"
-image: images/icon_resquin.png 
+image: images/icon_resquin.png
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 format:
-  html:    
+  html:
     toc: true
     toc-location: left
     toc-depth: 2
     embed-resources: true
 bibliography: citation.bib
 biblio-style: apa
-editor: 
+editor:
   citation: "Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024). *Assessing Response Quality and Careless Responding in   multi-Item Scales*. GitHub Repository. URL:  https: //github.com/kraemefe/resquin-tool-application"
-prefer-html: true
 ---
 
 <!--below codes helped me to fix issues in installing packages and also text alignment when rendering the document into html-->
@@ -254,11 +253,21 @@ Before delving into the analysis of response quality, let's have a first
 look at the distribution of given responses to both multi-item scales:
 
 ```{r data inspection, warning=FALSE}
+
+# Initialize a format variable based on the output format
+output_format <- if (knitr::is_html_output()) {
+  "html"
+} else if (knitr::is_latex_output()) {
+  "latex"
+} else {
+  "simple"
+}
+
 # Creating subset of political trust scale
 start_col_trust <- which(colnames(raw_data) == "bbzc078a")
 end_col_trust <- which(colnames(raw_data) == "bbzc087a")
 trust <- raw_data[,start_col_trust:end_col_trust]
- 
+
 # Creating subset of NEP scale
 start_col_NEP <- which(colnames(raw_data) == "bczd005a")
 end_col_NEP <- which(colnames(raw_data) == "bczd019a")
@@ -272,11 +281,11 @@ trust_responses_df <- as.data.frame(do.call(cbind, trust_responses))
 
 # Print the table with styling
 trust_responses_df %>%
-  kable("html", escape = FALSE) %>%
+  kable(output_format, escape = FALSE) %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
   column_spec(1:ncol(trust_responses_df), width = "4em")
 
-# Inspect responses to NEP 
+# Inspect responses to NEP
 NEP_responses <- lapply(NEP, function(x) table(x, useNA = "ifany"))
 
 # Convert to data frame with column names
@@ -284,7 +293,7 @@ NEP_responses_df <- as.data.frame(do.call(cbind, NEP_responses))
 
 # Print the table with styling
 NEP_responses_df %>%
-  kable("html", escape = FALSE) %>%
+  kable(output_format, escape = FALSE) %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
   column_spec(1:ncol(NEP_responses_df), width = "4em")
 ```
@@ -304,7 +313,7 @@ trust <- trust %>%
 # Display the first few rows of recoded data frame as a formatted table
 trust %>%
   head() %>%  # Show only the first 6 rows
-  kable("html", caption = "First Six Rows of Re-coded Trust Data") %>%
+  kable(output_format, caption = "First Six Rows of Re-coded Trust Data") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 
 # Recode missing values to NA for responses to NEP scale
@@ -314,7 +323,7 @@ NEP <- NEP %>%
 # Display the first few rows of recoded data frame as a formatted table
 NEP %>%
   head() %>%  # Show only the first 6 rows
-  kable("html", caption = "First Six Rows of Re-coded NEP Data") %>%
+  kable(output_format, caption = "First Six Rows of Re-coded NEP Data") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
@@ -338,7 +347,7 @@ trust_distribution <- resp_distributions(trust)
 # Print results for the first 10 respondents
 kable(trust_distribution[1:10,])
 
-# Environmental attitudes 
+# Environmental attitudes
 NEP_distribution <- resp_distributions(NEP)
 
 # Print results
@@ -422,16 +431,16 @@ trust_table <- summary(trust_distribution)
 kable(trust_table)
 
 # Reshape the data for density and box plots
-trust_distribution_long <- pivot_longer(trust_distribution, 
-                                         cols = c("ii_mean", "ii_sd", "ii_median", "mahal"), 
-                                         names_to = "Indicator", 
+trust_distribution_long <- pivot_longer(trust_distribution,
+                                         cols = c("ii_mean", "ii_sd", "ii_median", "mahal"),
+                                         names_to = "Indicator",
                                          values_to = "Value")
 
 # Remove NAs (for those we have no calculated indicators)
 trust_distribution_long <- trust_distribution_long %>%
   filter(!is.na(Value))
 
-# Calculate mean for each Indicator               
+# Calculate mean for each Indicator
 mean_values <- trust_distribution_long %>%
   group_by(Indicator) %>%
   summarize(mean_value = mean(Value, na.rm = TRUE))
@@ -443,7 +452,7 @@ ggplot(trust_distribution_long, aes(x = Value, y = after_stat(scaled))) +
   geom_density(aes(y = after_stat(scaled)), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
-  
+
   scale_color_manual(values = c("Mean" = "black")) +
   facet_wrap(~ Indicator, scales = "free") +
   labs(title = "Combined Density and Box Plots of Indicators with Mean Values",
@@ -548,8 +557,8 @@ items:
 
 
 ```{r straightlining trust}
-# Generating straightlining indicator for institutional trust scale 
-trust_distribution$non_diff <- NA 
+# Generating straightlining indicator for institutional trust scale
+trust_distribution$non_diff <- NA
 trust_distribution$non_diff[trust_distribution$ii_sd == 0] <- 1
 trust_distribution$non_diff[trust_distribution$ii_sd != 0] <- 0
 
@@ -581,7 +590,7 @@ is a relatively low proportion of straightlining behavior across
 respondents and does not indicate general data quality issues. However,
 it is necessary to flag these respondents who show straightlining across
 the items of a scale for a further investigation of their response
-behavior. 
+behavior.
 The code below creates a new variable in the dataset, flagging respondents
 who show straightlining across the items of the institutional trust scale
 as `TRUE`; otherwise, as `FALSE`.
@@ -624,9 +633,9 @@ NEP_table <- summary(NEP_distribution)
 kable(NEP_table)
 
 # Reshape the data for density and box plots
-NEP_distribution_long <- pivot_longer(NEP_distribution, 
-                                         cols = c("ii_mean", "ii_sd", "ii_median", "mahal"), 
-                                         names_to = "Indicator", 
+NEP_distribution_long <- pivot_longer(NEP_distribution,
+                                         cols = c("ii_mean", "ii_sd", "ii_median", "mahal"),
+                                         names_to = "Indicator",
                                          values_to = "Value")
 
 # Remove non-finite values
@@ -774,8 +783,8 @@ especially pose a threat for data quality and should be investigated:
 
 
 ```{r straightlining NEP}
-# Generating straightlining indicator for institutional trust scale 
-NEP_distribution$non_diff <- NA 
+# Generating straightlining indicator for institutional trust scale
+NEP_distribution$non_diff <- NA
 NEP_distribution$non_diff[NEP_distribution$ii_sd == 0] <- 1
 NEP_distribution$non_diff[NEP_distribution$ii_sd != 0] <- 0
 
@@ -793,7 +802,7 @@ For the NEP scale, we can see that 0.5% of respondents show
 straightlining across the several items of the scale. Despite the low
 prevalence of straightlining in the data, respondents who straightlined
 in the NEP scale are highly likely to show poor quality responses and
-should be flagged for further analyses. 
+should be flagged for further analyses.
 Below, we again flag respondents who show straightlining across the items
 of the NEP scale with a new variable named `straightlining_flag`:
 
@@ -911,9 +920,9 @@ trust_respstyles_table <- summary(trust_respstyles)
 kable(trust_respstyles_table)
 
 # Reshape the data for density and box plots
-trust__respstyles_long <- pivot_longer(trust_respstyles, 
-                                         cols = c("MRS", "ARS", "ERS"), 
-                                         names_to = "Indicator", 
+trust__respstyles_long <- pivot_longer(trust_respstyles,
+                                         cols = c("MRS", "ARS", "ERS"),
+                                         names_to = "Indicator",
                                          values_to = "Value")
 
 # Remove NAs (for those we have no calculated indicators)
@@ -930,7 +939,7 @@ ggplot(trust__respstyles_long, aes(x = Value, y = after_stat(scaled))) +
   geom_density(aes(y = after_stat(scaled)), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
-  
+
   scale_color_manual(values = c("Mean" = "black")) +
   facet_wrap(~ Indicator, scales = "free") +
   labs(title = "Combined Density and Box Plots of Indicators with Mean Values",
@@ -981,7 +990,7 @@ should be further checked for anomalies in their response behavior
 
 <!--Info box -->
 
-**Be careful!** 
+**Be careful!**
 When interpreting the indicator of acquiescence response
 style (ARS), be aware that strictly speaking you can only meaningfully
 interpret the indicator for actual agreement/disagreement - scales. For
@@ -1042,9 +1051,9 @@ NEP_positively_polarized_respstyles_table <- summary(NEP_positively_polarized_re
 kable(NEP_positively_polarized_respstyles_table)
 
 # Reshape the data for density and box plots
-NEP_positively_polarized_respstyles_long <- pivot_longer(NEP_positively_polarized_respstyles, 
-                                         cols = c("MRS", "ARS", "ERS"), 
-                                         names_to = "Indicator", 
+NEP_positively_polarized_respstyles_long <- pivot_longer(NEP_positively_polarized_respstyles,
+                                         cols = c("MRS", "ARS", "ERS"),
+                                         names_to = "Indicator",
                                          values_to = "Value")
 
 # Remove NAs (for those we have no calculated indicators)
@@ -1061,7 +1070,7 @@ ggplot(NEP_positively_polarized_respstyles_long, aes(x = Value, y = after_stat(s
   geom_density(aes(y = after_stat(scaled)), alpha = 0.5) +
   geom_boxplot(aes(y = -0.5), width = 0.5, outlier.size = 2, color = "black", fill = "lightgray") +
   geom_vline(data = mean_values, aes(xintercept = mean_value, color = "Mean"), linetype = "dashed") +
-  
+
   scale_color_manual(values = c("Mean" = "black")) +
   facet_wrap(~ Indicator, scales = "free") +
   labs(title = "Combined Density and Box Plots of Indicators with Mean Values",
