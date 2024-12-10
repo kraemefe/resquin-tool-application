@@ -253,15 +253,7 @@ Before delving into the analysis of response quality, let's have a first
 look at the distribution of given responses to both multi-item scales:
 
 ```{r data inspection, warning=FALSE}
-
-# Initialize a format variable based on the output format
-output_format <- if (knitr::is_html_output()) {
-  "html"
-} else if (knitr::is_latex_output()) {
-  "latex"
-} else {
-  "simple"
-}
+output_format <- "simple"
 
 # Creating subset of political trust scale
 start_col_trust <- which(colnames(raw_data) == "bbzc078a")
