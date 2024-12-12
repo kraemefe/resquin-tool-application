@@ -186,8 +186,8 @@ Mahalanobis distance captures how different each respondent's pattern of answers
 | **Indicator** | **Description** |
 |-------------|----------------------------------------------------------|
 | `MRS` | **Middle Response Style** that reflects the tendency to select the neutral/middle option on a scale. The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint. |
-| `ARS` | **Acquiescence Response Style**that reflects the tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format. |
-| `ERS` | **Extreme Response Style**that reflects the tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale. |
+| `ARS` | **Acquiescence Response Style** that reflects the tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format. |
+| `ERS` | **Extreme Response Style** that reflects the tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale. |
 :::
 
 To calculate these indicators for the assessment of response quality of
@@ -515,6 +515,9 @@ outlier_data_trust <- trust_distribution_long %>%
 trust_distribution_long <- trust_distribution_long %>%
   left_join(outlier_data_trust, by = "Indicator") %>%
   mutate(is_outlier = ifelse(Value < lower_threshold | Value > upper_threshold, 1, 0)) #Outliers take on the value 1 of the variable is_outlier
+
+# Print variable
+table(trust_distribution_long$is_outlier, useNA="ifany")
 
 ```
 :::
@@ -1304,15 +1307,14 @@ to move on from there?
     for a question, you can assume that respondents provided no to
     minimal effort to process the question which consequently resulted
     in poor quality responses. A common threshold to assess whether
-    response times are too short to process a question is introduced by
-    @zhang2014speeding. Further measures to approach the question
-    whether respondents' answers reflect low engagement with a question
-    and therefore, poor quality responses are *respondent motivation* or
-    *respondent cognitive ability*. These are both factors discussed to
-    influence the occurrence and magnitude of *satisficing*, an umbrella
-    term for different response strategies that can be used as shortcuts
-    to reduce cognitive burden and can therefore, reflect careless
-    responding (@krosnick1991response).
+    response times are too short to process a question is introduced by @zhang2014speeding.
+    Further measures to approach the question whether respondents' answers
+    reflect low engagement with a question and therefore, poor quality
+    responses are *respondent motivation* or *respondent cognitive ability*.
+    These are both factors discussed to influence the occurrence and
+    magnitude of *satisficing*, an umbrella term for different response
+    strategies that can be used as shortcuts to reduce cognitive burden
+    and can therefore, reflect careless responding (@krosnick1991response).
 
 -   For your further analyses, we recommend in any case to not simply
     drop respondents with suspicious response patterns. Instead, we
