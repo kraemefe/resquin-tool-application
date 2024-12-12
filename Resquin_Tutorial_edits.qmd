@@ -22,7 +22,6 @@ editor:
 prefer-html: true
 ---
 
-<!--below codes helped me to fix issues in installing packages and also text alignment when rendering the document into html-->
 
 ```{r setup, include=FALSE}
 # Set a CRAN mirror to avoid issues with package installations
@@ -91,9 +90,7 @@ from the originial GESIS Panel scientific use file.
 :::
 
 
-<!--connection sentence added-->
-
-You can navigate between the tabs below to explore the two different multi-item scales that we will use for data quality analysis in this tutorial.
+You can navigate between the tabs below to explore the two different multi-item scales that we will use for the analysis of response quality in this tutorial.
 
 ::: panel-tabset
 ### Political Trust
@@ -164,7 +161,6 @@ given responses to the respective measurement instruments. There are
 several indicators which can help identify low-quality responses and
 assess the response quality in multi-item scales.
 
-<!--connection sentence added-->
 
 In this tutorial, we will specifically examine indicators related to response distribution and different types of response biases. The tabs below summarize the specific indicators we will focus on for each.
 
@@ -210,9 +206,6 @@ calculates an indicator for disacquiescence response style (DRS), i.e.,
 the tendency to disagree with statements, and an indicator for
 non-extreme response style (NERS), i.e., the tendency to select non-
 extreme answers across a set of items.
-
-<!--I could not add the suggestion part here, but check it again-->
-
 Given that the DRS indicator is the ***direct opposite*** of the ARS
 indicator and the NERS indicator is the ***direct inverse*** of the ERS
 indicator, we chose not to interpret them here in this tutorial as interpreting these pairs together does not provide additional
@@ -253,8 +246,9 @@ unit (respondent). For this tutorial, we import our data set directly
 from GitHub: <!--maybe let's rename the data for better usability -->
 
 ```{r import data}
-# Import data from github
-raw_data <- read.csv("raw-data/ZA5666_v1-0-0.csv", header=TRUE, sep=";", na.strings="NA")
+# Import data
+data_path <- "raw-data/ZA5666_v1-0-0.csv"
+raw_data <- read.csv(data_path, header=TRUE, sep=";", na.strings="NA")
 ```
 
 ## Inspecting data
@@ -409,7 +403,6 @@ for all respondents who show a value higher than 0 for the indicator
 `n_na` (count of missing values), indicators of central tendency and
 variability are NA.
 
-<!-- changed info box as callout-->
 
 ::: {.callout-tip title="Package-Specific Feature"}
 By specifying the option `min_valid_responses`, respondents with missing
@@ -442,8 +435,6 @@ specifying cut-offs for valid responses is more or less arbitrary and
 should always be considered after looking at the data. In any case, make
 sure to thoroughly document and report which cut-off you used to exclude
 respondents from the analysis.
-
-<!-- Let's see if we can find any references from the literature on how to deal with NAs -->
 
 Due to a sufficient sample size, we will follow a strict approach and
 investigate response distribution indicators only for those respondents
@@ -640,8 +631,6 @@ institutional trust scale as `TRUE`; otherwise, as `FALSE`.
 trust_distribution$straightlining_flag <- trust_distribution$ii_sd == 0
 ```
 
-<!--callout added-->
-
 ::: {.callout-important title="Be careful!"}
 Whereas straightlining can indicate "careless" response behavior
 resulting in poor quality responses, we advise to always pay attention
@@ -783,7 +772,6 @@ statements?
 **Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 =
 Don't agree; 5 = Fully disagree
 
-<!--edited to table display-->
 
 | **\#** | **Items** | **Direction** |
 |--------|--------------------------------------------------------|--------|
@@ -843,8 +831,6 @@ variable named `straightlining_flag`:
 # Flag respondents with zero variation in responses (ii_sd == 0)
 NEP_distribution$straightlining_flag <- NEP_distribution$ii_sd == 0
 ```
-
-<!--Callout added-->
 
 ::: {.callout-important title="Be careful!"}
 As the NEP scale includes items with both positive and negative
@@ -956,11 +942,6 @@ indicator in the data frame produced by `resp_styles`.
 ### 1. Institutional Trust Scale
 
 Let’s again begin with the institutional trust scale.
-
-<!-- I have reduced the resulting density and boxplots to include only MRS, ARS and ERS. Should I do the same for the table or is current version okay?  -->
-
-<!-- Let's also do it for the table. Also I have been wondering if we can adapt the plots so that MRS comes first, then ARS and then ERS. So that it matches the result description. If not
-then we adapt the order of descriptions :-)-->
 
 ::: panel-tabset
 ### Summary Table
