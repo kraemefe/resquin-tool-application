@@ -5,7 +5,7 @@ and one on political trust - using resquin.
 
 ## About resquin
 
-**`resquin` is currently still in development and will comprise two more functions on the calculation of response pattern and time indicators.**
+**`resquin` is currently still in development and will comprise two more functions on the calculation of response pattern and response time indicators.**
 
 `resquin` (**res**ponse **qu**ality **in**dicators) provides functions
 to assess response quality and identify poor quality responses or response biases.
