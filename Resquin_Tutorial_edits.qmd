@@ -498,6 +498,24 @@ ggplot(trust_distribution_long, aes(x = Value, y = after_stat(scaled))) +
   theme(legend.position = "right",
         legend.title = element_blank())  # Remove legend title
 
+# Exemplary code to flag outliers displayed in the boxplots
+
+# Calculate IQR and thresholds for each Indicator to determine the outliers we see in the boxplot
+outlier_data_trust <- trust_distribution_long %>%
+  group_by(Indicator) %>%
+  summarize(
+    Q1 = quantile(Value, 0.25, na.rm = TRUE),
+    Q3 = quantile(Value, 0.75, na.rm = TRUE),
+    IQR = Q3 - Q1,
+    lower_threshold = Q1 - 1.5 * IQR,
+    upper_threshold = Q3 + 1.5 * IQR
+  )
+
+# Add a column to flag outliers in the dataset
+trust_distribution_long <- trust_distribution_long %>%
+  left_join(outlier_data_trust, by = "Indicator") %>%
+  mutate(is_outlier = ifelse(Value < lower_threshold | Value > upper_threshold, 1, 0)) #Outliers take on the value 1 of the variable is_outlier
+
 ```
 :::
 
@@ -600,10 +618,10 @@ trust_distribution$non_diff[trust_distribution$ii_sd == 0] <- 1
 trust_distribution$non_diff[trust_distribution$ii_sd != 0] <- 0
 
 # Calculate proportion of respondents who show straightlining response behavior
-proportion_straightline <- round(prop.table(table(trust_distribution$non_diff))[2], 4)
+proportion_straightline_trust <- round(prop.table(table(trust_distribution$non_diff))[2], 4)
 
 # Print the result
-cat("Proportion of Straightlining Respondents in the Trust Scale:", proportion_straightline, "\n")
+cat("Proportion of Straightlining Respondents in the Trust Scale:", proportion_straightline_trust, "\n")
 ```
 
 ::: callout-note
@@ -628,7 +646,7 @@ institutional trust scale as `TRUE`; otherwise, as `FALSE`.
 
 ```{r straightlining flag for trust scale}
 # Flag respondents with zero variation in responses (ii_sd == 0)
-trust_distribution$straightlining_flag <- trust_distribution$ii_sd == 0
+trust_distribution$straightlining_flag_trust <- trust_distribution$ii_sd == 0
 ```
 
 ::: {.callout-important title="Be careful!"}
@@ -813,10 +831,10 @@ NEP_distribution$non_diff[NEP_distribution$ii_sd == 0] <- 1
 NEP_distribution$non_diff[NEP_distribution$ii_sd != 0] <- 0
 
 # Calculate proportion of respondents who show straightlining response behavior
-proportion_straightline <- round(prop.table(table(NEP_distribution$non_diff))[2], 4)
+proportion_straightline_NEP <- round(prop.table(table(NEP_distribution$non_diff))[2], 4)
 
 # Print the result
-cat("Proportion of Straightlining Respondents in the Trust Scale:", proportion_straightline, "\n")
+cat("Proportion of Straightlining Respondents in the NEP Scale:", proportion_straightline_NEP, "\n")
 ```
 
 For the NEP scale, we can see that 0.5% of respondents show
@@ -829,7 +847,7 @@ variable named `straightlining_flag`:
 
 ```{r straightlining flag for NEP scale}
 # Flag respondents with zero variation in responses (ii_sd == 0)
-NEP_distribution$straightlining_flag <- NEP_distribution$ii_sd == 0
+NEP_distribution$straightlining_flag_NEP <- NEP_distribution$ii_sd == 0
 ```
 
 ::: {.callout-important title="Be careful!"}
