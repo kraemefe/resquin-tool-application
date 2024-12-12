@@ -17,6 +17,8 @@ bibliography: citation.bib
 biblio-style: apa
 editor: 
   citation: "Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024). *Assessing Response Quality and Careless Responding in   multi-Item Scales*. GitHub Repository. URL:  https: //github.com/kraemefe/resquin-tool-application"
+  markdown: 
+    wrap: 72
 prefer-html: true
 ---
 
@@ -32,21 +34,19 @@ options(repos = c(CRAN = "https://cran.r-project.org"))
 What do we need to be aware of when analyzing responses of multi-item
 scales? Which response quality issues can affect data from multi-item
 scales? This tool gives an overview on the assessment of response
-quality in multi-item scales and guides you through the quality analysis
-with replicable R-code. Specifically, you will learn:
+quality in multi-item scales and guides you through the quality
+analysis with replicable R-code. Specifically, you will learn:
 
 -   how to calculate and interpret different indicators of response
-    distribution regarding potential data quality issues,
+   distribution regarding potential data quality issues,
 
 -   how to calculate and interpret indicators of different response
-    styles which can reflect poor response behavior,
+   styles which can reflect poor response behavior,
 
--   the caveats of certain response quality indicators and their
-    suitability for different question types and response scales,
+-   the caveats of certain response quality indicators and their suitability for different question types and response scales,
 
 -   what to do if you detect poor quality responses.
 
-<!--I added a side table of content in YAML as well, you can see it after rendering document.  Should we still keep the below one?-->
 
 # Introduction {#introduction}
 
@@ -83,15 +83,19 @@ in 2014 from a sub-sample of the GESIS Panel (n=1,222). The data
 includes multi-item measurements of political trust and environmental
 attitudes.
 
-:::{.callout-note}
+::: callout-note
 This sub-sample of the @ZA5666 is publicly accessible as the GESIS Panel
 Campus File. It contains a random 25% sample of the GESIS panel members
 surveyed in 2014 and comprises only a limited selection of variables
 from the originial GESIS Panel scientific use file.
 :::
 
-::: {.panel-tabset}
 
+<!--connection sentence added-->
+
+You can navigate between the tabs below to explore the two different multi-item scales that we will use for data quality analysis in this tutorial.
+
+::: panel-tabset
 ### Political Trust
 
 Political trust is measured with a 10-item scale and a 7-point Likert
@@ -102,22 +106,19 @@ response scale:
 How much do you personally trust the following public institutions or
 groups?
 
-<!--I tried a new way to display the items, if you approve I can edit the others as well-->
-<!-- Yes, I like it a lot. Let's display it like this - thank you!-->
 
-| Items       | Institution                                    |
-|-------------|------------------------------------------------|
-| **bbzc078a** | Trust in Bundestag                             |
-| **bbzc079a** | Trust in federal government                    |
-| **bbzc080a** | Trust in political parties                     |
-| **bbzc081a** | Trust in judicial authorities                  |
-| **bbzc082a** | Trust in police                                |
-| **bbzc083a** | Trust in politicians                           |
-| **bbzc084a** | Trust in media                                 |
-| **bbzc085a** | Trust in European Union                        |
-| **bbzc086a** | Trust in United Nations                        |
-| **bbzc087a** | Trust in Federal Constitutional Court          |
-
+| Items        | Institution                           |
+|--------------|---------------------------------------|
+| **bbzc078a** | Trust in Bundestag                    |
+| **bbzc079a** | Trust in federal government           |
+| **bbzc080a** | Trust in political parties            |
+| **bbzc081a** | Trust in judicial authorities         |
+| **bbzc082a** | Trust in police                       |
+| **bbzc083a** | Trust in politicians                  |
+| **bbzc084a** | Trust in media                        |
+| **bbzc085a** | Trust in European Union               |
+| **bbzc086a** | Trust in United Nations               |
+| **bbzc087a** | Trust in Federal Constitutional Court |
 
 **Response Scale:** 1 = Don’t trust at all - 7 = Entirely trust
 
@@ -130,32 +131,29 @@ scale uses a 5-point Likert response scale.
 
 **NEP scale:** Environmental attitudes
 
-<!--edited to table display-->
 
 To what extent do you agree or disagree with the following statements?
 
-| Items       | Statement                                          |
-|-------------|----------------------------------------------------|
-| **bczd005a** | Approaching maximum number of humans              |
-| **bczd006a** | The right to adapt environment to the needs       |
-| **bczd007a** | Consequences of human intervention                |
-| **bczd008a** | Human ingenuity                                   |
-| **bczd009a** | Abuse of the environment by humans                |
-| **bczd010a** | Sufficient natural resources                      |
-| **bczd011a** | Equal rights for plants and animals               |
-| **bczd012a** | Balance of nature stable enough                   |
-| **bczd013a** | Humans are subjected to natural laws              |
-| **bczd014a** | Environmental crisis greatly exaggerated          |
-| **bczd015a** | Earth is like spaceship                           |
-| **bczd016a** | Humans were assigned to rule over nature          |
-| **bczd017a** | Balance of nature is very sensitive               |
-| **bczd018a** | Control nature                                    |
-| **bczd019a** | Environmental disaster                            |
-
+| Items        | Statement                                   |
+|--------------|---------------------------------------------|
+| **bczd005a** | Approaching maximum number of humans        |
+| **bczd006a** | The right to adapt environment to the needs |
+| **bczd007a** | Consequences of human intervention          |
+| **bczd008a** | Human ingenuity                             |
+| **bczd009a** | Abuse of the environment by humans          |
+| **bczd010a** | Sufficient natural resources                |
+| **bczd011a** | Equal rights for plants and animals         |
+| **bczd012a** | Balance of nature stable enough             |
+| **bczd013a** | Humans are subjected to natural laws        |
+| **bczd014a** | Environmental crisis greatly exaggerated    |
+| **bczd015a** | Earth is like spaceship                     |
+| **bczd016a** | Humans were assigned to rule over nature    |
+| **bczd017a** | Balance of nature is very sensitive         |
+| **bczd018a** | Control nature                              |
+| **bczd019a** | Environmental disaster                      |
 
 **Response Scale:** 1 = Fully agree; 2 = Agree; 3 = Neither nor; 4 =
 Don't agree; 5 = Fully disagree
-
 :::
 
 ## Assessing Response Quality and Response Quality Indicators
@@ -166,31 +164,35 @@ given responses to the respective measurement instruments. There are
 several indicators which can help identify low-quality responses and
 assess the response quality in multi-item scales.
 
-In this tutorial, we will specifically look at several indicators of
-response distribution, such as:
+<!--connection sentence added-->
+
+In this tutorial, we will specifically examine indicators related to response distribution and different types of response biases. The tabs below summarize the specific indicators we will focus on for each.
+
+::: panel-tabset
+### Response Distribution
 
 
--   The proportion of missing responses across multiple items per
-    respondent (`prop_na`)
--   The mean over multiple items per respondent (`ii_mean`)
--   The median over multiple items per respondent (`ii_median`)
--   The standard deviation across multiple items per respondent
-    (`ii_sd`)
--   The Mahalanobis distance: The Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the other respondents.
+| **Indicator** | **Description** |
+|-----------------|-------------------------------------------------------|
+| `prop_na` | The proportion of **missing responses** across multiple items per respondent. |
+| `ii_mean` | The **mean** of multiple items per respondent. |
+| `ii_median` | The **median** of multiple items per respondent. |
+| `ii_sd` | The **standard deviation** across multiple items per respondent. |
+| `mahal` | The **mahalanobis distance** across multiple items per respondent - 
+::: callout-note 
+Mahalanobis distance captures how different each respondent's pattern of answers is from the 'typical' response pattern of all respondents. A higher score indicates that the respondent’s answers are more unusual or inconsistent compared to the other respondents.
+::: 
+|
 
-Apart from peculiarities in the response distribution of our multi-item
-scales, we will further consider indicators of different response
-biases, namely:
+### Response Bias
 
-- **MRS: Middle Response Style** {collapse="true"}
-  Tendency to select the neutral/middle option on a scale: The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint.
 
-- **ARS: Acquiescence Response Style** {collapse="true"}
-  Tendency to agree with statements irrespective of actual views: The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format.
-
-- **ERS: Extreme Response Style** {collapse="true"}
-  Tendency to select the lower or upper endpoint of a scale: The indicator captures the sum of scale endpoint responses across the items of a scale.
-
+| **Indicator** | **Description** |
+|-------------|----------------------------------------------------------|
+| `MRS` | **Middle Response Style** that reflects the tendency to select the neutral/middle option on a scale. The indicator captures the sum of mid-point responses across the items of the scale and is only valid if the scale has a numeric midpoint. |
+| `ARS` | **Acquiescence Response Style**that reflects the tendency to agree with statements irrespective of actual views. The indicator captures the sum of responses above the scale mid-point across the items of a scale and is only valid for scales with an agree-disagree format. |
+| `ERS` | **Extreme Response Style**that reflects the tendency to select the lower or upper endpoint of a scale. The indicator captures the sum of scale endpoint responses across the items of a scale. |
+:::
 
 To calculate these indicators for the assessment of response quality of
 our multi-item scales, we will use the `Resquin` package in R. The
@@ -202,12 +204,26 @@ calculated per respondent. Specifically, we will use the two functions
 quality based on response distribution and on identifying certain
 response biases.
 
+::: {.callout-tip title="Package-Specific Feature"}
+Apart from MRS, ARS, and ERS, the `resquin`-package additionally
+calculates an indicator for disacquiescence response style (DRS), i.e.,
+the tendency to disagree with statements, and an indicator for
+non-extreme response style (NERS), i.e., the tendency to select non-
+extreme answers across a set of items.
+
+<!--I could not add the suggestion part here, but check it again-->
+
+Given that the DRS indicator is the ***direct opposite*** of the ARS
+indicator and the NERS indicator is the ***direct inverse*** of the ERS
+indicator, we chose not to interpret them here in this tutorial as interpreting these pairs together does not provide additional
+substantive value to our analysis.
+:::
+
 ## Getting started
 
 To use `resquin`, we first need to install the package from the
 repository of CRAN, the Comprehensive R Archive Network. For
 installation, we can use the following commands:
-
 
 ```{r install resquin, message=FALSE, warning=FALSE, results='hide'}
 # Installing resquin
@@ -219,7 +235,6 @@ library(resquin)
 Alongside `resquin` itself, we will use other packages for setup, data
 preparation and analysis in this tutorial. To install and load these
 packages from CRAN simultaneously, we will use the `pacman` package:
-
 
 ```{r install CRAN packages, message=FALSE, warning=FALSE, results='hide'}
 # Installing pacman and loading pacman into the R session
@@ -244,12 +259,10 @@ raw_data <- read.csv("raw-data/ZA5666_v1-0-0.csv", header=TRUE, sep=";", na.stri
 
 ## Inspecting data
 
-
 Before delving into the analysis of response quality, let's have a first
 look at the distribution of given responses to both multi-item scales:
 
-::: {.panel-tabset}
-
+::: panel-tabset
 ### Political Trust
 
 ```{r data inspection, warning=FALSE}
@@ -307,9 +320,7 @@ NEP_responses_df %>%
   column_spec(1:ncol(NEP_responses_df), width = "4em")
 
 ```
-
 :::
-
 
 ## Data preparation
 
@@ -318,8 +329,7 @@ there are several missing values which are not defined as NA yet. For
 `resquin` to calculate meaningful indicators, we have to make sure that
 missings are coded to NA before we run any analyses:
 
-::: {.panel-tabset}
-
+::: panel-tabset
 ### Political Trust
 
 ```{r data preparation}
@@ -361,21 +371,29 @@ distributions of both the institutional trust scale and the NEP scale in
 greater detail by using `resp_distributions`. We can use
 `resp_distributions` as follows:
 
-```{r resp_destributions default}
+::: panel-tabset
+### Political Trust
+
+```{r resp_destributions default trust}
 # Calculate indicators of response distribution with resp_distribution
 
 # Institutional trust
 trust_distribution <- resp_distributions(trust)
 
 # Print results for the first 10 respondents
-kable(trust_distribution[1:10,])
+kable(trust_distribution[1:10,], caption = "First 10 Rows of Trust Response Distribution Indicators")
+```
 
+### NEP
+
+```{r resp_destributions default nep}
 # Environmental attitudes 
 NEP_distribution <- resp_distributions(NEP)
 
 # Print results
-kable(NEP_distribution[1:10,])
+kable(NEP_distribution[1:10,], caption = "First 10 Rows of NEP Response Distribution Indicators")
 ```
+:::
 
 `resp_distributions` returns a data frame containing several indicators
 of response distribution per respondent (displayed as separate rows of
@@ -393,13 +411,12 @@ variability are NA.
 
 <!-- changed info box as callout-->
 
-::: {.callout-note title="Package-Specific Feature"}
-By specifying the option `min_valid_responses`, respondents with
-missing values in the multi-item scale can be included in the analysis
-of response quality. `min_valid_responses` takes on a numeric value
-between 0 and 1 and defines the share of valid responses a respondent
-must have to calculate the respective indicators of response
-distribution.
+::: {.callout-tip title="Package-Specific Feature"}
+By specifying the option `min_valid_responses`, respondents with missing
+values in the multi-item scale can be included in the analysis of
+response quality. `min_valid_responses` takes on a numeric value between
+0 and 1 and defines the share of valid responses a respondent must have
+to calculate the respective indicators of response distribution.
 :::
 
 ## Handling respondents with missing data
@@ -446,11 +463,18 @@ unusual response patterns overall.
 
 Let’s begin with the institutional trust scale:
 
-```{r summary statistics trust}
+::: panel-tabset
+### Summary Table
+
+```{r summary statistics table trust}
 # Summarize and print results over all respondents
 trust_table <- summary(trust_distribution)
 kable(trust_table)
+```
 
+### Summary Plots
+
+```{r summary statistics plot trust}
 # Reshape the data for density and box plots
 trust_distribution_long <- pivot_longer(trust_distribution, 
                                          cols = c("ii_mean", "ii_sd", "ii_median", "mahal"), 
@@ -484,6 +508,7 @@ ggplot(trust_distribution_long, aes(x = Value, y = after_stat(scaled))) +
         legend.title = element_blank())  # Remove legend title
 
 ```
+:::
 
 The density and box plots provide a quick visualization of central
 tendency and variability parameters for each calculated indicator. Box
@@ -502,12 +527,13 @@ respondents* of the 10-item scale of institutional trust (ranging from 1
 to 7), we can conclude the following:
 
 -   The mean of `ii_mean` is 3.76, and the median of `ii_mean` is 3.80.
-    These parameters tell us that the *average respondent* selects a mean
-    response with the value 3.8 across all items of the institutional
-    trust scale. Looking at the median of `ii_mean`, we see that 50% of
-    our respondents select a mean response up to the value of 4 across
-    all items. The plot additionally indicates a nearly normal
-    distribution of `ii_mean` with a slight skew towards lower values.
+    These parameters tell us that the *average respondent* selects a
+    mean response with the value 3.8 across all items of the
+    institutional trust scale. Looking at the median of `ii_mean`, we
+    see that 50% of our respondents select a mean response up to the
+    value of 4 across all items. The plot additionally indicates a
+    nearly normal distribution of `ii_mean` with a slight skew towards
+    lower values.
 -   The `ii_median` has a mean value of 3.65 and a median value of 4.0.
     These parameters indicate that *on average* 50% of the given answers
     across the items of the institutional trust scale lie below the
@@ -576,7 +602,6 @@ measure for straightlining response behavior, we generate a new
 indicator based on a respondents' standard deviation across the several
 items:
 
-
 ```{r straightlining trust}
 # Generating straightlining indicator for institutional trust scale 
 trust_distribution$non_diff <- NA 
@@ -584,16 +609,13 @@ trust_distribution$non_diff[trust_distribution$ii_sd == 0] <- 1
 trust_distribution$non_diff[trust_distribution$ii_sd != 0] <- 0
 
 # Calculate proportion of respondents who show straightlining response behavior
-trust_straightline_df <- data.frame(
-  Indicator = "Straightlining Respondents",
-  Proportion = round(prop.table(table(trust_distribution$non_diff))[2], 4)
-)
+proportion_straightline <- round(prop.table(table(trust_distribution$non_diff))[2], 4)
 
-# Print the result as a table
-kable(trust_straightline_df, col.names = c("Trust Scale", "Proportion"))
+# Print the result
+cat("Proportion of Straightlining Respondents in the Trust Scale:", proportion_straightline, "\n")
 ```
 
-:::{.callout-note}
+::: callout-note
 Apart from a binary measure indicating the selection of the identical
 response option across items versus selecting at least two different
 response options across a set of items is only one of several possible
@@ -602,7 +624,6 @@ overview of the different possible operationalizations used in research,
 see @kim_et_al_2019.
 :::
 
-
 The results show that about 5% of respondents show **straightlining
 response behavior** in the institutional trust scale, meaning that 5% of
 respondents selected the identical answer across the several items. This
@@ -610,10 +631,9 @@ is a relatively low proportion of straightlining behavior across
 respondents and does not indicate general data quality issues. However,
 it is necessary to flag these respondents who show straightlining across
 the items of a scale for a further investigation of their response
-behavior. 
-The code below creates a new variable in the dataset, flagging respondents
-who show straightlining across the items of the institutional trust scale
-as `TRUE`; otherwise, as `FALSE`.
+behavior. The code below creates a new variable in the dataset, flagging
+respondents who show straightlining across the items of the
+institutional trust scale as `TRUE`; otherwise, as `FALSE`.
 
 ```{r straightlining flag for trust scale}
 # Flag respondents with zero variation in responses (ii_sd == 0)
@@ -622,8 +642,7 @@ trust_distribution$straightlining_flag <- trust_distribution$ii_sd == 0
 
 <!--callout added-->
 
-
-::: {.callout-note title="Be careful!"}
+::: {.callout-important title="Be careful!"}
 Whereas straightlining can indicate "careless" response behavior
 resulting in poor quality responses, we advise to always pay attention
 to the contents of the several items of a scale before drawing
@@ -649,11 +668,19 @@ question or show genuine undifferentiated answers.
 Now let's move on to inspecting the central tendency and variability
 parameters for the NEP scale:
 
-```{r summary statistics NEP}
+::: panel-tabset
+### Summary Table
+
+```{r summary statistics table NEP}
 # Summarize and print results over all respondents
 NEP_table <- summary(NEP_distribution)
 kable(NEP_table)
 
+```
+
+### Summary Plots
+
+```{r summary statistics Plots NEP}
 # Reshape the data for density and box plots
 NEP_distribution_long <- pivot_longer(NEP_distribution, 
                                          cols = c("ii_mean", "ii_sd", "ii_median", "mahal"), 
@@ -684,6 +711,7 @@ ggplot(NEP_distribution_long, aes(x = Value, y = after_stat(scaled))) +
         legend.title = element_blank()) # Remove legend title
 
 ```
+:::
 
 Again, the output shows the distribution of the central tendency
 parameters *across all respondents*. For the 15-item NEP scale (ranging
@@ -731,9 +759,9 @@ all respondents, we can conclude:
     atypical responses, compared to the average responding pattern of
     the other respondents.
 
-**In summary**, most respondents show some variability across the items of
-the scale, however, a few respondents show no variability at all meaning
-they provide identical answers across all items and are outliers
+**In summary**, most respondents show some variability across the items
+of the scale, however, a few respondents show no variability at all
+meaning they provide identical answers across all items and are outliers
 compared to the rest of the sample. These respondents along with
 respondents who are extremely dissimilar from the average response
 pattern (indicated by the `mahal` indicator) should be further
@@ -757,24 +785,23 @@ Don't agree; 5 = Fully disagree
 
 <!--edited to table display-->
 
-| **#**| **Items**                                                                                  | **Direction**         |
-|-|----------------------------------------------------------------------------------------------------------------|-----|
-| 1 | We are approaching the limit of the number of people the earth can support                | *Positive* |
-| 2 | Humans have the right to modify the natural environment to suit their needs               | *Negative* |
-| 3 | When humans interfere with nature it often produces disastrous consequences               | *Positive* |
-| 4 | Human ingenuity will ensure that we do NOT make the earth unlivable                       | *Negative* |
-| 5 | Humans are severely abusing the environment                                               | *Positive* |
-| 6 | There are enough resources on the planet - we just have to learn how to use them          | *Negative* |
-| 7 | Plants and animals have as much right as humans to exist                                  | *Positive* |
+| **\#** | **Items** | **Direction** |
+|--------|--------------------------------------------------------|--------|
+| 1 | We are approaching the limit of the number of people the earth can support | *Positive* |
+| 2 | Humans have the right to modify the natural environment to suit their needs | *Negative* |
+| 3 | When humans interfere with nature it often produces disastrous consequences | *Positive* |
+| 4 | Human ingenuity will ensure that we do NOT make the earth unlivable | *Negative* |
+| 5 | Humans are severely abusing the environment | *Positive* |
+| 6 | There are enough resources on the planet - we just have to learn how to use them | *Negative* |
+| 7 | Plants and animals have as much right as humans to exist | *Positive* |
 | 8 | The balance of nature is strong enough to cope with the impacts of modern industrial nations | *Negative* |
-| 9 | Despite our special abilities humans are still subject to the laws of nature             | *Positive* |
-| 10 | The so-called 'ecological crisis' facing humankind has been greatly exaggerated           | *Negative* |
-| 11 | The earth is like a spaceship with very limited room and resources                        | *Positive* |
-| 12 | Humans were meant to rule over the rest of nature                                         | *Negative* |
-| 13 | The balance of nature is very delicate and easily upset                                  | *Positive* |
-| 14 | Humans will eventually learn enough about how nature works to be able to control it      | *Negative* |
+| 9 | Despite our special abilities humans are still subject to the laws of nature | *Positive* |
+| 10 | The so-called 'ecological crisis' facing humankind has been greatly exaggerated | *Negative* |
+| 11 | The earth is like a spaceship with very limited room and resources | *Positive* |
+| 12 | Humans were meant to rule over the rest of nature | *Negative* |
+| 13 | The balance of nature is very delicate and easily upset | *Positive* |
+| 14 | Humans will eventually learn enough about how nature works to be able to control it | *Negative* |
 | 15 | If things continue on their present course, we will soon experience a major ecological catastrophe | *Positive* |
-
 
 8 of the items are "positively" worded, with a response of 1 indicating
 a pro-environmental attitude. In contrast, the remaining 7 items are
@@ -791,7 +818,6 @@ should perform further checks to examine the possibility of poor quality
 responses. Nevertheless, straightlining in the NEP scale might
 especially pose a threat for data quality and should be investigated:
 
-
 ```{r straightlining NEP}
 # Generating straightlining indicator for institutional trust scale 
 NEP_distribution$non_diff <- NA 
@@ -799,22 +825,19 @@ NEP_distribution$non_diff[NEP_distribution$ii_sd == 0] <- 1
 NEP_distribution$non_diff[NEP_distribution$ii_sd != 0] <- 0
 
 # Calculate proportion of respondents who show straightlining response behavior
-NEP_straightline_df <- data.frame(
-  Indicator = "Straightlining Respondents",
-  Proportion = round(prop.table(table(NEP_distribution$non_diff))[2], 4)
-)
+proportion_straightline <- round(prop.table(table(NEP_distribution$non_diff))[2], 4)
 
-# Print the result as a table
-kable(NEP_straightline_df, col.names = c("NEP Scale", "Proportion"))
+# Print the result
+cat("Proportion of Straightlining Respondents in the Trust Scale:", proportion_straightline, "\n")
 ```
 
 For the NEP scale, we can see that 0.5% of respondents show
 straightlining across the several items of the scale. Despite the low
 prevalence of straightlining in the data, respondents who straightlined
 in the NEP scale are highly likely to show poor quality responses and
-should be flagged for further analyses. 
-Below, we again flag respondents who show straightlining across the items
-of the NEP scale with a new variable named `straightlining_flag`:
+should be flagged for further analyses. Below, we again flag respondents
+who show straightlining across the items of the NEP scale with a new
+variable named `straightlining_flag`:
 
 ```{r straightlining flag for NEP scale}
 # Flag respondents with zero variation in responses (ii_sd == 0)
@@ -823,7 +846,7 @@ NEP_distribution$straightlining_flag <- NEP_distribution$ii_sd == 0
 
 <!--Callout added-->
 
-::: {.callout-note title="Be careful!"}
+::: {.callout-important title="Be careful!"}
 As the NEP scale includes items with both positive and negative
 wordings, the response distribution indicators cannot be directly used
 for the description of the distribution of pro- or anti-environmental
@@ -847,7 +870,6 @@ NEP_recoded$bczd014a <- 6 - NEP_recoded$bczd014a  # Q10: Ecological crisis exagg
 NEP_recoded$bczd016a <- 6 - NEP_recoded$bczd016a  # Q12: Humans were meant to rule over nature
 NEP_recoded$bczd018a <- 6 - NEP_recoded$bczd018a  # Q14: Control nature
 ```
-
 :::
 
 ## Calculating indicators of various response styles
@@ -886,20 +908,33 @@ respondent has answered. Although the proportion of a certain response
 behavior is generally more informative than the mere count, we specify
 the option `normalize = FALSE` for our analysis in this tutorial.
 
+::: panel-tabset
+### Political Trust
 
-```{r}
+```{r resp indicators trust}
 # Calculating response style indicators for institutional trust
 trust_respstyles <- resp_styles(trust, 1, 7, min_valid_responses = 1, normalize = FALSE)
 
-# Print results of the first 10 respondents
-kable(trust_respstyles[1:10,])
+# Exclude columns `drs` and `ners` from the table
+trust_respstyles_filtered <- trust_respstyles[, !(colnames(trust_respstyles) %in% c("DRS", "NERS"))]
 
+# Print results of the first 10 respondents
+kable(trust_respstyles_filtered[1:10,], caption = "First 10 Rows of Trust Response Style Indicators (Excluding DRS and NERS)")
+```
+
+### NEP
+
+```{r resp indicators nep}
 # Calculating response style indicators for environmental attitudes
 NEP_respstyles <- resp_styles(NEP, 1, 5, min_valid_responses = 1, normalize = FALSE)
 
+# Exclude columns `drs` and `ners` from the table
+NEP_respstyles_filtered <- NEP_respstyles[, !(colnames(NEP_respstyles) %in% c("DRS", "NERS"))]
+
 # Print results of the first 10 respondents
-kable(NEP_respstyles[1:10,])
+kable(NEP_respstyles_filtered[1:10,], caption = "First 10 Rows of NEP Response Style Indicators (Excluding DRS and NERS)")
 ```
+:::
 
 As with `resp_distributions`, `resp_styles` returns a data frame
 containing the several response style indicators per respondent
@@ -923,10 +958,14 @@ indicator in the data frame produced by `resp_styles`.
 Let’s again begin with the institutional trust scale.
 
 <!-- I have reduced the resulting density and boxplots to include only MRS, ARS and ERS. Should I do the same for the table or is current version okay?  -->
+
 <!-- Let's also do it for the table. Also I have been wondering if we can adapt the plots so that MRS comes first, then ARS and then ERS. So that it matches the result description. If not
 then we adapt the order of descriptions :-)-->
 
-```{r summary statistics trust resp_styles}
+::: panel-tabset
+### Summary Table
+
+```{r summary statistics table trust resp_styles}
 # Exclude "NERS" and "DRS" columns
 trust_respstyles_subset <- trust_respstyles %>%
   select(-NERS, -DRS)
@@ -935,6 +974,11 @@ trust_respstyles_subset <- trust_respstyles %>%
 trust_respstyles_table <- summary(trust_respstyles_subset)
 kable(trust_respstyles_table)
 
+```
+
+### Summary Plots
+
+```{r summary statistics plot trust resp_styles}
 # Reshape the data for density and box plots
 trust__respstyles_long <- pivot_longer(trust_respstyles, 
                                          cols = c("MRS", "ARS", "ERS"), 
@@ -969,6 +1013,7 @@ ggplot(trust__respstyles_long, aes(x = Value, y = after_stat(scaled))) +
   theme(legend.position = "right",
         legend.title = element_blank())
 ```
+:::
 
 Looking at the response style indicators across *all respondents* of the
 institutional trust scale, we see the following patterns:
@@ -1008,48 +1053,34 @@ than five extreme responses across items are outliers. These respondents
 should be further checked for anomalies in their response behavior
 (e.g., their response times) to exclude data quality concerns.
 
-::: {.callout-note title="Be careful!"}
-When interpreting the indicator of acquiescence response
-style (ARS), be aware that strictly speaking you can only meaningfully
-interpret the indicator for actual agreement/disagreement - scales. For
-the purpose of this tutorial, we calculated and interpreted it for the
-trust scale ranging from complete distrust to complete trust to show how
-to extract some information about potential data quality issues from it.
-However, for scientific publications or data quality reports, we
-recommend to not use the ARS-indicator for scales other than
-agreement/disagreement - scales. Be also aware that the calculation of
-the ARS indicator assumes that the response scale is positively
-polarized, i.e., higher values of the response scale reflect higher
-levels of agreement with certain statements or issues.
-:::
-
-
-
-::: {.callout-note title="Package-Specific Feature"}
-Apart from MRS, ARS, and ERS, the `resquin`-package additionally calculates
-an indicator for disacquiescence response style (DRS), i.e., the tendency
-to disagree with statements, and an indicator for non-extreme response style
-(NERS), i.e., the tendency to select non- extreme answers across a set of items.
-When interpreting the indicators for these response styles, keep in mind
-that the DRS-indicator is the *direct opposite* of the ARS-indicator and
-the NERS-indicator is the *direct inverse* of the ERS-indicator.
-Especially, for NERS and ERS it might be pointless to meaningfully
-interpret both indicators at the same time.
+::: {.callout-important title="Be careful!"}
+When interpreting the indicator of acquiescence response style (ARS), be
+aware that strictly speaking you can only meaningfully interpret the
+indicator for actual agreement/disagreement - scales. For the purpose of
+this tutorial, we calculated and interpreted it for the trust scale
+ranging from complete distrust to complete trust to show how to extract
+some information about potential data quality issues from it. However,
+for scientific publications or data quality reports, we recommend to not
+use the ARS-indicator for scales other than agreement/disagreement -
+scales. Be also aware that the calculation of the ARS indicator assumes
+that the response scale is positively polarized, i.e., higher values of
+the response scale reflect higher levels of agreement with certain
+statements or issues.
 :::
 
 ### 2. NEP Scale
 
-::: {.callout-note title="Be careful!"}
-Remember that ARS reflects the tendency to agree with
-statements. The calculation of ARS in the `resquin` package (i.e., sum of answers
-above the scale mid-point across all items of the scale) assumes a positively
-polarized scale, where higher values indicate stronger agreement. However,
-the NEP scale is negatively polarized, with lower values indicating agreement
-(1 = fully agree). To compute ARS accurately, we need to reverse-code all the items
-so that `5` indicates agreement and `1` indicates disagreement. After
-this transformation, we should then recalculate the response style
-indicators on the reverse-coded data to be able to interpret them accordingly.
-:::
+::: {.callout-important title="Be careful!"}
+Remember that ARS reflects the tendency to agree with statements. The
+calculation of ARS in the `resquin` package (i.e., sum of answers above
+the scale mid-point across all items of the scale) assumes a positively
+polarized scale, where higher values indicate stronger agreement.
+However, the NEP scale is negatively polarized, with lower values
+indicating agreement (1 = fully agree). To compute ARS accurately, we
+need to reverse-code all the items so that `5` indicates agreement and
+`1` indicates disagreement. After this transformation, we should then
+recalculate the response style indicators on the reverse-coded data to
+be able to interpret them accordingly.
 
 ```{r positively polarized NEP}
 # Define the columns to reverse-code
@@ -1062,11 +1093,15 @@ NEP_positively_polarized[NEP_columns] <- 6 - NEP[NEP_columns]
 # Calculate response style indicators on the positively polarized NEP data
 NEP_positively_polarized_respstyles <- resp_styles(NEP_positively_polarized, 1, 5,min_valid_responses = 1,normalize = FALSE)
 ```
+:::
 
-Let's now inspect response style indicators for the (recoded) positively polarized
-NEP scale:
+Let's now inspect response style indicators for the (recoded) positively
+polarized NEP scale:
 
-```{r summary statistics NEP resp_styles}
+::: panel-tabset
+### Summary Table
+
+```{r summary statistics table NEP resp_styles}
 # Exclude "NERS" and "DRS" columns
 NEP_positively_polarized_respstyles_subset <- NEP_positively_polarized_respstyles %>%
   select(-NERS, -DRS)
@@ -1074,7 +1109,11 @@ NEP_positively_polarized_respstyles_subset <- NEP_positively_polarized_respstyle
 # Summarize and print results over all respondents
 NEP_positively_polarized_respstyles_table <- summary(NEP_positively_polarized_respstyles_subset)
 kable(NEP_positively_polarized_respstyles_table)
+```
 
+### Summary Plots
+
+```{r summary statistics plot NEP resp_styles}
 # Reshape the data for density and box plots
 NEP_positively_polarized_respstyles_long <- pivot_longer(NEP_positively_polarized_respstyles, 
                                          cols = c("MRS", "ARS", "ERS"), 
@@ -1110,44 +1149,45 @@ ggplot(NEP_positively_polarized_respstyles_long, aes(x = Value, y = after_stat(s
         legend.title = element_blank())  # Remove legend title
 
 ```
+:::
 
-The distribution of response style indicators across *all respondents* of
-the NEP-scale, reveals the following patterns:
+The distribution of response style indicators across *all respondents*
+of the NEP-scale, reveals the following patterns:
 
-
--   ***MRS:*** Respondents *on average* select the middle response category
-    for two out of the 15 items of the NEP scale. Respondents with more than
-    six mid-point responses are outliers in the sample while
-    respondents maximally selected 14 mid-point responses for the 15
-    items. Similarly to the institutional trust scale, this distribution
-    pattern suggest that mid-point responding is not a dominant response
-    style for the NEP scale among our sample. Therefore, outliers should
-    be carefully checked regarding their response behavior to exclude
-    data quality issues.
+-   ***MRS:*** Respondents *on average* select the middle response
+    category for two out of the 15 items of the NEP scale. Respondents
+    with more than six mid-point responses are outliers in the sample
+    while respondents maximally selected 14 mid-point responses for the
+    15 items. Similarly to the institutional trust scale, this
+    distribution pattern suggest that mid-point responding is not a
+    dominant response style for the NEP scale among our sample.
+    Therefore, outliers should be carefully checked regarding their
+    response behavior to exclude data quality issues.
 
 -   ***ARS:*** *On average*, respondents show a reasonable amount of
     agreeing responses by agreeing with about eight out of 15 items.
     Against the background of reversely coded items (i.e.,eight items
     are formulated pro-environmental and 7 items are formulated
-    anti-environmental) the amount of average agreeing responses
-    across the items indicates that responses are not generally affected
-    by acquiescence bias and of poor quality as *on average* respondents
-    do not report conflicting attitudes. However, some respondents show
-    an unreasonable amount of agreeing responses across items as we can see
+    anti-environmental) the amount of average agreeing responses across
+    the items indicates that responses are not generally affected by
+    acquiescence bias and of poor quality as *on average* respondents do
+    not report conflicting attitudes. However, some respondents show an
+    unreasonable amount of agreeing responses across items as we can see
     from the distribution plot. In addition, the outcome shows that on
-    maximum respondents agree with all of the items of the scale irrespective
-    of their opposite wording. Although, according to the distribution plots,
-    respondents are only outliers in the sample if they agreed to more than
-    12 items, we recommend flagging every respondent with more than eight
-    agreeing responses due to the design of the scale. These respondents
-    should be closely checked regarding their response behavior, and
-    additional proxies, such as their response times, should be investigated
-    to gain further insights into the quality of their responses.
+    maximum respondents agree with all of the items of the scale
+    irrespective of their opposite wording. Although, according to the
+    distribution plots, respondents are only outliers in the sample if
+    they agreed to more than 12 items, we recommend flagging every
+    respondent with more than eight agreeing responses due to the design
+    of the scale. These respondents should be closely checked regarding
+    their response behavior, and additional proxies, such as their
+    response times, should be investigated to gain further insights into
+    the quality of their responses.
 
--   ***ERS:*** *On average*, respondents select the extreme end-points of
-    the scale to about three to four out of 15 items. Respondents with
-    more than 13 extreme responses across the items of the scale are
-    considered outliers in the sample. Overall, the distribution
+-   ***ERS:*** *On average*, respondents select the extreme end-points
+    of the scale to about three to four out of 15 items. Respondents
+    with more than 13 extreme responses across the items of the scale
+    are considered outliers in the sample. Overall, the distribution
     suggests that respondents indeed avoid extreme answers and stick to
     more moderate positions. Consequently, those with a high amount of
     given extreme responses and respondents who provided endpoint
@@ -1155,29 +1195,29 @@ the NEP-scale, reveals the following patterns:
     investigated regarding any data quality concerns.
 
 **In summary**, the distribution of response style indicators for the
-NEP-scale suggests that the measure is generally not affected by any
-of the observed response styles (i.e., MRS, ARS, and ERS). However, some
+NEP-scale suggests that the measure is generally not affected by any of
+the observed response styles (i.e., MRS, ARS, and ERS). However, some
 outliers give cause for data quality concerns and should be flagged for
 further investigation. Especially, our findings regarding agreement bias
-show concerning response patterns regarding the reverse wording of items in
-the scale. Respondents with more agreeing responses than positively or negatively
-formulated items should be flagged and closely inspected regarding the
-quality of their responses. This in particular true for those
-respondents who straightlined across the items of the scale.
+show concerning response patterns regarding the reverse wording of items
+in the scale. Respondents with more agreeing responses than positively
+or negatively formulated items should be flagged and closely inspected
+regarding the quality of their responses. This in particular true for
+those respondents who straightlined across the items of the scale.
 
-::: {.callout-note title="Good to Know"}
-Although `resquin` and `resp_styles` is typically
-designed for multi-item scales or matrix questions that share the same
-question introduction and response scale, it is also possible to
-evaluate "stand-alone" survey questions (e.g., attitudes toward
-governmental spending, attitudes toward social policies) from a broader
-topic (e.g., political attitudes) together. If you want to do so, it is
-crucial to only investigate those "stand-alone" questions together which
-have the same number of response options. Also, you want to make sure
-that the questions are not separated from each other in the
-questionnaire but are in a consecutive order. As long as the several
-questions are sequential and share the same response scale, it is
-possible to calculate meaningful indicators of response styles.
+::: {.callout-caution title="Good to Know"}
+Although `resquin` and `resp_styles` is typically designed for
+multi-item scales or matrix questions that share the same question
+introduction and response scale, it is also possible to evaluate
+"stand-alone" survey questions (e.g., attitudes toward governmental
+spending, attitudes toward social policies) from a broader topic (e.g.,
+political attitudes) together. If you want to do so, it is crucial to
+only investigate those "stand-alone" questions together which have the
+same number of response options. Also, you want to make sure that the
+questions are not separated from each other in the questionnaire but are
+in a consecutive order. As long as the several questions are sequential
+and share the same response scale, it is possible to calculate
+meaningful indicators of response styles.
 :::
 
 # Conclusion and recommendations {#conclusion-and-recommendations}
@@ -1194,14 +1234,15 @@ detail.
 affected by any of the investigated response biases, although again,
 outliers give reason for data quality concerns. Additionally, we find
 straightlining response behavior with on overall, a low prevalence of
-only 0.5% of straightlining responses. However, these respondents most likely present
-a data quality concern due to the reversely coded nature of the scale.
-Similarly, some response patterns regarding ARS are especially concerning
-since they suggest data quality threats. Again, due to the
-reversely coded items of the scale, response patterns with more than eight or seven
-agreeing responses across items suggests poor data quality with responses detached
-from true values. Respondents with suspicious response behaviors should be flagged
-and ideally further checked.
+only 0.5% of straightlining responses. However, these respondents most
+likely present a data quality concern due to the reversely coded nature
+of the scale. Similarly, some response patterns regarding ARS are
+especially concerning since they suggest data quality threats. Again,
+due to the reversely coded items of the scale, response patterns with
+more than eight or seven agreeing responses across items suggests poor
+data quality with responses detached from true values. Respondents with
+suspicious response behaviors should be flagged and ideally further
+checked.
 
 ## Key Takeaways
 
@@ -1252,10 +1293,9 @@ respondents for your further analyses.
 
 ## Recommendations
 
-Knowing how to assess and interpret indicators of
-response distribution and response styles regarding response quality,
-you probably wonder how to move on from there?
-
+Knowing how to assess and interpret indicators of response distribution
+and response styles regarding response quality, you probably wonder how
+to move on from there?
 
 -   Ideally, we recommend to conduct further analyses on respondents
     with suspicious response patterns. A typical proxy to understand the
@@ -1265,14 +1305,15 @@ you probably wonder how to move on from there?
     for a question, you can assume that respondents provided no to
     minimal effort to process the question which consequently resulted
     in poor quality responses. A common threshold to assess whether
-    response times are too short to process a question is introduced by @zhang2014speeding.
-    Further measures to approach the question whether respondents'
-    answers reflect low engagement with a question and therefore, poor
-    quality responses are *respondent motivation* or *respondent cognitive ability*.
-    These are both factors discussed to influence the occurrence and magnitude
-    of *satisficing*, an umbrella term for different response strategies that
-    can be used as shortcuts to reduce cognitive burden and can therefore,
-    reflect careless responding (@krosnick1991response).
+    response times are too short to process a question is introduced by
+    @zhang2014speeding. Further measures to approach the question
+    whether respondents' answers reflect low engagement with a question
+    and therefore, poor quality responses are *respondent motivation* or
+    *respondent cognitive ability*. These are both factors discussed to
+    influence the occurrence and magnitude of *satisficing*, an umbrella
+    term for different response strategies that can be used as shortcuts
+    to reduce cognitive burden and can therefore, reflect careless
+    responding (@krosnick1991response).
 
 -   For your further analyses, we recommend in any case to not simply
     drop respondents with suspicious response patterns. Instead, we
@@ -1284,4 +1325,3 @@ you probably wonder how to move on from there?
 
 ::: {#refs}
 :::
-
