@@ -9,7 +9,7 @@
 <meta name="author" content="Fabienne Kraemer">
 <meta name="author" content="Arjin Eser">
 <meta name="author" content="Çağla Yıldız">
-<meta name="dcterms.date" content="2024-12-12">
+<meta name="dcterms.date" content="2024-12-13">
 
 <title>Resquin</title>
 <style>
@@ -3387,7 +3387,7 @@ border: 0;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 12, 2024</p>
+      <p class="date">December 13, 2024</p>
     </div>
   </div>
   
@@ -4797,31 +4797,6 @@ Package-Specific Feature
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exemplary code to flag outliers displayed in the boxplots</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate IQR and thresholds for each Indicator to determine the outliers we see in the boxplot</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>outlier_data_trust <span class="ot">&lt;-</span> trust_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Q1 =</span> <span class="fu">quantile</span>(Value, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Q3 =</span> <span class="fu">quantile</span>(Value, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">IQR =</span> Q3 <span class="sc">-</span> Q1,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower_threshold =</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper_threshold =</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a column to flag outliers in the dataset</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>trust_distribution_long <span class="ot">&lt;-</span> trust_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(outlier_data_trust, <span class="at">by =</span> <span class="st">&quot;Indicator&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">is_outlier =</span> <span class="fu">ifelse</span>(Value <span class="sc">&lt;</span> lower_threshold <span class="sc">|</span> Value <span class="sc">&gt;</span> upper_threshold, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co">#Outliers take on the value 1 of the variable is_outlier</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Print variable</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(trust_distribution_long<span class="sc">$</span>is_outlier, <span class="at">useNA=</span><span class="st">&quot;ifany&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-   0    1 
-3830   58 </code></pre>
-</div>
 </div>
 </div>
 </div>
@@ -4846,16 +4821,16 @@ Package-Specific Feature
 <h4 class="anchored" data-anchor-id="straightlining-or-non-differentiation">Straightlining or non-differentiation</h4>
 <p>From the standard deviation across items we can additionally infer whether respondents show straightlining response behavior across the multiple items of each scale. <em>Straightlining or non-differentiation</em> describes the response pattern of selecting the identical answer to a series of questions or items of a scale. It can indicate whether a respondent properly processed the respective question(s) or used shortcuts to reduce cognitive burden which in turn produces poor quality answers that do not represent a respondents’ true values. To get a measure for straightlining response behavior, we generate a new indicator based on a respondents’ standard deviation across the several items:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportion of respondents who show straightlining response behavior</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>proportion_straightline_trust <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(trust_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>], <span class="dv">4</span>)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Proportion of Straightlining Respondents in the Trust Scale:&quot;</span>, proportion_straightline_trust, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>non_diff[trust_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportion of respondents who show straightlining response behavior</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>proportion_straightline_trust <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(trust_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>], <span class="dv">4</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Proportion of Straightlining Respondents in the Trust Scale:&quot;</span>, proportion_straightline_trust, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Proportion of Straightlining Respondents in the Trust Scale: 0.0514 </code></pre>
 </div>
@@ -4875,8 +4850,8 @@ Note
 </div>
 <p>The results show that about 5% of respondents show <strong>straightlining response behavior</strong> in the institutional trust scale, meaning that 5% of respondents selected the identical answer across the several items. This is a relatively low proportion of straightlining behavior across respondents and does not indicate general data quality issues. However, it is necessary to flag these respondents who show straightlining across the items of a scale for a further investigation of their response behavior. The code below creates a new variable in the dataset, flagging respondents who show straightlining across the items of the institutional trust scale as <code>TRUE</code>; otherwise, as <code>FALSE</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>straightlining_flag_trust <span class="ot">&lt;-</span> trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>trust_distribution<span class="sc">$</span>straightlining_flag_trust <span class="ot">&lt;-</span> trust_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-important callout-titled" title="Be careful!">
 <div class="callout-header d-flex align-content-center">
@@ -4901,9 +4876,9 @@ Be careful!
 <div class="tab-content">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>NEP_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_distribution)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>NEP_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_distribution)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -4997,34 +4972,34 @@ Be careful!
 </div>
 <div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_distribution, </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">&quot;ii_mean&quot;</span>, <span class="st">&quot;ii_sd&quot;</span>, <span class="st">&quot;ii_median&quot;</span>, <span class="st">&quot;mahal&quot;</span>), </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">&quot;Indicator&quot;</span>, </span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove non-finite values</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value) <span class="sc">&amp;</span> <span class="fu">is.finite</span>(Value))</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_distribution_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;lightgray&quot;</span>) <span class="sc">+</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">&quot;Mean&quot;</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Mean&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Combined Density and Box Plots of Indicators with Mean Values&quot;</span>,</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Value&quot;</span>,</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Scaled Density / Boxplot&quot;</span>) <span class="sc">+</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>,</span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_distribution, </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">&quot;ii_mean&quot;</span>, <span class="st">&quot;ii_sd&quot;</span>, <span class="st">&quot;ii_median&quot;</span>, <span class="st">&quot;mahal&quot;</span>), </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">&quot;Indicator&quot;</span>, </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove non-finite values</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>NEP_distribution_long <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value) <span class="sc">&amp;</span> <span class="fu">is.finite</span>(Value))</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_distribution_long <span class="sc">%&gt;%</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_distribution_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;lightgray&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">&quot;Mean&quot;</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Mean&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Combined Density and Box Plots of Indicators with Mean Values&quot;</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Value&quot;</span>,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Scaled Density / Boxplot&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>,</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -5146,24 +5121,24 @@ Be careful!
 </table>
 <p>8 of the items are “positively” worded, with a response of 1 indicating a pro-environmental attitude. In contrast, the remaining 7 items are “negatively” worded, where a response of 1 indicates an anti-environmental attitude. As a result, respondents showing straightlining (i.e., giving the identical response to all items) contradict attitudinal aspects of previous items, suggesting respondents indeed show <strong>careless responding</strong>. This is especially true if respondents select identical responses at the extremes of the scale. However, we have to again be careful with hasty conclusions: In the case of respondents straightlining across the mid-point of the scale, we cannot immediately rule out the possibility of genuine ambiguity and should perform further checks to examine the possibility of poor quality responses. Nevertheless, straightlining in the NEP scale might especially pose a threat for data quality and should be investigated:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportion of respondents who show straightlining response behavior</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>proportion_straightline_NEP <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(NEP_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>], <span class="dv">4</span>)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Proportion of Straightlining Respondents in the NEP Scale:&quot;</span>, proportion_straightline_NEP, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating straightlining indicator for institutional trust scale </span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>non_diff[NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">!=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportion of respondents who show straightlining response behavior</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>proportion_straightline_NEP <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(NEP_distribution<span class="sc">$</span>non_diff))[<span class="dv">2</span>], <span class="dv">4</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Proportion of Straightlining Respondents in the NEP Scale:&quot;</span>, proportion_straightline_NEP, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Proportion of Straightlining Respondents in the NEP Scale: 0.0053 </code></pre>
 </div>
 </div>
 <p>For the NEP scale, we can see that 0.5% of respondents show straightlining across the several items of the scale. Despite the low prevalence of straightlining in the data, respondents who straightlined in the NEP scale are highly likely to show poor quality responses and should be flagged for further analyses. Below, we again flag respondents who show straightlining across the items of the NEP scale with a new variable named <code>straightlining_flag</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>straightlining_flag_NEP <span class="ot">&lt;-</span> NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag respondents with zero variation in responses (ii_sd == 0)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>NEP_distribution<span class="sc">$</span>straightlining_flag_NEP <span class="ot">&lt;-</span> NEP_distribution<span class="sc">$</span>ii_sd <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-important callout-titled" title="Be careful!">
 <div class="callout-header d-flex align-content-center">
@@ -5177,17 +5152,17 @@ Be careful!
 <div class="callout-body-container callout-body">
 <p>As the NEP scale includes items with both positive and negative wordings, the response distribution indicators cannot be directly used for the description of the distribution of pro- or anti-environmental attitudes. To derive substantively meaningful conclusions from the indicators (e.g., average environmental attitudes among the respondents), it’s necessary to reverse-code either the positively or negatively worded items. This ensures that all items reflect the same directional attitude. For the recoding, you can use the following code chunk:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new data frame by copying the original NEP data</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>NEP_recoded <span class="ot">&lt;-</span> NEP</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverse code the negatively worded items in the new data frame</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd006a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd006a  <span class="co"># Q2: Humans have the right to modify the natural environment</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd008a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd008a  <span class="co"># Q4: Human ingenuity</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd010a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd010a  <span class="co"># Q6: There are enough resources</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd012a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd012a  <span class="co"># Q8: The balance of nature is strong enough</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd014a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd014a  <span class="co"># Q10: Ecological crisis exaggerated</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd016a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd016a  <span class="co"># Q12: Humans were meant to rule over nature</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd018a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd018a  <span class="co"># Q14: Control nature</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new data frame by copying the original NEP data</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>NEP_recoded <span class="ot">&lt;-</span> NEP</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverse code the negatively worded items in the new data frame</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd006a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd006a  <span class="co"># Q2: Humans have the right to modify the natural environment</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd008a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd008a  <span class="co"># Q4: Human ingenuity</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd010a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd010a  <span class="co"># Q6: There are enough resources</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd012a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd012a  <span class="co"># Q8: The balance of nature is strong enough</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd014a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd014a  <span class="co"># Q10: Ecological crisis exaggerated</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd016a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd016a  <span class="co"># Q12: Humans were meant to rule over nature</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>NEP_recoded<span class="sc">$</span>bczd018a <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP_recoded<span class="sc">$</span>bczd018a  <span class="co"># Q14: Control nature</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -5209,14 +5184,14 @@ Be careful!
 <div class="tab-content">
 <div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for institutional trust</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(trust, <span class="dv">1</span>, <span class="dv">7</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude columns `drs` and `ners` from the table</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>trust_respstyles_filtered <span class="ot">&lt;-</span> trust_respstyles[, <span class="sc">!</span>(<span class="fu">colnames</span>(trust_respstyles) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DRS&quot;</span>, <span class="st">&quot;NERS&quot;</span>))]</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_respstyles_filtered[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="at">caption =</span> <span class="st">&quot;First 10 Rows of Trust Response Style Indicators (Excluding DRS and NERS)&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for institutional trust</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(trust, <span class="dv">1</span>, <span class="dv">7</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude columns `drs` and `ners` from the table</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>trust_respstyles_filtered <span class="ot">&lt;-</span> trust_respstyles[, <span class="sc">!</span>(<span class="fu">colnames</span>(trust_respstyles) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DRS&quot;</span>, <span class="st">&quot;NERS&quot;</span>))]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_respstyles_filtered[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="at">caption =</span> <span class="st">&quot;First 10 Rows of Trust Response Style Indicators (Excluding DRS and NERS)&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>First 10 Rows of Trust Response Style Indicators (Excluding DRS and NERS)</caption>
@@ -5285,14 +5260,14 @@ Be careful!
 </div>
 <div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for environmental attitudes</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>NEP_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP, <span class="dv">1</span>, <span class="dv">5</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude columns `drs` and `ners` from the table</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>NEP_respstyles_filtered <span class="ot">&lt;-</span> NEP_respstyles[, <span class="sc">!</span>(<span class="fu">colnames</span>(NEP_respstyles) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DRS&quot;</span>, <span class="st">&quot;NERS&quot;</span>))]</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_respstyles_filtered[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="at">caption =</span> <span class="st">&quot;First 10 Rows of NEP Response Style Indicators (Excluding DRS and NERS)&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating response style indicators for environmental attitudes</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>NEP_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP, <span class="dv">1</span>, <span class="dv">5</span>, <span class="at">min_valid_responses =</span> <span class="dv">1</span>, <span class="at">normalize =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude columns `drs` and `ners` from the table</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>NEP_respstyles_filtered <span class="ot">&lt;-</span> NEP_respstyles[, <span class="sc">!</span>(<span class="fu">colnames</span>(NEP_respstyles) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DRS&quot;</span>, <span class="st">&quot;NERS&quot;</span>))]</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results of the first 10 respondents</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_respstyles_filtered[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="at">caption =</span> <span class="st">&quot;First 10 Rows of NEP Response Style Indicators (Excluding DRS and NERS)&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>First 10 Rows of NEP Response Style Indicators (Excluding DRS and NERS)</caption>
@@ -5374,13 +5349,13 @@ Be careful!
 <div class="tab-content">
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude &quot;NERS&quot; and &quot;DRS&quot; columns</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles_subset <span class="ot">&lt;-</span> trust_respstyles <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>NERS, <span class="sc">-</span>DRS)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>trust_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(trust_respstyles_subset)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude &quot;NERS&quot; and &quot;DRS&quot; columns</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>trust_respstyles_subset <span class="ot">&lt;-</span> trust_respstyles <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>NERS, <span class="sc">-</span>DRS)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>trust_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(trust_respstyles_subset)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(trust_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -5441,39 +5416,39 @@ Be careful!
 </div>
 <div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(trust_respstyles, </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>), </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">&quot;Indicator&quot;</span>, </span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span>)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the Indicator factor levels</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long<span class="sc">$</span>Indicator <span class="ot">&lt;-</span> <span class="fu">factor</span>(trust__respstyles_long<span class="sc">$</span>Indicator, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>))</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trust__respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;lightgray&quot;</span>) <span class="sc">+</span></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">&quot;Mean&quot;</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Mean&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Combined Density and Box Plots of Indicators with Mean Values&quot;</span>,</span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Value&quot;</span>,</span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Scaled Density / Boxplot&quot;</span>) <span class="sc">+</span></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>,</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(trust_respstyles, </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>), </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">&quot;Indicator&quot;</span>, </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the Indicator factor levels</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>trust__respstyles_long<span class="sc">$</span>Indicator <span class="ot">&lt;-</span> <span class="fu">factor</span>(trust__respstyles_long<span class="sc">$</span>Indicator, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>))</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> trust__respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trust__respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;lightgray&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">&quot;Mean&quot;</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Mean&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Combined Density and Box Plots of Indicators with Mean Values&quot;</span>,</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Value&quot;</span>,</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Scaled Density / Boxplot&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>,</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -5520,15 +5495,15 @@ Be careful!
 <div class="callout-body-container callout-body">
 <p>Remember that ARS reflects the tendency to agree with statements. The calculation of ARS in the <code>resquin</code> package (i.e., sum of answers above the scale mid-point across all items of the scale) assumes a positively polarized scale, where higher values indicate stronger agreement. However, the NEP scale is negatively polarized, with lower values indicating agreement (1 = fully agree). To compute ARS accurately, we need to reverse-code all the items so that <code>5</code> indicates agreement and <code>1</code> indicates disagreement. After this transformation, we should then recalculate the response style indicators on the reverse-coded data to be able to interpret them accordingly.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the columns to reverse-code</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>NEP_columns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(NEP)  <span class="co"># Replace with specific columns if needed</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a reversed version of NEP data and perform reverse-coding to positively polarize the scale</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized <span class="ot">&lt;-</span> NEP</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized[NEP_columns] <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP[NEP_columns]</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate response style indicators on the positively polarized NEP data</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP_positively_polarized, <span class="dv">1</span>, <span class="dv">5</span>,<span class="at">min_valid_responses =</span> <span class="dv">1</span>,<span class="at">normalize =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the columns to reverse-code</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>NEP_columns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(NEP)  <span class="co"># Replace with specific columns if needed</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a reversed version of NEP data and perform reverse-coding to positively polarize the scale</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized <span class="ot">&lt;-</span> NEP</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized[NEP_columns] <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="sc">-</span> NEP[NEP_columns]</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate response style indicators on the positively polarized NEP data</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(NEP_positively_polarized, <span class="dv">1</span>, <span class="dv">5</span>,<span class="at">min_valid_responses =</span> <span class="dv">1</span>,<span class="at">normalize =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -5538,13 +5513,13 @@ Be careful!
 <div class="tab-content">
 <div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude &quot;NERS&quot; and &quot;DRS&quot; columns</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_subset <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles <span class="sc">%&gt;%</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>NERS, <span class="sc">-</span>DRS)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_positively_polarized_respstyles_subset)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_positively_polarized_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude &quot;NERS&quot; and &quot;DRS&quot; columns</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_subset <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>NERS, <span class="sc">-</span>DRS)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize and print results over all respondents</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(NEP_positively_polarized_respstyles_subset)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(NEP_positively_polarized_respstyles_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -5605,39 +5580,39 @@ Be careful!
 </div>
 <div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_positively_polarized_respstyles, </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>), </span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">&quot;Indicator&quot;</span>, </span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the Indicator factor levels</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long<span class="sc">$</span>Indicator <span class="ot">&lt;-</span> <span class="fu">factor</span>(NEP_positively_polarized_respstyles_long<span class="sc">$</span>Indicator, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>))</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_positively_polarized_respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;lightgray&quot;</span>) <span class="sc">+</span></span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">&quot;Mean&quot;</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Mean&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Combined Density and Box Plots of Indicators with Mean Values&quot;</span>,</span>
-<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Value&quot;</span>,</span>
-<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Scaled Density / Boxplot&quot;</span>) <span class="sc">+</span></span>
-<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>,</span>
-<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data for density and box plots</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(NEP_positively_polarized_respstyles, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>), </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">&quot;Indicator&quot;</span>, </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove NAs (for those we have no calculated indicators)</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Value))</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the Indicator factor levels</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>NEP_positively_polarized_respstyles_long<span class="sc">$</span>Indicator <span class="ot">&lt;-</span> <span class="fu">factor</span>(NEP_positively_polarized_respstyles_long<span class="sc">$</span>Indicator, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;MRS&quot;</span>, <span class="st">&quot;ARS&quot;</span>, <span class="st">&quot;ERS&quot;</span>))</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate mean for each Indicator</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>mean_values <span class="ot">&lt;-</span> NEP_positively_polarized_respstyles_long <span class="sc">%&gt;%</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined boxplot and density plot with a dashed line for each mean</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(NEP_positively_polarized_respstyles_long, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> <span class="fu">after_stat</span>(scaled))) <span class="sc">+</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(scaled)), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;lightgray&quot;</span>) <span class="sc">+</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> mean_values, <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">&quot;Mean&quot;</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Mean&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Indicator, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Combined Density and Box Plots of Indicators with Mean Values&quot;</span>,</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Value&quot;</span>,</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Scaled Density / Boxplot&quot;</span>) <span class="sc">+</span></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>,</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())  <span class="co"># Remove legend title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
