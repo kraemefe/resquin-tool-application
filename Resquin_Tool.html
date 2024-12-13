@@ -3688,7 +3688,7 @@ Package-Specific Feature
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pacman)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and load other CRAN packages using pacman</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr, kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(pak, dplyr, ggplot2, tidyr, patchwork, knitr, kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After installation, we can import the survey data we want to analyze regarding its response quality. For both <code>resp_distributions</code> and <code>resp_styles</code> to calculate meaningful indicators, we need to import survey data in a wide format, i.e., with only one row per observation unit (respondent). For this tutorial, we import our data set directly from GitHub: <!--maybe let's rename the data for better usability --></p>
 <div class="cell">

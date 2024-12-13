@@ -235,7 +235,7 @@ install.packages("pacman")
 library(pacman)
 
 # Install and load other CRAN packages using pacman
-pacman::p_load(devtools, pak, dplyr,ggplot2,tidyr,patchwork, knitr, kableExtra)
+pacman::p_load(pak, dplyr, ggplot2, tidyr, patchwork, knitr, kableExtra)
 ```
 
 After installation, we can import the survey data we want to analyze
