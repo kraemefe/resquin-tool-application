@@ -198,7 +198,7 @@ Tendency to select the lower or upper endpoint of a scale. The indicator capture
 :::
 
 To calculate these indicators for the assessment of response quality of
-our multi-item scales, we will use the `Resquin` package in R. The
+our multi-item scales, we will use the `Resquin` package in R [@resquin2024]. The
 `resquin` package comprises different functions to calculate response
 quality indicators for multi-item scales. The quality indicators are
 calculated per respondent. Specifically, we will use the two functions
@@ -1232,7 +1232,7 @@ you probably wonder how to move on from there?
     These are both factors discussed to influence the occurrence and magnitude
     of *satisficing*, an umbrella term for different response strategies that
     can be used as shortcuts to reduce cognitive burden and can therefore,
-    reflect careless responding (@krosnick1991response).
+    reflect careless responding [@krosnick1991response].
 
 -   For your further analyses, we recommend in any case to not simply
     drop respondents with suspicious response patterns. Instead, we
