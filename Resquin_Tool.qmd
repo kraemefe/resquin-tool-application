@@ -263,6 +263,7 @@ look at the distribution of given responses to both multi-item scales:
 ### Political Trust
 
 ```{r data inspection, warning=FALSE}
+output_format <- "simple"
 
 # Creating subset of political trust scale
 start_col_trust <- which(colnames(raw_data) == "bbzc078a")
@@ -283,7 +284,7 @@ rownames(trust_responses_df) <- NULL
 
 # Print the table with styling
 trust_responses_df %>%
-  kable("html", escape = FALSE, 
+  kable(output_format, escape = FALSE, 
         caption = "Summary of Response Codes Across Political Trust Scale Items") %>%
   kable_styling(full_width = FALSE, 
                 bootstrap_options = c("striped", "hover", "condensed")) %>%
@@ -294,6 +295,7 @@ trust_responses_df %>%
 ### NEP
 
 ```{r data inspection nep, warning=FALSE}
+output_format <- "simple"
 
 # Creating subset of NEP scale
 start_col_NEP <- which(colnames(raw_data) == "bczd005a")
@@ -312,7 +314,7 @@ rownames(NEP_responses_df) <- NULL  # Remove rownames to clean the output
 
 # Print the table with styling
 NEP_responses_df %>%
-  kable("html", escape = FALSE, caption = "Summary of Response Codes Across NEP Scale Items") %>%
+  kable(output_format, escape = FALSE, caption = "Summary of Response Codes Across NEP Scale Items") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
   column_spec(1:ncol(NEP_responses_df), width = "4em")
 
@@ -337,7 +339,7 @@ trust <- trust %>%
 # Display the first few rows of recoded data frame as a formatted table
 trust %>%
   head() %>%  # Show only the first 6 rows
-  kable("html", caption = "First Six Rows of Re-coded Trust Data") %>%
+  kable(output_format, caption = "First Six Rows of Re-coded Trust Data") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 
 ```
@@ -352,7 +354,7 @@ NEP <- NEP %>%
 # Display the first few rows of recoded data frame as a formatted table
 NEP %>%
   head() %>%  # Show only the first 6 rows
-  kable("html", caption = "First Six Rows of Re-coded NEP Data") %>%
+  kable(output_format, caption = "First Six Rows of Re-coded NEP Data") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 ```
 :::
@@ -1091,7 +1093,7 @@ NEP_positively_polarized_respstyles_subset <- NEP_positively_polarized_respstyle
 
 # Summarize and print results over all respondents
 NEP_positively_polarized_respstyles_table <- summary(NEP_positively_polarized_respstyles_subset)
-kable(NEP_positively_polarized_respstyles_table)
+kable(NEP_positively_polarized_respstyles_table, format = "output_format")
 ```
 
 ### Summary Plots
