@@ -5,6 +5,7 @@ author:
   - name: "Fabienne Kraemer"
   - name: "Arjin Eser"
   - name: "Çağla Yıldız"
+  - name: "Matthias Roth"
 image: images/icon_resquin.png 
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 format:
@@ -218,9 +219,11 @@ To use `resquin`, we first need to install the package from the
 repository of CRAN, the Comprehensive R Archive Network. For
 installation, we can use the following commands:
 
-```{r install resquin, message=FALSE, warning=FALSE, results='hide'}
+```{r install resquin, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 # Installing resquin
 install.packages("resquin")
+```
+```{r load resquin, message=FALSE, warning=FALSE, results='hide'}
 # Loading resquin into the R session
 library(resquin)
 ```
@@ -229,7 +232,7 @@ Alongside `resquin` itself, we will use other packages for setup, data
 preparation and analysis in this tutorial. To install and load these
 packages from CRAN simultaneously, we will use the `pacman` package:
 
-```{r install CRAN packages, message=FALSE, warning=FALSE, results='hide'}
+```{r install CRAN packages, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 # Installing pacman and loading pacman into the R session
 install.packages("pacman")
 library(pacman)
