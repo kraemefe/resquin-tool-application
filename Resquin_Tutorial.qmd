@@ -16,7 +16,7 @@ format:
 bibliography: citation.bib
 biblio-style: apa
 editor:
-  citation: "Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024). *Assessing Response Quality and Careless Responding in   multi-Item Scales*. GitHub Repository. URL:  https: //github.com/kraemefe/resquin-tool-application"
+  citation: "Kraemer, Fabienne, Arjin Eser, and Çağla Yıldız (2024). *Assessing Response Quality and Careless Responding in   Multi-Item Scales*. GitHub Repository. URL:  https: //github.com/kraemefe/resquin-tool-application"
 ---
 
 <!--below codes helped me to fix issues in installing packages and also text alignment when rendering the document into html-->
@@ -46,16 +46,6 @@ with replicable R-code. Specifically, you will learn:
 -   what to do if you detect poor quality responses.
 
 <!--I added a side table of content in YAML as well, you can see it after rendering document.  Should we still keep the below one?-->
-
-### Table of Content
-
-[Introduction](#introduction)
-
-[Set-up](#set-up)
-
-[Tool application](#tool-application)
-
-[Conclusion and recommendations](#conclusion-and-recommendations)
 
 # Introduction {#introduction}
 
