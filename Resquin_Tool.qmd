@@ -219,7 +219,7 @@ To use `resquin`, we first need to install the package from the
 repository of CRAN, the Comprehensive R Archive Network. For
 installation, we can use the following commands:
 
-```{r install resquin, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+```{r install resquin, message=FALSE, warning=FALSE, results='hide'}
 # Installing resquin
 install.packages("resquin")
 ```
@@ -232,7 +232,7 @@ Alongside `resquin` itself, we will use other packages for setup, data
 preparation and analysis in this tutorial. To install and load these
 packages from CRAN simultaneously, we will use the `pacman` package:
 
-```{r install CRAN packages, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+```{r install CRAN packages, message=FALSE, warning=FALSE, results='hide'}
 # Installing pacman and loading pacman into the R session
 install.packages("pacman")
 library(pacman)
@@ -464,8 +464,10 @@ Let’s begin with the institutional trust scale:
 
 ```{r summary statistics table trust}
 # Summarize and print results over all respondents
-trust_table <- summary(trust_distribution)
+trust_table <- summary(as.data.frame(trust_distribution))
+
 kable(trust_table)
+
 ```
 
 ### Summary Plots
@@ -666,7 +668,7 @@ parameters for the NEP scale:
 
 ```{r summary statistics table NEP}
 # Summarize and print results over all respondents
-NEP_table <- summary(NEP_distribution)
+NEP_table <- summary(as.data.frame(NEP_distribution))
 kable(NEP_table)
 
 ```
@@ -956,7 +958,7 @@ trust_respstyles_subset <- trust_respstyles %>%
   select(-NERS, -DRS)
 
 # Summarize and print results over all respondents
-trust_respstyles_table <- summary(trust_respstyles_subset)
+trust_respstyles_table <- summary(as.data.frame(trust_respstyles_subset))
 kable(trust_respstyles_table)
 
 ```
@@ -1092,8 +1094,8 @@ NEP_positively_polarized_respstyles_subset <- NEP_positively_polarized_respstyle
   select(-NERS, -DRS)
 
 # Summarize and print results over all respondents
-NEP_positively_polarized_respstyles_table <- summary(NEP_positively_polarized_respstyles_subset)
-kable(NEP_positively_polarized_respstyles_table, format = "output_format")
+NEP_positively_polarized_respstyles_table <- summary(as.data.frame(NEP_positively_polarized_respstyles_subset))
+kable(NEP_positively_polarized_respstyles_table)
 ```
 
 ### Summary Plots
@@ -1309,3 +1311,7 @@ to move on from there?
 
 ::: {#refs}
 :::
+
+
+
+This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).
