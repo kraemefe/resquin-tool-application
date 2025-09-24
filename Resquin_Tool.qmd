@@ -17,7 +17,7 @@ format:
 bibliography: citation.bib
 biblio-style: apa
 editor: 
-  citation: "Kraemer, Fabienne, Arjin Eser, Çağla Yıldız. and Matthias Roth (2024). *Assessing Response Quality and Careless Responding in multi-Item Scales*. GitHub Repository. URL:  https: //github.com/kraemefe/resquin-tool-application"
+  citation: "Kraemer, Fabienne, Arjin Eser, Çağla Yıldız. and Matthias Roth (2024). *Assessing response quality and careless responding in multi-Item scales*. In F. Kraemer, Y. Peters, A.-K. Stroppe, J. Daikeler, F. Draxler, F. Kreuter, F. Keusch, T. Knopf, L. Meija Lopez, B. Rammstedt, P. Siegers, H. Silber, J. Sun, C. Wagner, K. Weller, C. Yıldız, S. Jünger, S. Kapidzic & L. Young (Eds.), KODAQS Toolbox." 
   markdown: 
     wrap: 72
 prefer-html: true
