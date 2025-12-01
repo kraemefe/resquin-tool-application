@@ -1,0 +1,1160 @@
+---
+title: "Resquin - Straightlining as a Data Quality Indicator in Multi-Item Scales"
+subtitle: "Investigating Response Times for Detected Straightliners"
+author:
+  - name: "Arjin Eser"
+  - name: "Fabienne Kraemer"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+format:
+  html: default
+bibliography: citation.bib
+biblio-style: apa
+editor: 
+  markdown: 
+    wrap: 72
+prefer-html: true
+toc: true
+toc-depth: 3
+---
+
+# At a glance
+
+Does straightlining (selecting the same response across a series of questions or scale items) indicate poor response quality? Or can it sometimes reflect respondents’ true opinions? How can we distinguish between the two? This tutorial illustrates how to assess straightlining as a data quality issue by examining its relationship with response times and guides you through a hands-on analysis with replicable R-code. Specifically, you will learn:
+
+-  How to measure speeding and interpret its relationship with straightlining,
+-  Why defining a speeding threshold can be tricky, especially when working with different types of scales,
+-  How to interpret straightlining in relation to response times among respondents who are not flagged for speeding,
+-  What to consider if you find a systematic pattern where straightlining systematically co-occurs with speeding or lower response times, that is likely indicating poor quality data.
+
+# Introduction {#introduction}
+
+Previously in the toolbox, we reviewed how to use `Resquin` package in R [@resquin2024] to assess data quality issues in multi-item scales (see [Resquin package](https://kodaqs-toolbox.gesis.org/github.com/kraemefe/resquin-tool-application/Resquin_Tool/)). Using Political Trust and NEP scales from GESIS Panel data, we examined various response distribution and response style indicators to flag suspicious response patterns. One common issue we identified for both scales was straightlining, where respondents gave the same answer to every item in a scale. Straightlining is often seen as a sign of careless responding, suggesting that respondents might be using this pattern as a shortcut to reduce the cognitive effort of answering demanding questions. Yet, for some of the respondents these undifferentiated answers could also reflect genuine attitudes, such as consistently high or low trust in political institutions.
+
+To better distinguish between the cases where straightlining reflects a shortcut or genuine opinions, it is important to capture the effort put by the respondents during the response generation process. This includes reading the question, understanding its meaning and selecting an appropriate answer. A common proxy for such an effort is response times. If respondents spend very little time on a question, it becomes less likely that they engaged with it meaningfully. Furthermore,in order to cognitively process a question and provide an optimal answer that reflects true opinions, a minimum amount of time is typically required. This idea is captured by the concept of speeding, where too fast responses are considered as potentially low-effort. However, determining what qualifies as “too fast” is not always straightforward, especially when working with scales that vary in length and complexity. In addition, even among respondents who are not flagged as speeders, response times can still reveal meaningful patterns when considered together with straightlining behavior.
+
+In this tutorial, we build on our earlier analysis of the Trust and NEP scales by focusing on respondents flagged for straightlining. We demonstrate how to calculate speeding, analyze its association with straightlining and explore how response times can help evaluate straightlining behavior among non-speeding respondents as well. Our aim is to provide an example of how response time data can be used to assess whether straightlining reflects thoughtful responses or simply a shortcut.
+
+# Set-up
+
+## Getting Started
+
+Below chunk helps us to install and load the packages we are going to
+use in this material.
+
+```{r install package, message=FALSE, warning=FALSE, results='hide'}
+# Installing pacman and loading pacman into the R session
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+
+pacman::p_load(haven, dplyr, resquin, ggplot2, MASS, patchwork, brglm2, knitr, tidyr)
+```
+
+## Data Preparation and Measurement
+
+In the previous tutorial, we used The GESIS Panel Campus File. However this data cannot be used to measure response times because it only provides an anonymized subset of respondents, omitting
+the variables needed for calculating response times. Consequently, for this tutorial, we rely on the Scientific Use File (Version 50.0.0) [@ZA5665], which is available upon request from
+the GESIS Data Archive. To replicate the analyses presented here, you
+should first request the Scientific Use File from the GESIS Panel –
+Standard Edition (see [Research Data](https://search.gesis.org/research_data/ZA5665/)).
+
+<!-- I used Version 50.0.0 that I already had available. Should we change the data with the latest version 60.0.0? Or is it okay because we use 2014 data? -->
+
+::: {.callout-tip title="Reminder"}
+The GESIS Panel is a German probability-based mixed-mode panel study which surveys
+respondents every three months on a variety of topics, such as political
+and social attitudes. The data on political trust and the NEP scales analyzed here come from the second and third waves conducted in 2014.
+:::
+
+```{r import data, message=FALSE, warning=FALSE, results='hide'}
+# Load data
+raw_data <- read_sav("raw-data/reduced_ZA5665_a1_v50-0-0.sav")
+```
+
+### Response Time
+
+For the analysis of response time measurements, we use paradata of the
+online respondents of the GESIS Panel. Paradata is data that is
+automatically generated or collected during the response process. In the
+GESIS Panel, response time measurements are collected via a built-in
+functionality of the survey software on a **page-by-page** basis and are
+referred to as relative time stamps (RTS). These relative time stamps
+per page capture the time passed in seconds between pressing the
+"submit"-button of a respective page and an absolute time stamp. The
+absolute time stamp represents the time passed in seconds between
+1/1/1970 and loading the first page of the survey. As a result, we have
+to prepare our response time measurements before analyzing them for the
+straightlining respondents of our previous analysis: To get the proper
+response time for a specific page, we have to subtract the response time
+of this page from the response time of the previous page - the
+difference between these two pages then represents the time spent on a
+specific page. For detailed information on the paradata of the GESIS
+Panel, see the [Online Paradata Description](https://dbk.gesis.org/dbksearch/download.asp?db=D&id=65301).
+For analyses with other data, make sure to check how response times were
+collected and therefore, need to be prepared for further analyses.
+
+::: {.callout-important title="Be careful!"}
+In our previous analysis of response quality, we analyzed both offline
+and online respondents. For the investigation of response times,
+however, we can only draw on online respondents, for whom response times
+are collected. Therefore, we can only compare response times across
+straightlining respondents answered questions in online mode.
+:::
+
+The tabs below outline how to create the response time measurements for
+the two multi-item scales, Political Trust and NEP, we used for the
+analysis of response quality in this tutorial:
+
+::: panel-tabset
+#### Political Trust
+
+The 10 items of our institutional trust scale are displayed on one
+single page in the questionnaire:
+
+| Items | Statement | Page ID | Page-wise Response Time Variable |
+|------------------|--------------------|------------------|------------------|
+| **bbzc078a** | Trust in Bundestag | 2377 | bbzr018a |
+| **bbzc079a** | Trust in federal government | 2377 | bbzr018a |
+| **bbzc080a** | Trust in political parties | 2377 | bbzr018a |
+| **bbzc081a** | Trust in judicial authorities | 2377 | bbzr018a |
+| **bbzc082a** | Trust in police | 2377 | bbzr018a |
+| **bbzc083a** | Trust in politicians | 2377 | bbzr018a |
+| **bbzc084a** | Trust in media | 2377 | bbzr018a |
+| **bbzc085a** | Trust in European Union | 2377 | bbzr018a |
+| **bbzc086a** | Trust in United Nations | 2377 | bbzr018a |
+| **bbzc087a** | Trust in Federal Constitutional Court | 2377 | bbzr018a |
+
+As described above, to calculate the response time for page ID 2377, we
+additionally need the response time variable of the preceding page, that
+is, *bbzr017a*.
+
+As a first step of preparing our response time variable for the
+institutional trust scale, we need to code all missing values to NA.
+
+```{r recode NAs all}
+# Replace missing and non-finite values in bbzr017a and bbzr018a with NA
+raw_data <- raw_data %>%
+  mutate(
+    bbzr017a = ifelse(bbzr017a %in% c(-11, -22, -33, -44, -55, -66, -77, -99), NA, bbzr017a),
+    bbzr018a = ifelse(bbzr018a %in% c(-11, -22, -33, -44, -55, -66, -77, -99), NA, bbzr018a)
+  )
+```
+
+Now we can calculate the response times for the institutional trust
+scale:
+
+```{r calculate response time for trust1}
+# Calculate response times for the variable trust
+raw_data <- raw_data %>%
+  mutate(response_time_trust = bbzr018a - bbzr017a)
+```
+
+#### NEP
+
+The 15 items of the NEP scale are displayed on two different
+questionnaire pages:
+
+| Items | Statement | Page ID | Page-wise Response Time Variable |
+|------------------|--------------------|------------------|------------------|
+| **bczd005a** | Approaching maximum number of humans | 4535 | bczr005a |
+| **bczd006a** | The right to adapt environment to the needs | 4535 | bczr005a |
+| **bczd007a** | Consequences of human intervention | 4535 | bczr005a |
+| **bczd008a** | Human ingenuity | 4535 | bczr005a |
+| **bczd009a** | Abuse of the environment by humans | 4535 | bczr005a |
+| **bczd010a** | Sufficient natural resources | 4535 | bczr005a |
+| **bczd011a** | Equal rights for plants and animals | 4535 | bczr005a |
+| **bczd012a** | Balance of nature stable enough | 4535 | bczr005a |
+| **bczd013a** | Humans are subjected to natural laws | 4536 | bczr006a |
+| **bczd014a** | Environmental crisis greatly exaggerated | 4536 | bczr006a |
+| **bczd015a** | Earth is like spaceship | 4536 | bczr006a |
+| **bczd016a** | Humans were assigned to rule over nature | 4536 | bczr006a |
+| **bczd017a** | Balance of nature is very sensitive | 4536 | bczr006a |
+| **bczd018a** | Control nature | 4536 | bczr006a |
+| **bczd019a** | Environmental disaster | 4536 | bczr006a |
+
+Again, we additionally need the response time variable from the
+preceding page to calculate the response time for the first page of the
+NEP scale, that is, *bczr004a*.
+
+Before proceeding, we need to code all missing values to NA, as the
+first step of preparing our response time variable for the NEP scale.
+
+```{r inspect response time variables}
+# Replace missing and non-finite values in bczr004a, bczr005a and bczr006a with NA
+raw_data <- raw_data %>%
+  mutate(
+    bczr004a = ifelse(bczr004a %in% c(-11, -22, -33, -44, -55, -66, -77, -99), NA, bczr004a),
+    bczr005a = ifelse(bczr005a %in% c(-11, -22, -33, -44, -55, -66, -77, -99), NA, bczr005a),
+    bczr006a = ifelse(bczr006a %in% c(-11, -22, -33, -44, -55, -66, -77, -99), NA, bczr006a)
+  )
+```
+
+Now we can also calculate the response time for the NEP scale:
+
+```{r calculate response time for trust}
+# Calculate response times for the NEP scale in total 2 pages
+raw_data <- raw_data %>%
+  mutate(
+    nep_response_time_diff1 = bczr005a - bczr004a,
+    nep_response_time_diff2 = bczr006a - bczr005a,
+    response_time_nep = nep_response_time_diff1 + nep_response_time_diff2
+  )
+```
+:::
+
+Having created the response times in seconds for the Institutional Trust and NEP scales, we can move on to calculating the speeding indicator for the next steps in our analysis.
+
+### Speeding Indicator
+
+Speeding means spending less time on the survey pages
+than is deemed necessary to produce an optimal response [@zhang2014speeding, p. 128]. Yet there are different approaches to defining this necessary amount of time and different choices of threshold can lead to different findings. 
+
+::: {.callout-caution title="Good to Know"}
+Overall, two common approaches are used by researchers to set a speeding threshold. The first is a *data driven approach* where researchers use the distribution of response times to identify unusually fast answers. For example, @Schoen2014 use three operationalizations of speeding by flagging respondents who answer 30, 40 or 50 percent faster than the median response time. As they also note, 30 percent is a more inclusive rule that flags more cases as speeders, whereas 50 percent is a more exclusive and strict rule that may exclude respondents who still have much faster responses. 
+
+The second is a *conceptual approach*, where a theoretically plausible limit is set in advance. For example, @zhang2014speeding use a threshold of 300 milliseconds (msec) per word, which reflects a reading speed that most respondents are expected to have. In another study, @Conrad_Tourangeau_Couper_Zhang_2017 apply a threshold of 350 msec per word. These conceptual thresholds, however, could also be context dependent. For example, reading speed can differ across languages, such as between English and German, so such rules should be adapted carefully.
+
+Both data driven and conceptual approaches can also be applied as *group based thresholds*. For example, the median response time of highly educated respondents or their expected reading speed, may differ from the typical respondent. This means that the choice of threshold is somewhat arbitrary and can influence your results, so documenting your operationalization clearly is highly important.
+:::
+
+In this tutorial we use a relatively strict conceptual threshold of 300 milliseconds per word, following  @zhang2014speeding. We then examine whether response times among non speeders provide additional insight into whether this threshold captures low effort answering on both scales.
+
+To identify speeding respondents for both scales, we first calculate the number of words each respondent sees on the pages containing the
+relevant questions and items.
+
+For the Trust scale, there is a single page with 31 words. The optimal
+response time is: 31\*300/1000 = 9.3 seconds.
+
+![Trust Scale Page - 31 Words](images\trust_words.png)
+
+For the NEP scale, there are two pages totaling 270 words. The
+corresponding threshold is: 270\*300/1000 = 81 seconds.
+
+![NEP Scale Page 1 - 157 Words](images\nep_words1.png)
+
+![NEP Scale Page 2 - 113 Words](images\nep_words2.png)
+
+With these thresholds we can now create a binary variable to flag
+speeding respondents (1 if they remain under the optimal time, 0
+otherwise) for each scale:
+
+```{r speeding dummy}
+# Create speeding flag for the NEP and Trust scales
+raw_data <- raw_data %>%
+  mutate(
+    nep_speeding = case_when(
+      is.na(response_time_nep) ~ NA_real_,
+      response_time_nep < 81 ~ 1,
+      TRUE ~ 0
+    ),
+    trust_speeding = case_when(
+      is.na(response_time_trust) ~ NA_real_,
+      response_time_trust < 9.3 ~ 1,
+      TRUE ~ 0
+    )
+  )
+```
+
+
+### Straightlining Indicator from Resquin Package
+
+Previously, using version 0.0.2 of the Resquin package, we calculated the straightlining indicator using the `ii_sd` output from the `resp_distributions` function within the package. This meant that, based on the standard deviations calculated by the function, we flagged those respondents who had a standard deviation of 0, i.e., no variation in their answers, as straightliners.
+
+Now, with the newest updates in version 0.1.1, there is a new function `resp_nondifferentiation` that performs this same task directly. We will use this function to calculate the indicator called "Simple Nondifferentiation":
+
+::: panel-tabset
+
+#### Political Trust
+
+```{r trust nondifferentiation indicators}
+# Names of all variables for trust scale items
+list_trust_variables <- c("bbzc078a", "bbzc079a", "bbzc080a", 
+                              "bbzc081a", "bbzc082a", "bbzc083a",
+                              "bbzc084a", "bbzc085a", "bbzc086a",
+                              "bbzc087a")
+# Create a dataframe including items and the Respondent ID column
+trust_variables_with_IDs <- raw_data %>%
+  dplyr::select(z000001a, all_of(list_trust_variables)) %>%
+  
+  # Replace invalid values (-22, -33, -77, -99, -111) with NA
+  mutate(across(all_of(list_trust_variables), ~ replace(., . %in% c(-22, -33, -77, -99, -111), NA))) 
+
+# Calculate response nondifferentitation indicators
+trust_nondiff_indicators <- resp_nondifferentiation(
+  id = trust_variables_with_IDs$z000001a,
+  min_valid_responses = 1,
+  x = trust_variables_with_IDs[, !(names(trust_variables_with_IDs) %in% "z000001a")] # remove the ID column from the data frame
+)
+
+# Print results for the first 10 respondents
+kable(trust_nondiff_indicators[1:10,], caption = "First 10 Rows of Trust Scale Response Nondifferentiation Indicators")
+```
+
+#### NEP
+
+```{r nep distribution}
+# Names of all variables for NEP scale items
+list_nep_variables <- c("bczd005a", "bczd006a", "bczd007a", "bczd008a",  
+                              "bczd009a", "bczd010a", "bczd011a",
+                              "bczd012a", "bczd013a", "bczd014a",
+                              "bczd015a", "bczd016a", "bczd017a",
+                              "bczd018a", "bczd019a")
+
+# Create a dataframe including items and the Respondent ID column
+NEP_variables_with_IDs <- raw_data %>%
+  dplyr::select(z000001a, all_of(list_nep_variables)) %>%
+  
+  # Replace invalid values (-22, -33, -77, -99, -111) with NA
+  mutate(across(all_of(list_nep_variables), ~ replace(., . %in% c(-22, -33, -77, -99, -111), NA))) 
+
+# Calculate response nondifferentitation indicators
+NEP_nondiff_indicators <- resp_nondifferentiation(
+  id = NEP_variables_with_IDs$z000001a,
+  min_valid_responses = 1,
+  x = NEP_variables_with_IDs[, !(names(NEP_variables_with_IDs) %in% "z000001a")] # remove the ID column from the data frame
+)
+
+# Print results for the first 10 respondents
+kable(NEP_nondiff_indicators[1:10,], caption = "First 10 Rows of NEP Scale Response Nondifferentiation Indicators")
+```
+:::
+
+The `resp_nondifferentiation` function generates a dataframe that includes several straightlining indicators calculated for each respondent. **Simple Nondifferentiation** is only one of the indicators of straightlining that the function calculates. While Simple Nondifferentiation is a binary measure (assigning 1 to respondents who used the same scale point in all their answers and 0 otherwise), the other three indicators are continuous and provide more details about the extent of straightlining behavior:
+
+-  **Mean Root of Pairs Method**: calculates the average distance between all pairs of answers a respondent gives within a scale. Higher values indicate more similarity among the answers and thus more straightlining.
+-  **Maximum Identical Rating Method**: identifies the most frequently chosen response option and computes its share among all answers in a scale. Higher values mean the respondent repeatedly selected the same answer, indicating stronger straightlining.
+-  **Scale Point Variation Method**: checks how many different response options a respondent used across a scale. Lower values mean fewer scale points were used, suggesting higher straightlining.
+
+::: {.callout-important title="Note"}
+Which straightlining indicator to use depends on different factors such as your research question, the substantive concept you are measuring, the design of the scale items and the purpose or depth of your data quality analysis.
+
+For example, in scales that include reverse-coded items such as the NEP scale, a binary indicator of nondifferentiation can be very effective for identifying data quality issues, since identical answers across all items would reflect contradictory attitudes. However, for scales like Political Trust, nondifferentiation might reflect a theoretically meaningful pattern of genuine trust or distrust in the political system. In such cases, a continuous indicator, such as the Mean Root of Pairs, can help identify unusual or outlier patterns that could be concerning. Similarly, continuous indicators can be more useful for sensitivity analyses for the data quality. Therefore, we recommend choosing the indicator(s) that best fit the theoretical context of your study and the analytical purpose of your data quality analysis.
+:::
+
+Reviewing the first 10 rows of the resulting data frames, there are several NAs for each scales. Only 2 respondents have indicators calculated for the Trust scale and 3 for the NEP scale. Respondents with NA indicators are those with incomplete data for the corresponding scale. By default, `resp_nondifferentiation` only includes respondents with 100% valid data. To allow a certain amount of missing values, you can use the `min_valid_responses` argument, which lets you specify how much missing data is acceptable in the calculation of nondifferentiation indicators. If you set this to 1, only respondents with fully valid data (no missing answers) will be included.
+
+::: {.callout-important title="Reminder!"}
+Ideally, having data without missing answers is better for identifying response patterns and obtaining the most meaningful indicators. For example, indicators like the *Scale Point Variation Method* can be affected by missing data, since missing answers reduce the likelihood of using all available scale points and can therefore influence your analysis. However, depending on your data, if excluding missing cases drastically reduces your sample size, you may need to allow some missing values. Still, it is important to keep in mind the potential effects of this choice on both the measures and the indicators you use to assess data quality, as these decisions will influence your results and interpretations. Therefore, you should always consider the implications of how you handle missing data and document your decisions clearly. In our case, since the dataset has enough observations, we only include respondents with complete data and do not allow any missing answers.
+:::
+
+::: {.callout-tip title="Package-Specific Feature"}
+With the new update in the Resquin package, you can now also include an ID column in the resulting data frame of calculated indicators. The default for the `id` argument is `TRUE` and will give you an automatically generated ID column with integer values. You can also provide your own vector of IDs from your dataset. It is important to note that the data you provide in the argument `x` should contain only the scale items, not the IDs. Otherwise, the ID values would be included in the calculation and distort the results.
+:::
+
+
+### Inspecting and Preparing Data
+
+In the next step, we combine the relevant indicators and variables into a single data frame, then exclude respondents with missing values in any column. This ensures that only respondents with available response time data (i.e., those who completed the survey online) and with a calculated straightlining indicator (i.e., those with no missing answers for the relevant scales) remain in the dataset. In addition to the response time variables, speeding flag, and straightlining flag, we also create a binary variable called `NEPscale`, which marks indicators for the NEP scale as 1 and for the Trust scale as 0.
+  
+```{r preaparing final data with all indicators}
+# Trust scale
+trust_df <- trust_nondiff_indicators %>%
+  dplyr::select(id, straightlining_flag = simple_nondifferentiation) %>%
+  dplyr::inner_join(
+    raw_data %>%
+      dplyr::select(z000001a, response_time = response_time_trust, speeding = trust_speeding),
+    by = c("id" = "z000001a")
+  ) %>%
+  dplyr::transmute(
+    z000001a = id,
+    response_time,
+    straightlining_flag,
+    NEPscale = 0, #for Trust scale
+    speeding
+  )
+
+# NEP scale
+nep_df <- NEP_nondiff_indicators %>%
+  dplyr::select(id, straightlining_flag = simple_nondifferentiation) %>%
+  dplyr::inner_join(
+    raw_data %>%
+      dplyr::select(z000001a, response_time = response_time_nep, speeding = nep_speeding),
+    by = c("id" = "z000001a")
+  ) %>%
+  dplyr::transmute(
+    z000001a = id,
+    response_time,
+    straightlining_flag,
+    NEPscale = 1, # for NEP scale
+    speeding
+  )
+
+# Combine both
+final_data <- dplyr::bind_rows(nep_df, trust_df)
+
+# Drop rows with any NA, either in response times or straightlining flags
+final_data_clean <- na.omit(final_data)
+```
+
+
+Before delving into the analysis of response quality, let's have a first look at the distribution of main measurements:
+
+::: panel-tabset
+
+#### Political Trust
+
+```{r}
+# Summarize and print results over all respondents
+trust_table <- summary(as.data.frame(final_data_clean[final_data_clean$NEPscale == 0,]))
+
+kable(trust_table)
+```
+
+#### NEP
+
+```{r}
+# Summarize and print results over all respondents
+nep_table <- summary(as.data.frame(final_data_clean[final_data_clean$NEPscale == 1,]))
+
+kable(nep_table)
+```
+
+:::
+
+Inspecting the response time data more closely reveals that the maximum time spent on the Trust scale page is 651,826 seconds (approximately 7.5 days) and on the NEP scale page 703,327 seconds (around 8.1 days). Given that the expected completion time for the GESIS Panel online survey (waves 2 and 3, 2014) is about 20 minutes for roughly 50–60 questions, such durations are clearly unrealistic. These extreme values likely occur when respondents leave the survey open for a long period, experience connection problems, or face other technical interruptions.
+
+How you handle unrealistic response time values depends on what you analyze and the structure of your data. In our case, when examining the speeding indicator and its relationship to straightlining, we are primarily interested in respondents who spent less than the optimal amount of time per page. Therefore, extremely long response times do not directly influence the results, except for changing the sample size. However, when response time is treated as a continuous variable and analyzed together with straightlining, such outliers can bias statistical model estimates. Since our dataset includes enough observations, we will exclude respondents with unrealistic completion times from the analysis.
+
+Yet, deciding what counts as unrealistic and identifying a cutoff point is not always straightforward. This choice is somewhat arbitrary, so it is important to describe your reasoning and decision process clearly in your research. In general, you can follow a conceptual approach by setting a reasonable upper limit, such as the expected total completion time for the survey (around 20 minutes in our case), or a less strict threshold, such as one hour, to account for possible technical interruptions. Alternatively, you can use a data-driven approach by defining a percentile-based cutoff, for example keeping the bottom 98 or 99 percent of cases and excluding the top 2 or 1 percent. 
+
+Here, we apply the second approach. Let's calculate the cutoff values for the 90th, 95th, 98th, and 99th percentiles for each scale and see how many respondents fall above each threshold.
+
+::: panel-tabset
+
+#### Table
+
+```{r}
+# Define percentiles to check
+percentiles <- c(0.90, 0.95, 0.98, 0.99)
+
+# Create a helper function for one scale
+get_counts <- function(data, scale_name, percentiles) {
+  df_scale <- data %>% filter(NEPscale == scale_name)
+  
+  results <- lapply(percentiles, function(p) {
+    cutoff <- quantile(df_scale$response_time, p, na.rm = TRUE)
+    below <- sum(df_scale$response_time <= cutoff, na.rm = TRUE)
+    above <- sum(df_scale$response_time > cutoff, na.rm = TRUE)
+    
+    data.frame(
+      NEPscale = scale_name,
+      Percentile = p * 100,
+      Cutoff = round(cutoff, 0),
+      N_below_cutoff = below,
+      N_above_cutoff = above
+    )
+  })
+  
+  bind_rows(results)
+}
+
+# Apply to both NEP and Trust
+table_percentiles <- bind_rows(
+  get_counts(final_data_clean, 1, percentiles),
+  get_counts(final_data_clean, 0, percentiles)
+)
+
+# View table
+kable(table_percentiles, row.names = FALSE)
+
+```
+
+#### Bar Chart
+
+```{r}
+# Prepare data
+plot_df <- table_percentiles %>%
+  mutate(
+    Scale      = factor(NEPscale, levels = c(0, 1),
+                        labels = c("Trust Scale", "NEP Scale")),
+    Percentile = paste0(Percentile, "%")
+  ) %>%
+  pivot_longer(
+    c(N_below_cutoff, N_above_cutoff),
+    names_to  = "Side",
+    values_to = "N"
+  ) %>%
+  mutate(
+    Side = recode(Side,
+                  N_below_cutoff = "<= cutoff",
+                  N_above_cutoff = "> cutoff")
+  ) %>%
+  group_by(Scale, Percentile) %>%
+  # Total N per bar and the cutoff for labeling
+  mutate(
+    total_N = sum(N),
+    Cutoff  = first(Cutoff)
+  ) %>%
+  ungroup()
+
+ggplot(plot_df, aes(x = Percentile, y = N, fill = Side)) +
+  geom_col(width = 0.7, position = "stack") +
+  geom_text(
+    aes(label = N),
+    position = position_stack(vjust = 0.9),
+    size = 2.5,
+    color = "darkblue"
+  ) +
+  facet_wrap(~ Scale) +
+  geom_text(
+    aes(
+      x     = Percentile,
+      y     = total_N * 1.03,
+      label = paste0(Cutoff, "\nseconds")
+    ),
+    vjust = 0,
+    size  = 2.5
+  ) +
+  coord_cartesian(ylim = c(0, max(plot_df$total_N) * 1.12)) +
+  labs(
+    title = "Cases below and above percentile cutoffs by scale",
+    x     = "Percentile",
+    y     = "Count",
+    fill  = "Position relative to cutoff"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.y  = element_blank(),
+    axis.title.y = element_blank()
+  )
+
+```
+:::
+
+As seen in the table and bar chart, the chosen cutoff has a considerable effect on the remaining sample size. In our data, we still have enough observations even after applying a relatively stricter threshold, so we use the 95th percentile as our cutoff. This corresponds to 121 seconds (about 2 minutes) for the Trust scale and 377 seconds (about 6.3 minutes) for the NEP scale, which is also theoretically plausible given the expected 20 minutes needed to complete each scale.
+
+<!--  could you please double check if my explaination makes sense here? -->
+
+```{r}
+final_data_clean2 <- final_data_clean %>%
+  group_by(NEPscale) %>%
+  mutate(cutoff = quantile(response_time, 0.95, na.rm = TRUE),
+         response_time = ifelse(response_time > cutoff, NA, response_time)) %>%
+  ungroup() %>%
+  filter(!is.na(response_time)) %>%
+  dplyr::select(-cutoff)
+```
+
+# Speeding and Straightlining
+
+Now that we have the final cleaned dataset, we can start our analysis to examine whether there is a systematic relationship between speeding and straightlining. 
+
+## Descriptive Patterns
+As a first step, let’s look at the descriptive statistics and see how straightliners and speeders are distributed across the two scales in the data:
+
+```{r}
+# Prepare the table
+table_df2 <- as.data.frame(ftable(table(
+  final_data_clean2$NEPscale,
+  final_data_clean2$straightlining_flag,
+  final_data_clean2$speeding
+)))
+
+colnames(table_df2) <- c("NEP_Scale", "Straightlining_Flag", "Speeding_Flag", "Count")
+
+# Make labels clear
+table_df2 <- table_df2 %>%
+  mutate(
+    NEP_Scale = factor(NEP_Scale, labels = c("Trust Scale", "NEP Scale")),
+    Straightlining_Flag = factor(Straightlining_Flag, labels = c("Not \nStraightlining", "\nStraightlining")),
+    Speeding_Flag = factor(Speeding_Flag, labels = c("0", "1"))
+  )
+
+# Bar chart: Speeding on x-axis, Straightlining in legend
+ggplot(table_df2, aes(x = Straightlining_Flag, y = Count, fill = Speeding_Flag)) +
+  geom_col(position = position_dodge(width = 0.7)) +
+  geom_text(aes(label = Count), position = position_dodge(width = 0.7), vjust = -0.4, size = 3.5) +
+  facet_wrap(~ NEP_Scale) +
+  labs(
+    x = "",
+    y = "Number of Respondents",
+    fill = "Speeding"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.y = element_blank()
+  )
+```
+
+Across the two scales, straightlining is much more common in the Trust scale (132 respondents) than in the NEP scale (9 respondents). However, their speeding behavior differs considerably. Among the 132 Trust-scale straightliners, none are classified as speeders. This means that although they gave identical answers to all items, they still spent at least 9.3 seconds on the page, enough time to read all questions. On the NEP scale, by contrast, 5 of the 9 straightliners are speeders, meaning they spent less than the 81-second threshold. This raises questions about whether they had enough time to provide thoughtful answers.
+
+::: {.callout-caution title="Good to Know"}
+Some respondents speed but do not straightline (125 in the NEP scale and 5 in the Trust scale). These cases may reflect other low-effort response styles, such as middle or extreme responding. Straightlining is only one of several possible shortcuts in survey responding.
+:::
+
+<!-- Should we keep the above call out? If yes, should we add more explanation? --> 
+
+The descriptive statistics already provide useful insights, revealing differences across scales. Straightlining may reflect genuine consistency in some cases, particularly in the Trust scale, but the overlap between straightlining and speeding in the NEP scale suggests that some respondents may have engaged in lower-effort responding. However, descriptive statistics alone cannot tell us *whether straightlining and speeding co-occur systematically and whether their relationship differs across scales*. 
+
+## Modeling the Relationship between Straightlining, Speeding and Scale
+
+To address these questions, we estimate a logistic regression model predicting our binary dependent variable, speeding. Straightlining is the main predictor and we include an interaction term between straightlining and scale. This interaction allows us to test whether the relationship between straightlining and speeding differs between the NEP and Trust scales.
+
+::: {.callout-important title="Why include interaction?"} 
+The NEP and Trust scales differ in their design. The NEP scale is longer and includes reverse-coded items, making it more cognitively demanding. In survey research, such differences in task difficulty (i.e., question length, complexity, or topic) are theorized to influence satisficing behavior, where respondents provide satisfactory rather than fully thoughtful answers.
+
+While task difficulty is our focus, it is important to note that according to Krosnick (1991), satisficing is also influenced by two respondent-level factors: respondent's motivation and cognitive ability. In this tutorial, however, we treat straightlining as a **question-level** behavior and focus on task-level differences rather than individual characteristics. If this holds, we expect *straightlining to be more strongly associated with speeding on the NEP scale than on the Trust scale*.
+:::
+
+::: {.callout-important title="Complete separation and bias reduction"}
+A technical challenge when adding the interaction term for our sample is that on the Trust scale, no respondent both straightlined and sped. This creates complete separation, where a combination of predictors perfectly predicts the outcome. Standard logistic regression cannot handle this, so we use bias-reduced logistic regression from `brglm2` package, which provides finite and stable estimates even under separation.
+
+Additionally, both scales come from the same respondents in different 2014 waves of the GESIS Panel. While this means the observations are not fully independent, this is not a major concern for our exploratory purpose since we treat straightlining as a question-level behaviour and both scales are from different 2014 waves.
+:::
+
+```{r model speeding}
+# model with interaction
+model_fix <- glm(
+  speeding ~ straightlining_flag + NEPscale + straightlining_flag:NEPscale,
+  data = final_data_clean2,
+  family = binomial(link = "logit"),
+  method = "brglmFit" # given that there are not any observations of speeding for straiglining trust scale respondents
+)
+summary(model_fix)
+```
+These regression results are not straightforward to
+interpret, mainly because the coefficients are in log-odds form and
+there is an interaction term. To provide a substantive interpretation, we
+simulate the **predicted probabilities of speeding** based on the model’s
+estimates and examine how each independent variable influences this
+probability.
+
+::: {.callout-important title="Note"}
+Please note that, although we use speeding as the dependent
+variable, we are not claiming a causal relationship. Our model cannot
+rule out the possibility that speeding leads to straightlining, or that
+both arise from other underlying factors. The analysis is intended only
+to test and quantify systematic statistical associations between these two data quality
+indicators.
+:::
+
+## Simulated Predicted Probabilities
+
+```{r fig-speeding-simulation, fig.cap="Predicted probability of speeding for straightliners and non straightliners per scale"}
+# 1) Extract coefficients & covariance
+coefs <- coef(model_fix)
+cov_matrix <- vcov(model_fix)
+
+# 2) Simulate parameter draws
+set.seed(1234)
+simulated_params <- mvrnorm(n = 1000, mu = coefs, Sigma = cov_matrix)
+
+# 3) Define scenarios
+#    Rows: 
+#      1 -> (SL=0, NEP=0)
+#      2 -> (SL=1, NEP=0)
+#      3 -> (SL=0, NEP=1)
+#      4 -> (SL=1, NEP=1)
+scenario <- as.matrix(expand.grid(
+  straightlining_flag = c(0, 1),
+  NEPscale = c(0, 1)
+))
+
+
+# Add column for interaction
+# scenario matrix: [Intercept, SL, NEP, SL:NEP]
+scenario <- cbind(
+  1,
+  scenario,
+  scenario[,1] * scenario[,2])
+
+colnames(scenario) <- c("Intercept", "straightlining_flag", "NEPscale", "SLxNEP")
+
+# 4) Compute linear predictor (log-odds) for each draw & scenario
+mu <- simulated_params %*% t(scenario)
+
+# 5) Logistic response function
+response_function <- function(x) 1 / (1 + exp(-x))
+
+# Convert log-odds to probabilities
+ev <- response_function(mu)
+
+# 6) Summarize predicted probabilities for each scenario
+#    Mean for 'Predicted_Probability' + 95% CI
+ci_lower <- apply(ev, 2, quantile, probs = 0.025)
+ci_upper <- apply(ev, 2, quantile, probs = 0.975)
+ci_mean <- apply(ev, 2, mean)
+
+# Create data frame of predicted probabilities
+predicted_probs <- data.frame(
+  Group = c("Trust \nNon-Straightliner", 
+            "Trust \nStraightliner",
+            "NEP \nNon-Straightliner",
+            "NEP \nStraightliner"),
+  Predicted_Probability = ci_mean,
+  Lower_95CI = ci_lower,
+  Upper_95CI = ci_upper
+)
+
+# Predicted Probabilities Plot
+ggplot(predicted_probs, aes(x = Group, y = Predicted_Probability)) +
+  geom_point(size = 4) +  # Point estimate
+  geom_errorbar(aes(ymin = Lower_95CI, ymax = Upper_95CI), width = 0.2) +
+  labs(title = "Predicted Probability of Speeding",
+       x = "",
+       y = "") +
+  ylim(-0.01, 0.85) +
+  theme_minimal() +
+  # Add numeric labels above the points
+  geom_text(
+    aes(label = sprintf("%.3f", Predicted_Probability)),  # Format to 3 decimals
+    hjust = -0.6,
+    color = "black"
+  )
+```
+
+@fig-speeding-simulation presents the results of 1,000 simulations from our model. Each point in the figure represents the **mean** predicted probability of speeding for a given combination of straightlining behavior and scale, while the lines show the 95% confidence intervals. In other words, these simulations illustrate a “hypothetical world” derived from the model’s coefficients, showing how a respondent’s probability of speeding varies depending on whether they straightline and which scale they are answering (NEP or Trust).
+
+For the NEP scale, the average predicted probability of speeding is 0.05 among non-straightliners and 0.55 among straightliners. For the Trust scale, these probabilities are near zero: 0.003 for non-straightliners and 0.010 for straightliners. Overall, straightliners are more likely to speed on both scales, but the effect is much higher on the NEP scale. Yet, to test whether these differences are statistically meaningful, we calculate and visualize first differences in predicted probabilities.
+
+## Systematic Differences
+
+To adress *whether straightlining and speeding co-occur systematically and whether their relationship differs across scales*.  we need to look into two quantities:
+
+1.  The *first difference* in predicted probabilities of speeding between straightliners and non-straightliners for each scale.
+2.  The *difference of first differences*, showing whether this effect differs between NEP and Trust scales.
+
+::: panel-tabset
+#### 1) First Differences by Scale
+
+```{r fig-first-diff, fig.cap="Effect of straightlining on predicted probability of speeding by scale"}
+
+# ---- simulate scenarios and compute first differences ----
+# 7) Compute first differences by scale
+#    FD_Trust = P(SL=1,NEP=0) - P(SL=0,NEP=0)
+#    FD_NEP   = P(SL=1,NEP=1) - P(SL=0,NEP=1)
+
+fd_trust <- ev[,2] - ev[,1]  # scenario 2 minus scenario 1
+fd_nep   <- ev[,4] - ev[,3]  # scenario 4 minus scenario 3
+
+fd_trust_lower <- quantile(fd_trust, probs = 0.025)
+fd_trust_upper <- quantile(fd_trust, probs = 0.975)
+fd_trust_mean <- mean(fd_trust)
+
+fd_nep_lower <- quantile(fd_nep, probs = 0.025)
+fd_nep_upper <- quantile(fd_nep, probs = 0.975)
+fd_nep_mean <- mean(fd_nep)
+
+# 8) Create data frame for first differences
+first_differences <- data.frame(
+  Scale = c("Trust Straightliners", "NEP Straightliners"),
+  First_Difference = c(fd_trust_mean, fd_nep_mean),
+  Lower_95CI = c(fd_trust_lower, fd_nep_lower),
+  Upper_95CI = c(fd_trust_upper, fd_nep_upper)
+)
+
+# First Difference Plot
+plot_first_diff <- ggplot(first_differences, aes(x = Scale, y = First_Difference)) +
+  geom_point(size = 4, color = "red") +  # Point estimate
+  geom_errorbar(aes(ymin = Lower_95CI, ymax = Upper_95CI), width = 0.2,
+                color = "red") + 
+  geom_hline(yintercept = 0, linetype = 2, color = "grey40") +
+  labs(title = "First Difference in Predicted Probabilities of Speeding by scale",
+       subtitle = "(Baseline: Non straightliners)",
+       x = "",
+       y = "Change in Predicted Probabilities") +
+  ylim(-0.05, 0.8) +
+  theme_minimal() +
+  # Add numeric labels above the points
+  geom_text(
+    aes(label = sprintf("%.3f", First_Difference)),
+    hjust = -0.3,
+    vjust = -0.7,
+    color = "red"
+  )
+
+plot_first_diff
+```
+
+#### 2) Difference of First Differences
+
+```{r fig-diff-of-diff, fig.cap="Change in the effect of straightlining on speeding between NEP and Trust scales"}
+# Compute first difference and CIs
+fd_trust <- ev[,2] - ev[,1]  # scenario 2 minus scenario 1
+fd_nep   <- ev[,4] - ev[,3]  # scenario 4 minus scenario 3
+fd <- fd_nep - fd_trust
+
+fd_mean <- mean(fd)
+fd_lower <- quantile(fd, probs = 0.025)
+fd_upper <- quantile(fd, probs = 0.975)
+
+# Create dataframe for first differences
+first_differences <- data.frame(
+  Comparison = "Straightlining effect on NEP Scale",
+  First_Difference = fd_mean,
+  Lower_95CI = fd_lower,
+  Upper_95CI = fd_upper
+)
+
+# First Difference Plot
+plot_first_diff <- ggplot(first_differences, aes(x = Comparison, y = First_Difference)) +
+  geom_point(size = 4, color = "red") +  # Point estimate
+  geom_errorbar(aes(ymin = Lower_95CI, ymax = Upper_95CI), width = 0.2, color = "red") + 
+  geom_hline(yintercept = 0, linetype = 2, color = "grey40") +
+  labs(title = "Difference of first differences: Change in straightlining effect between scales",
+       subtitle = "Baseline: Effect of straightlining on speeding for Trust Scale",
+       x = "",
+       y = "Change in Predicted Probability") +
+  ylim(0, 1) +
+  theme_minimal() +
+  # Add numeric labels above the points
+  geom_text(
+    aes(label = sprintf("%.2f", First_Difference)),  # Format to 3 decimals
+    hjust = -0.6,
+    color = "red"
+  )
+plot_first_diff  
+```
+:::
+
+@fig-first-diff plots the first differences in predicted probabilities of speeding between straightliners and non-straightliners for each scale, based on 1,000 simulations. On average, NEP straightliners have a 0.50 higher predicted probability of speeding than NEP non-straightliners. This difference is statistically significant, as the 95% confidence interval does not include zero. For the Trust scale, the first difference is only 0.008 and not significant.
+
+@fig-diff-of-diff plots the difference of these first differences between the NEP and Trust scales, again based on 1,000 simulations. This figure shows how the effect of straightlining on speeding changes across scales. On the NEP scale, straightlining increases the predicted probability of speeding by 49 percentage points more than it does on the Trust scale. This difference is statistically significant since zero is not included in the confidence interval. This confirms that the relationship between straightlining and speeding is significantly stronger for the NEP scale.
+
+## Interpretation
+
+Overall, the simulation results suggest:
+
+-   Straightlining is associated with an increased predicted probability of speeding, but this association is only significant for the NEP scale (@fig-first-diff).
+-   The magnitude of the effect of straightlining on speeding is highly scale dependent. For NEP-scale straightliners, the increase in the probability of speeding from non-straightliners to straightliners is about *49 percentage points larger* than on the Trust scale. In other words, the NEP scale makes the link between straightlining and speeding significantly much stronger (@fig-diff-of-diff).
+
+These results imply that straightlining on the NEP scale is likely a strong signal of low data quality, since it is associated with a much higher likelihood of speeding. The longer and more demanding NEP scale appears to be linked to more frequent satisficing behavior, meaning that respondents who straightline are also more likely to rush through the questions. On the simpler Trust scale, straightlining seems less problematic, as it is not related to faster-than-optimal completion times. Researchers using the NEP scale should pay special attention to such respondents, possibly excluding them or testing how sensitive the main results are to their inclusion in order to avoid bias from careless responding.
+
+
+# Response Times and Straightlining
+
+So far, we have tested whether straightliners are more likely to speed.
+Yet, as previously discussed, the speeding threshold is not always
+straightforward to define. Even among those who meet our “optimal” time
+threshold (i.e., non-speeders), there may still be variations in how
+long they spend on the page. Therefore, examining non-speeders’ response
+times can provide additional insights into whether straightlining is
+linked to reduced effort. To address whether this is the case we now ask: *Among non-speeders, do straightliners spend less time on the survey page(s) than non-straightliners? If so, does this effect depend on the scale?*
+
+## Descriptive Patterns
+
+First, let's subset the data to include only respondents who did not
+speed. This way, we focus on a subset where respondents are presumably
+more careful than speeders, yet may still vary in the time they spend
+answering the questions:
+
+```{r subset nonspeeders}
+non_speeders_df <- final_data_clean2 %>%
+  filter(speeding == 0)
+```
+
+Now, we again look at the descriptive statistics and see how response times are distributed across the straightliners and the two scales in the data. 
+
+::: panel-tabset
+#### Summary Table
+
+```{r summary table response times}
+# Prepare data
+df <- non_speeders_df %>%
+  mutate(
+    Scale = factor(NEPscale, levels = c(0,1), labels = c("Trust","NEP")),
+    Straightlining = factor(straightlining_flag, levels = c(0,1),
+                   labels = c("Non straightliner","Straightliner")),
+    rt_sec = response_time
+  ) %>%
+  droplevels()
+
+# Create table for median and IQR in seconds for each group
+desc_tbl <- df %>%
+  group_by(Scale, Straightlining) %>%
+  summarise(
+    n = n(),
+    mean_sec = mean(rt_sec, na.rm = TRUE),
+    median_sec = median(rt_sec, na.rm = TRUE),
+    iqr_lo = quantile(rt_sec, .25, na.rm = TRUE),
+    iqr_hi = quantile(rt_sec, .75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(across(c(mean_sec, median_sec, iqr_lo, iqr_hi), ~ round(.x, 0)))
+kable(desc_tbl)
+
+```
+
+#### Ordered Plot
+
+```{r ordered plot response times}
+# order within each scale
+df_sorted <- df %>%
+  group_by(Scale) %>%
+  arrange(rt_sec, .by_group = TRUE) %>%
+  mutate(order = row_number()) %>%
+  ungroup()
+
+ggplot(df_sorted, aes(x = order, y = rt_sec)) +
+  # first layer: non-straightliners (plotted first, behind)
+  geom_point(
+    data = subset(df_sorted, Straightlining == "Non straightliner"),
+    aes(color = "Non straightliner"),
+    alpha = 0.05, size = 6
+  ) +
+  # second layer: straightliners (plotted on top)
+  geom_point(
+    data = subset(df_sorted, Straightlining == "Straightliner"),
+    aes(color = "Straightliner"),
+    alpha = 0.35, size = 4.5
+  ) +
+  facet_wrap(~ Scale, nrow = 1, scales = "free_x") +
+  labs(
+    title = "Response times ordered from lowest to highest within each scale",
+    x = "Respondent order",
+    y = "Response time (seconds)",
+    color = "Straightlining"
+  ) +
+  scale_color_manual(
+    values = c("Non straightliner" = "#f8766d",
+               "Straightliner" = "#00bfc4")
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+
+```
+:::
+
+We present two figures: *a summary table* and *an ordered plot*. The summary table reports the mean and median response times as well as the 25th and 75th percentiles (interquartile range) for straightliners and non-straightliners within each scale. The ordered plot shows individual response times for each scale ordered from the lowest to highest, with respondents colored according to straightlining flag. Together, these two figures illustrate how response times are distributed across scales and how they differ between straightliners and non-straightliners.
+
+In the *summary table*, mean values indicate the average time respondents spent on the page, whereas the median values reflect the midpoint of the completion times. The interquartile range (IQR) shows the spread of the middle 50% of respondents. Overall, across all indicators, straightliners spend less time than non-straightliners on both scales:
+
+-  On the Trust scale, non straightliners have a *mean* of 51 seconds and straightliners have a mean of 32 seconds, which is 37% lower. On the NEP scale, non straightliners have a mean of 163 seconds and straightliners have a mean of 138 seconds, 15% lower.
+-  On the Trust scale, straightliners’ *median* response time (26 seconds) is 43% shorter than the median of non straightliners (46 seconds). On the NEP scale, median response time for straightliners (132 seconds) is 11% shorter than non straightliners (149 seconds).
+-  Regarding the *middle half of respondents*, on the Trust scale, straightliners complete the page within 21 to 37 seconds, whereas non-straightliners range from 36 to 62 seconds. On the NEP scale, straightliners fall between 87 and 182 seconds, while non-straightliners range from 118 to 192 seconds.
+
+The *ordered plot* adds to the summary plot by showing how often different response times occur. Straightliners are in blue and non straightliners in orange, and all response times are ordered from the lowest to the highest.
+
+- For the Trust scale, there are many straightliners and their points appear mostly at the lower end of the plot. The colour becomes lighter toward the upper end, which means there are fewer straightliners with longer response times.
+- For the NEP scale, there are only four straightliners. Two of them are at the lower end of the plot and two are at the middle-upper end. As the number of straightliners is also small, the pattern is unclear.
+
+Together, these descriptive results highlight the importance of examining response times for non speeders in more detail, particularly for the Trust scale.
+
+## Modeling the Relationship between Response Times, Straightlining and Scale
+
+We predict response times using an OLS regression. Since response times are count values, we log transform them to make the model easier to work with and compatible with OLS. The straightlining flag is the main predictor of the model and we include an interaction term to assess whether the relationship is scale dependent.
+
+```{r model resp. times}
+#create log times
+non_speeders_df <- non_speeders_df %>%
+  mutate(log_time = log(response_time))
+
+# A simple linear model:
+lm_fit <- lm(log_time ~ straightlining_flag * NEPscale, data = non_speeders_df)
+summary(lm_fit)
+```
+Because the model uses logged response times, the coefficients are not easy and intuitive to interpret on their own. Instead, we simulate predicted response times from the estimated model, convert the log values back to seconds and then compare the scenarios.
+
+## Simulated Predicted Response Times (in seconds)
+
+```{r fig-restimes-simulation, fig.cap="Predicted response times (in seconds) fpr straightliners and non straightliners per scale"}
+#Extract coefficients and covariance
+coefs <- coef(lm_fit)
+cov_matrix <- vcov(lm_fit)
+
+#Simulate 1000 draws of coefficients
+set.seed(123)
+simulated_params <- mvrnorm(n = 1000, mu = coefs, Sigma = cov_matrix)
+
+# Define scenarios
+scenario_df <- expand.grid(
+  straightlining_flag = c(0, 1),
+  NEPscale = c(0, 1)
+)
+
+# Build the model matrix for these scenarios
+X_scenario <- model.matrix(~ straightlining_flag * NEPscale, data = scenario_df)
+
+# Compute predicted log-time draws
+logtime_draws <- simulated_params %*% t(X_scenario)
+
+# Exponentiate to get predicted times in seconds
+time_draws <- exp(logtime_draws)
+
+# Summarize each scenario's distribution
+time_mean <- apply(time_draws, 2, mean)
+time_lower  <- apply(time_draws, 2, quantile, probs = 0.025)
+time_upper  <- apply(time_draws, 2, quantile, probs = 0.975)
+
+# Combine into a results data frame
+results <- data.frame(
+  Scenario = c("Trust \nNon-Straightliner", 
+            "Trust \nStraightliner",
+            "NEP \nNon-Straightliner",
+            "NEP \nStraightliner"),
+  Mean_Time = round(time_mean),
+  Lower_95CI = time_lower,
+  Upper_95CI = time_upper
+)
+
+# Plot
+ggplot(results, aes(x = Scenario, y = Mean_Time)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = Lower_95CI, ymax = Upper_95CI), width = 0.2) +
+  labs(title = "Predicted Response Times in Seconds",
+       x = "",
+       y = "") +
+  theme_minimal() +
+  # Add numeric labels above the points
+  geom_text(
+    aes(label = sprintf("%.1f", Mean_Time)),  # Format to 3 decimals
+    hjust = -0.8,
+    color = "black")
+```
+@fig-restimes-simulation shows the results of 1,000 simulations from our OLS model. The points
+in the figure show the **mean** predicted times in seconds that
+respondents spend on the question page(s), while the lines
+are for 95% confidence intervals around these means. For the NEP
+scale, the model predicts a mean of 154 seconds for non-straightliners
+and 129 seconds for straightliners. For the Trust scale, the mean
+predicted response times are 47 seconds for non-straightliners and 29 seconds for
+straightliners. These estimates suggest that straightliners, on average,
+spend less time on the page than non-straightliners. However, whether
+these differences are statistically different than zero requires
+first-difference calculations.
+
+<!-- Maybe we can add a callout to note that the confidence interval is so wide for NEP straightliners as the sample size is only 4 -->
+
+## Systematic Differences
+
+To assess *whether (non speeding) straightliners spend less time on the survey pages than non straightliners and whether this differs by scale*, we again calculate two quantities:
+
+1.  The *first difference* in predicted response times between straightliners and non-straightliners for each scale.
+2.  The *difference of first differences*, showing whether this effect differs between NEP and Trust scales.
+  
+::: panel-tabset
+
+#### 1) First Differences by Scale
+
+```{r fig-resptime-first-diff, fig.cap="Effect of straightlining on predicted response times by scale"}
+fd_trust <- time_draws[,2] - time_draws[,1]  # scenario 2 minus scenario 1
+fd_nep <- time_draws[,4] - time_draws[,3]  # scenario 4 minus scenario 3
+
+fd_trust_lower <- quantile(fd_trust, probs = 0.025)
+fd_trust_upper <- quantile(fd_trust, probs = 0.975)
+fd_trust_mean <- round(mean(fd_trust))
+
+fd_nep_lower <- quantile(fd_nep, probs = 0.025)
+fd_nep_upper <- quantile(fd_nep, probs = 0.975)
+fd_nep_mean <- round(mean(fd_nep))
+
+# Create data frame for first differences
+first_differences <- data.frame(
+  Scale = c("Trust Straightliners", "NEP Straightliners"),
+  First_Difference = c(fd_trust_mean, fd_nep_mean),
+  Lower_95CI = c(fd_trust_lower, fd_nep_lower),
+  Upper_95CI = c(fd_trust_upper, fd_nep_upper)
+)
+
+plot_first_diff <- ggplot(first_differences, aes(x = Scale, y = First_Difference)) +
+  geom_point(size = 4, color = "red") +  # Point estimate
+  geom_errorbar(aes(ymin = Lower_95CI, ymax = Upper_95CI), width = 0.2, color = "red") +  # CI
+  geom_hline(yintercept = 0, linetype = 2, color = "grey40") +
+  labs(title = "First Difference in Predicted Response Times (in seconds) by Scale",
+       subtitle = "Baseline: Non Straightliners",
+       x = "",
+       y = "Change in Predicted Response Times") +
+  ylim(-100, 60) +
+  theme_minimal() +
+  # Add numeric labels above the points
+  geom_text(
+    aes(label = sprintf("%.1f", First_Difference)),
+    hjust = -1,
+    color = "red"
+  )
+
+plot_first_diff 
+```
+
+#### 2) Difference of First Differences
+
+```{r fig-resptimes-diff-of-diff, fig.cap="Change in the effect of straightlining on response times between NEP and Trust scales"}
+fd_trust <- time_draws[,2] - time_draws[,1]  # scenario 2 minus scenario 1
+fd_nep <- time_draws[,4] - time_draws[,3]  # scenario 4 minus scenario 3
+fd <- fd_nep - fd_trust
+
+fd_straightliners_lower <- quantile(fd, probs = 0.025)
+fd_straightliners_upper <- quantile(fd, probs = 0.975)
+fd_straightliners_mean <- round(mean(fd))
+
+# 8) Create data frame for first differences
+first_differences <- data.frame(
+  Scale = c("Straightlining effect on NEP Scale"),
+  First_Difference = c(fd_straightliners_mean, fd_straightliners_mean),
+  Lower_95CI = c(fd_straightliners_lower, fd_straightliners_lower),
+  Upper_95CI = c(fd_straightliners_upper, fd_straightliners_upper)
+)
+
+plot_first_diff <- ggplot(first_differences, aes(x = Scale, y = First_Difference)) +
+  geom_point(size = 4, color = "red") +  # Point estimate
+  geom_errorbar(aes(ymin = Lower_95CI, ymax = Upper_95CI), width = 0.2, color = "red") +  # CI
+   geom_hline(yintercept = 0, linetype = 2, color = "grey40") +
+  labs(title = "Difference of First Differences: Change in straightlining effect between scales",
+       subtitle = "Baseline: Effect of straightlining on response times for Trust scale",
+       x = "",
+       y = "Change in Predicted Response Times") +
+  theme_minimal() +
+  # Add numeric labels above the points
+  geom_text(
+    aes(label = sprintf("%.1f", First_Difference)),  # Format to 3 decimals
+    hjust = -1,
+    color = "red"
+  )
+
+plot_first_diff 
+```
+:::
+
+@fig-resptime-first-diff shows the simulated first differences in predicted response times between straightliners and non straightliners for each scale among non speeders, based on 1,000 simulations. For the NEP scale, straightliners respond on average 25 seconds faster than non straightliners, but this difference is not statistically significant because the confidence interval includes zero. The wide confidence interval comes from the fact that there are only 4 NEP straightliners among non-speeders, which gives the model very little information to learn from and therefore increases the uncertainty of the predictions. For the Trust scale, on the other hand, the first difference is 18 seconds and this estimate is statistically significant.
+
+@fig-resptimes-diff-of-diff shows how the effect of straightlining on response times among non speeders changes across scales by comparing the two first differences, again based on 1,000 simulations. Straightlining, on average, decreases predicted response time by 6 seconds more on the NEP scale than on the Trust scale, but this difference is not statistically significant because the interval includes zero. This means we do not find evidence that the effect of straightlining on response times is stronger for one scale than the other.
+
+## Interpretation
+
+Overall, for non speeders, the simulation results suggest:
+
+-  Straightlining is linked to lower predicted response times on both scales, but this effect is only statistically significant for the Trust scale (@fig-resptime-first-diff).
+-  We find no evidence that the effect of straightlining on response times differs across the two scales (@fig-resptimes-diff-of-diff).
+
+For the NEP scale the model cannot reliably distinguish straightliners from non straightliners in terms of response times, so the response time analysis does not add additional information about data quality. This can be interpreted as a result of the very small number of NEP straightliners left after excluding speeders, since most low effort NEP straightliners were likely already identified through speeding. 
+
+For the Trust scale, on the other hand, analyzing the association between straightlining and response times provides extra insight. Straightliners on the Trust scale who are not flagged as speeders remain above the optimal time threshold we defined (9.3 seconds), but on average they respond 18 seconds faster than non straightliners. This shows that relying only on a strict speeding rule can miss some patterns and response times can provide useful additional information about low effort responding. Researchers using the Trust scale should therefore consider including straightliners in sensitivity checks, testing different speeding thresholds or examining how excluding straightliners affects their results.
+
+<!-- I am not sure about the above interpretation and suggestions, could you please double check here more carefully? --> 
+
+# Conclusion and recommendations
+
+## Key Takeaways
+
+-   **Speeding** is a useful indicator to check whether straightlining
+    reflects **low-effort responding**. However, *threshold* used to
+    define speeding can strongly influence the results, so its choice
+    should be carefully considered.
+-   Examining response times among non-speeders provides additional
+    insights into the performance of speeding threshold and whether straightlining is associated with less time spent on question pages of different multi-item scales.
+
+## Recommendations
+
+-   Our results suggest that among the respondents we have the response
+    time data;
+    -   On the NEP scale, the predicted probability of speeding (i.e.,
+        spending less than 81 seconds on the page) is around 50% higher
+        for straightliners than for non-straightliners. On the Trust
+        scale (threshold = 9.3 seconds), straightlining is not
+        significantly related to speeding.
+
+    -   Among non-speeders on the Trust scale, straightlining is
+        associated with an estimated 18-second reduction in time spent
+        on the page and this difference is statistically significant.
+        On the NEP scale, non-speeders who straightline show an
+        estimated 25-second reduction, but this difference is not
+        statistically significant, potentially because most low effort NEP straightliners were already identified through speeding and very few remain in the model.
+
+    -   Thus, our findings suggest that straightliners are associated
+        with low-effort responding (operationalized as either speeding
+        or reduced response times) on both scales. We recommend running
+        sensitivity analyses to see whether including or excluding
+        straightliners meaningfully changes the primary results, thereby
+        accounting for potential data-quality issues.
+
+<!-- I think this last part could be improved after we finalize our analyses and recommmendations in earlier sections --> 
